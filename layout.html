@@ -113,6 +113,9 @@
             <button onclick="changePage('/diskon.html')">
                 Diskon
             </button>
+            <button onclick="changePage('/motor.html')">
+                Motor
+            </button>
         </nav>
     </aside>
     <script>
@@ -141,6 +144,9 @@
             }else if (path === "/diskon.html") {
                 changePage('/diskon.html', false)
                 // $("#content").load('/dashboard.html');
+            }else if (path === "/motor.html") {
+                changePage('/motor.html', false)
+                // $("#content").load('/dashboard.html');
             }
         });
         
@@ -156,7 +162,9 @@
                 changePage('/mitra.html');
             }else if (page === "diskon") {
                 changePage('/diskon.html');
-            }
+            } else if (page === "motor") {
+                changePage('/motor.html');
+            } 
         })
 
     </script>
