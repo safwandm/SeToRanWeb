@@ -12,16 +12,39 @@
         </button>
     </nav>
     <script> 
+        document.layout = true;
 
         function changePage(target) {
-            $("#content").load(target)
-            console.log(target)
+            $("#content").load(target);
+
+            // Update the URL without reloading the page
+            history.pushState(null, "", target);
         }
-    
-        let changeLogin = () => changePage('./login.html')
-        let changeDashboard = () => changePage('./dashboard.html')
-    
-        console.log("here")
+
+        let changeLogin = () => changePage('/login.html');
+        let changeDashboard = () => changePage('/dashboard.html');
+        
+        // Load the correct content when the back or forward button is clicked
+        window.onpopstate = function() {
+            const path = window.location.pathname;
+            if (path === "/login.html") {
+                changeLogin()
+            } else if (path === "/dashboard.html") {
+                changeDashboard()
+            }
+        };
+
+        
+        $(document).ready(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get("page");
+            if (page === "login") {
+                changeLogin();
+            } else if (page === "dashboard") {
+                changeDashboard();
+            }
+        })
+
     </script> 
 
     <div id="content">
