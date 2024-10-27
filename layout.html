@@ -1,4 +1,11 @@
+<!doctype html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layout</title>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
@@ -94,25 +101,46 @@
     </header>
     <aside>
         <nav>
-            <button onclick="changeLogin()">
+            <button onclick="changePage('/login.html')">
                 Login
             </button>
-            <button onclick="changeDashboard()">
+            <button onclick="changePage('/dashboard.html')">
                 Dashboard
             </button>
         </nav>
     </aside>
     <script>
+        document.layout = true;
 
-        function changePage(target) {
-            $("#content").load(target)
-            console.log(target)
+        function changePage(target, push = true) {
+            $("#content").load(target);
+
+            if (push)
+                history.pushState(null, "", target);
         }
 
-        let changeLogin = () => changePage('./login.html')
-        let changeDashboard = () => changePage('./dashboard.html')
+        window.addEventListener('popstate', (ev) => {
+            const path = window.location.pathname;
+            console.log("hashchange " + path)
+            if (path === "/login.html") {
+                changePage('/login.html', false)
+                // $("#content").load('/login.html');
+            } else if (path === "/dashboard.html") {
+                changePage('/dashboard.html', false)
+                // $("#content").load('/dashboard.html');
+            }
+        });
 
-        console.log("here")
+        $(document).ready(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get("page");
+            if (page === "login") {
+                changePage('/login.html');
+            } else if (page === "dashboard") {
+                changePage('/dashboard.html');
+            }
+        })
+
     </script>
 
     <div id="content">
@@ -120,3 +148,5 @@
     </div>
 
 </body>
+
+</html>
