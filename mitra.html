@@ -15,6 +15,21 @@
     body{
         background-color: #DFDDDD;
     }
+
+    .card{
+        background-color: white;
+        padding: 16px;
+        border-radius: 4px;
+    }
+
+    h2, h3{
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        font-size: 24px;
+        color: #00236F;
+    }
+
     table{
         font-family: "Poppins", sans-serif;
         font-weight: 600;
@@ -22,10 +37,14 @@
     }
 
     th{
-        border-top: 1px solid black;
-        border-bottom: 1px solid black;
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        border-top: 1px solid #DFDDDD;
+        border-bottom: 1px solid #DFDDDD;
         text-align: left;
         padding: 8px;
+        color: #2F2F30;
     }
 
     td{
@@ -33,11 +52,12 @@
         font-weight: 400;
         font-style: normal;
         padding: 8px;
+        font-size: 16px;
     }
 
-    button{
+    .btn-action{
         font-family: "Poppins", sans-serif;
-        font-weight: 600;
+        font-weight: 500;
         font-style: normal;
         background-color: #007CFF;
         color: white;
@@ -45,42 +65,74 @@
         width: 68px;
         border: none;
         border-radius: 4px;
+        font-size: 12px;
     }
+
+    .cardSide{
+        background-color: white;
+        color: #00236F;
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        font-size: 20px;
+        padding: 16px;
+        margin-left: 16px;
+        border-radius: 4px;
+    }
+
+    .btn-filter{
+        background-color: #007CFF;
+        color: white;
+        border: none;
+        font-family: "Poppins", sans-serif;
+        font-weight: 500;
+        font-style: normal;
+        font-size: 16px;
+        height: 40px;
+        width: 218px;
+        border-radius: 4px;
+    }
+    
 </style>
     <title>Document</title>
 </head>
 <body>
-    <div>
+    <div style="padding-left: 32px; padding-top: 20px; padding-right: 16px;">
         <h2>Mitra</h2>
         <p>Home/<b>Mitra</b></p>
-    </div>
-
-    <div>
-        <div class="card">
-            <h3>Mitra</h3>
-            <table style="width: 100%;">
-                <tr>
-                    <th>Mitra ID</th>
-                    <th>Username</th>
-                    <th>Vehicle</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    <td>122222022</td>
-                    <td>Galang</td>
-                    <td>1</td>
-                    <td>Active</td>
-                    <td style="text-align: center;"><button>Details</button></td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="cardSide">
-
-        </div>
-    </div>
+        <div style="display: flex;">
+            <div class="card" style="width: 100%;">
+                <p>Mitra</p>
+                <table style="width: 100%;">
+                    <tr>
+                        <th>Mitra ID</th>
+                        <th>Username</th>
+                        <th>Vehicle</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <td>122222022</td>
+                        <td>Galang</td>
+                        <td>1</td>
+                        <td>Active</td>
+                        <td style="text-align: center;" ><button class="btn-action">Details</button></td>
+                    </tr>
+                    <tr>
+                        <td>122222023</td>
+                        <td>Galangg</td>
+                        <td>2</td>
+                        <td>Active</td>
+                        <td style="text-align: center;" ><button class="btn-action">Details</button></td>
+                    </tr>
+                </table>
+            </div>
     
-
+            <div class="cardSide">
+                <p>Filter</p>
+                <button class="btn-filter">Placeholder</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
