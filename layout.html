@@ -110,6 +110,9 @@
             <button onclick="changePage('/mitra.html')">
                 Mitra
             </button>
+            <button onclick="changePage('/diskon.html')">
+                Diskon
+            </button>
         </nav>
     </aside>
     <script>
@@ -135,6 +138,9 @@
             } else if (path === "/mitra.html") {
                 changePage('/mitra.html', false)
                 // $("#content").load('/dashboard.html');
+            }else if (path === "/diskon.html") {
+                changePage('/diskon.html', false)
+                // $("#content").load('/dashboard.html');
             }
         });
         
@@ -148,6 +154,8 @@
                 changePage('/dashboard.html');
             } else if (page === "mitra") {
                 changePage('/mitra.html');
+            }else if (page === "diskon") {
+                changePage('/diskon.html');
             }
         })
 
