@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
+    <script>
+        if (document.layout == undefined) {
+            window.location.href = "layout.html?page=diskon";
+        }
+    </script>
+    <style>
+        body {
+            background-color: #DFDDDD;
+            font-family: "Poppins", sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-weight: 600;
+            font-style: normal;
+        }
+        th, td {
+            padding: 8px;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+            text-align: left;
+        }
+        th {
+            font-weight: 600;
+        }
+        td {
+            font-weight: 400;
+        }
+        .btn-action {
+            font-weight: 600;
+            background-color: #007CFF;
+            color: white;
+            height: 34px;
+            width: 68px;
+            border: none;
+            border-radius: 4px;
+        }
+        .btn-tambah{
+            font-weight: 600;
+            background-color: #007CFF;
+            color: white;
+            height: 34px;
+            width: 68px;
+            border: none;
+            border-radius: 4px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+        .main-content, .sidebar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .main-content {
+            flex-grow: 2;
+        }
+        .sidebar {
+            width: 250px;
+        }
+    </style>
+    <title>Diskon</title>
+</head>
+<body>
+    <div>
+        <h2>Diskon</h2>
+        <p>Home / <b>Diskon</b></p>
+    </div>
+
+    <div class="container">
+        <!-- Main Content for Diskon Page -->
+        <div class="main-content">
+            <h3>Daftar Diskon</h3>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Promo</th>
+                    <th>Status Promo</th>
+                    <th>Tgl Mulai</th>
+                    <th>Tgl Akhir</th>
+                    <th>Aksi</th>
+                </tr>
+                <tr>
+                    <td>12345</td>
+                    <td>Diskon Akhir Tahun</td>
+                    <td>Aktif</td>
+                    <td>01-12-2024</td>
+                    <td>31-12-2024</td>
+                    <td style="text-align: center;"><button class="btn-action">Detail</button></td>
+                </tr>
+                <!-- Additional rows can be added here -->
+            </table>
+        </div>
+
+        <!-- Sidebar Filter -->
+        <div class="sidebar">
+            <h3>Filter</h3>
+            <label for="statusPromo">Status Promo</label>
+            <select id="statusPromo" style="width: 100%; padding: 5px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc;">
+                <option value="">Select</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            <button class="btn-tambah" style="width: 100%;">Tambah Diskon</button>
+        </div>
+    </div>
+</body>
+</html>

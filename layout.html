@@ -101,7 +101,7 @@
     </header>
     <aside>
         <nav>
-            <button onclick="changePage('/login.html')">
+            <button onclick="window.location.href='/login.html';">
                 Login
             </button>
             <button onclick="changePage('/dashboard.html')">
@@ -109,6 +109,9 @@
             </button>
             <button onclick="changePage('/mitra.html')">
                 Mitra
+            </button>
+            <button onclick="changePage('/diskon.html')">
+                Diskon
             </button>
         </nav>
     </aside>
@@ -122,6 +125,7 @@
                 history.pushState(null, "", target);
         }
 
+        // handle forward/backward browser
         window.addEventListener('popstate', (ev) => {
             const path = window.location.pathname;
             console.log("hashchange " + path)
@@ -134,9 +138,13 @@
             } else if (path === "/mitra.html") {
                 changePage('/mitra.html', false)
                 // $("#content").load('/dashboard.html');
+            }else if (path === "/diskon.html") {
+                changePage('/diskon.html', false)
+                // $("#content").load('/dashboard.html');
             }
         });
-
+        
+        // handle redirect kalau user buka page lain secara langsung
         $(document).ready(() => {
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get("page");
@@ -146,6 +154,8 @@
                 changePage('/dashboard.html');
             } else if (page === "mitra") {
                 changePage('/mitra.html');
+            }else if (page === "diskon") {
+                changePage('/diskon.html');
             }
         })
 
