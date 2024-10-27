@@ -26,6 +26,7 @@
                 history.pushState(null, "", target);
         }
 
+        // handle forward/backward browser
         window.addEventListener('popstate', (ev) => {
             const path = window.location.pathname;
             console.log("hashchange " + path)
@@ -37,7 +38,8 @@
                 // $("#content").load('/dashboard.html');
             }
         });
-       
+        
+        // handle redirect kalau user buka page lain secara langsung
         $(document).ready(() => {
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get("page");
