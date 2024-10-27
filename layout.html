@@ -1,0 +1,31 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <nav>
+        <button onclick="changeLogin()">
+            Login
+        </button>
+        <button onclick="changeDashboard()">
+            Dashboard
+        </button>
+    </nav>
+    <script> 
+
+        function changePage(target) {
+            $("#content").load(target)
+            console.log(target)
+        }
+    
+        let changeLogin = () => changePage('./login.html')
+        let changeDashboard = () => changePage('./dashboard.html')
+    
+        console.log("here")
+    </script> 
+
+    <div id="content">
+
+    </div>
+    
+</body>
