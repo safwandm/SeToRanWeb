@@ -107,6 +107,9 @@
             <button onclick="changePage('/dashboard.html')">
                 Dashboard
             </button>
+            <button onclick="changePage('/mitra.html')">
+                Mitra
+            </button>
         </nav>
     </aside>
     <script>
@@ -119,6 +122,7 @@
                 history.pushState(null, "", target);
         }
 
+        // handle forward/backward browser
         window.addEventListener('popstate', (ev) => {
             const path = window.location.pathname;
             console.log("hashchange " + path)
@@ -128,9 +132,13 @@
             } else if (path === "/dashboard.html") {
                 changePage('/dashboard.html', false)
                 // $("#content").load('/dashboard.html');
+            } else if (path === "/mitra.html") {
+                changePage('/mitra.html', false)
+                // $("#content").load('/dashboard.html');
             }
         });
-
+        
+        // handle redirect kalau user buka page lain secara langsung
         $(document).ready(() => {
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get("page");
@@ -138,6 +146,8 @@
                 changePage('/login.html');
             } else if (page === "dashboard") {
                 changePage('/dashboard.html');
+            } else if (page === "mitra") {
+                changePage('/mitra.html');
             }
         })
 
