@@ -4,44 +4,42 @@
 
 <body>
     <nav>
-        <button onclick="changeLogin()">
+        <button onclick="changePage('/login.html')">
             Login
         </button>
-        <button onclick="changeDashboard()">
+        <button onclick="changePage('/dashboard.html')">
             Dashboard
         </button>
     </nav>
     <script> 
         document.layout = true;
 
-        function changePage(target) {
+        function changePage(target, push=true) {
             $("#content").load(target);
-
-            // Update the URL without reloading the page
-            history.pushState(null, "", target);
+            
+            if (push)
+                history.pushState(null, "", target);
         }
 
-        let changeLogin = () => changePage('/login.html');
-        let changeDashboard = () => changePage('/dashboard.html');
-        
-        // Load the correct content when the back or forward button is clicked
-        window.onpopstate = function() {
+        window.addEventListener('popstate', (ev) => {
             const path = window.location.pathname;
+            console.log("hashchange " + path)
             if (path === "/login.html") {
-                changeLogin()
+                changePage('/login.html', false)
+                // $("#content").load('/login.html');
             } else if (path === "/dashboard.html") {
-                changeDashboard()
+                changePage('/dashboard.html', false)
+                // $("#content").load('/dashboard.html');
             }
-        };
-
-        
+        });
+       
         $(document).ready(() => {
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get("page");
             if (page === "login") {
-                changeLogin();
+                changePage('/login.html');
             } else if (page === "dashboard") {
-                changeDashboard();
+                changePage('/dashboard.html');
             }
         })
 
