@@ -73,6 +73,10 @@ td{
 
 /* content */
 
+.breadcrumb {
+    margin-bottom: 16px;
+}
+
 #content {
     padding-left: 32px; 
     padding-top: 20px; 
