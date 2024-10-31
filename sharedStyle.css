@@ -1,0 +1,61 @@
+/* table */
+
+table{
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+th{
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    border-top: 1px solid #DFDDDD;
+    border-bottom: 1px solid #DFDDDD;
+    text-align: left;
+    padding: 8px;
+    color: #2F2F30;
+}
+
+td{
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    padding: 8px;
+    font-size: 16px;
+}
+
+/* content */
+
+#content {
+    padding-left: 32px; 
+    padding-top: 20px; 
+    padding-right: 16px;
+}
+
+h2, h3{
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 24px;
+    color: #00236F;
+}
+
+.card{
+
+    background-color: white;
+    padding: 16px;
+    border-radius: 4px;
+
+    box-shadow: var(--basic-shadow);
+}
+
+.btn-action {
+    font-weight: 600;
+    background-color: #007CFF;
+    color: white;
+    /* height: 34px;
+    width: 68px; */
+    border: none;
+    border-radius: 4px;
+}
