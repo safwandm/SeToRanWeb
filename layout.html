@@ -96,6 +96,11 @@
         function changePage(target, push = true) {
             $("#content").load(target);
 
+            // sementara
+            let reg = /\/(.*?)\.html/
+            let title = target.match(reg)[1]
+            $('title').text(title)
+
             if (push)
                 history.pushState(null, "", target);
         }
