@@ -126,7 +126,7 @@
         window.location.href = "layout.html?page=motor";
     }
 
-    $.get('motor.json', 
+    $.get('./json/motor.json', 
         function (data, status) {
             console.log(data)
             data.motors.forEach(function (motor) {
