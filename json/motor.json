@@ -1,0 +1,44 @@
+{
+    "motors": [
+        {
+            "id": "B 1234 ABC",
+            "name": "Kawasaki Sport 155",
+            "year": 2020,
+            "transmission": "Matic",
+            "status": "Active",
+            "dailyRate": 55000
+        },
+        {
+            "id": "B 5678 DEF",
+            "name": "Yamaha Nmax 155",
+            "year": 2021,
+            "transmission": "Matic",
+            "status": "Inactive",
+            "dailyRate": 60000
+        },
+        {
+            "id": "B 9101 GHI",
+            "name": "Honda PCX 160",
+            "year": 2022,
+            "transmission": "Matic",
+            "status": "Active",
+            "dailyRate": 65000
+        },
+        {
+            "id": "B 1121 JKL",
+            "name": "Suzuki GSX-R150",
+            "year": 2020,
+            "transmission": "Manual",
+            "status": "Active",
+            "dailyRate": 70000
+        },
+        {
+            "id": "B 3141 MNO",
+            "name": "Vespa Sprint 150",
+            "year": 2023,
+            "transmission": "Automatic",
+            "status": "Active",
+            "dailyRate": 75000
+        }
+    ]
+}
