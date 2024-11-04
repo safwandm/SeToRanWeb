@@ -8,7 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> -->
-        <style>
+    <style>
         /* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap'); */
 
         * {
@@ -29,7 +29,6 @@
             grid-column: 1 / 3;
             background-color: #3C6DD7;
             color: white;
-            /* padding: 8px 24px; */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -40,73 +39,35 @@
             display: flex;
             gap: 80px;
         }
-    
+
         .logo p {
             font-size: 24px;
             font-weight: 600;
             line-height: 1;
         }
-    
-        /* aside {
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0px 0px 20px rgba(0, 48, 120, 0.1);
-        }
-
-        aside nav {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        aside nav img {
-            width: 16px;
-            height: 16px;
-        }
-
-        aside nav button {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border: none;
-            background: none;
-            text-align: left;
-            font-weight: 500;
-            cursor: pointer;
-        } */
 
         .selected {
             background-color: #E3F2FD;
             color: #3C6DD7;
         }
 
-        .content {
-            /* padding: 20px; */
-        }
-
-        /* .breadcrumb {
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .breadcrumb h2 {
-            font-weight: 600;
-            color: #3C6DD7;
-
-        } */
-
         .filterNsearch-section {
             display: flex;
+            position: relative;
+
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            /* margin-top: 20px; */
         }
 
         .filter {
+
             display: flex;
+
             align-items: center;
+
+            cursor: pointer;
+
         }
 
         .filter img {
@@ -120,48 +81,87 @@
             font-weight: 500;
 
             display: inline;
+
         }
 
+        .filter-dropdown-box {
+            position: absolute;
+            bottom: -180px;
+            /* Position it below the button */
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+
+            padding: 10px;
+            width: 200px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+
+        }
+
+        .filter-dropdown-box select {
+            width: 100%;
+
+            margin-bottom: 5px;
+        }
 
         .filterNsearch-section .search-bar {
+
+            display: flex;
+
+            width: 404px;
+            height: 46px;
+
             display: flex;
             align-items: center;
+
+            background-color: white;
+
             border: 1px solid #ccc;
             border-radius: 24px;
-            padding: 5px 10px;
+
+            justify-content: space-between;
+
+        }
+        /* Menghilangkan background biru saat mencari */
+        input:focus, textarea:focus {
+            background-color: inherit;
+            box-shadow: none; 
         }
 
-        .search-bar input {
+        .search-bar .search-field {
+
+            width: 100%;
+
             border: none;
+
             outline: none;
+
+            margin-left: 10px;
             padding-left: 10px;
         }
 
-        /* Table styling */
+        .search-bar .search-button {
+            width: 54px;
+            height: 100%;
+
+            background-color: #007CFF;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border: none;
+            border-radius: 24px;
+
+            cursor: pointer;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-
-        /* thead {
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-            border-left: none;
-            border-right: none;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            font-weight: 500;
-        }
-
-        td {
-            border-bottom: 1px solid #ddd;
-        } */
 
         .action-button {
             /* background-color: #3C6DD7;
@@ -178,6 +178,113 @@
     if (document.layout == undefined) {
         window.location.href = "layout.html?page=motor";
     }
+
+    var filterObj = {
+        "pencarian": {
+            "nama": ""
+        },
+        "tahun": "",
+        "transmisi": "",
+        "status": ""
+    }
+
+    function reloadTable() {
+        $.get('./json/motor.json',
+            function (data, status) {
+
+                if (filterObj.tahun) {
+                    data.motors = data.motors.filter(motor => motor.year == filterObj.tahun)
+                }
+
+                if (filterObj.transmisi) {
+                    data.motors = data.motors.filter(motor => motor.transmission == filterObj.transmisi)
+                }
+
+                if (filterObj.status) {
+                    data.motors = data.motors.filter(motor => motor.status == filterObj.status)
+                }
+
+                let queryNama = filterObj.pencarian.nama
+                if (queryNama) {
+                    console.log('test')
+                    let regex = new RegExp(queryNama, "i")
+                    data.motors = data.motors.filter(motor => regex.test(motor.name))
+                }
+
+                let motorTable = $('.card tbody');
+                if (motorTable.children($('tr')).length != 0) {
+                    motorTable.empty()
+                }
+
+                data.motors.forEach(function (motor) {
+                    motorTable.append(`
+                    <tr>
+                        <td>${motor.id}</td>
+                        <td>${motor.name}</td>
+                        <td>${motor.year}</td>
+                        <td>${motor.transmission}</td>
+                        <td>${motor.status}</td>
+                        <td>${motor.dailyRate}</td>
+                        <td><button class="btn-action action-button">Detail</button></td>
+                    </tr>
+                `)
+                })
+            }
+        )
+    }
+    $('.filter-dropdown-box').submit(function (event) {
+        let filterValue = $(this).serializeArray();
+
+        filterObj.tahun = filterValue[0].value
+        filterObj.transmisi = filterValue[1].value
+        filterObj.status = filterValue[2].value
+
+        reloadTable()
+
+        event.preventDefault()
+        event.stopPropagation();
+    })
+    $('.search-bar').submit(function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        let searchValue = $(this).serializeArray();
+
+        filterObj.pencarian.nama = searchValue[0].value
+
+        reloadTable()
+
+        event.preventDefault()
+        event.stopPropagation();
+    })
+
+    $('.search-button').click(function (evebt) {
+        $('.search-button').submit()
+    })
+
+    $('.filter-options').change(function (event) {
+        $('.filter-options').submit()
+    })
+    $('.filter, .filter-dropdown-box').click(function (event) {
+        if ($('.filter-dropdown-box').css('display') == 'none') {
+            $('.filter-dropdown-box').toggle();
+        }
+        event.stopPropagation()
+    })
+
+    $(document).click(function (event) {
+        if (!$(event.target).closest('.dropdown-box').length && !$(event.target).closest('.filter').length) {
+            $('.filter-dropdown-box').hide()
+        }
+    })
+
+    for (let i = 2000; i <= 2024; ++i) {
+        $('#filter-tahun').append(`
+            <option value="${i}">${i}</option>
+        `)
+    }
+
+    reloadTable()
 </script>
 
 <body>
@@ -188,13 +295,45 @@
         </div>
 
         <div class="filterNsearch-section">
+
             <div class="filter">
                 <img src="./assets/icons/ic_outline-filter-alt.png" alt="">
-                <p>Pilih Filter</p>    
+                <p id="filter-chosen">Filter</p>
             </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Search...">
-            </div>
+
+            <form class="filter-dropdown-box" style="display: none;">
+
+                <!-- <input type="number" id="filter-tahun" name="tahun" min="1984" max="2024" value="1984"> -->
+
+                <label for="filter-tahun">Tahun</label>
+                <select name="tahun" id="filter-tahun" class="filter-options">
+                    <option value="" selected>None</option>
+                </select>
+
+                <label for="filter-tahun">Transmisi</label>
+                <select name="transmisi" id="filter-transmisi" class="filter-options">
+                    <option value="" selected>None</option>
+                    <option value="Automatic">Automatic</option>
+                    <option value="Matic">Matic</option>
+                    <option value="Manual">Manual</option>
+                </select>
+
+                <label for="filter-tahun">Status</label>
+                <select name="status" id="filter-status" class="filter-options">
+                    <option value="" selected>None</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+
+                <!-- <button class="cancel-filter">x</button> -->
+            </form>
+
+            <form class="search-bar">
+                <input type="text" placeholder="Search..." name="nama" class="search-field">
+                <div class="search-button">
+                    <img src="./assets/icons/material-symbols_search.png" alt="" class="search-img">
+                </div>
+            </form>    
         </div>
 
         <div class="card">
@@ -211,18 +350,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>B 1234 ABC</td>
-                        <td>Kawasaki Sport 155</td>
-                        <td>2020</td>
-                        <td>Matic</td>
-                        <td>Active</td>
-                        <td>55000</td>
-                        <td><button class="btn-action action-button">Detail</button></td>
-                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </body>
+
 </html>
