@@ -20,9 +20,14 @@
 
         body {
             display: grid;
+
+            position: relative;
+
+
             grid-template-columns: 1fr 5fr;
             grid-template-rows: min-content auto;
             background-color: #F6FAFF;
+            padding: 0px;
         }
 
         header {
@@ -123,10 +128,12 @@
             justify-content: space-between;
 
         }
+
         /* Menghilangkan background biru saat mencari */
-        input:focus, textarea:focus {
+        input:focus,
+        textarea:focus {
             background-color: inherit;
-            box-shadow: none; 
+            box-shadow: none;
         }
 
         .search-bar .search-field {
@@ -171,6 +178,57 @@
             padding: 6px 12px;
             cursor: pointer;
         }
+
+        .motor-detail-card {
+            width: 387px;
+            height: 531px;
+
+            display: none;
+            flex-direction: column;
+
+            position: absolute;
+
+            top: 20%;
+            left: 43%;
+
+            padding: 25px 21px;
+
+            border-radius: 4;
+            box-shadow: 0px 0px 5px rgba(0, 48, 120, 0.1);
+
+            background-color: white;
+        }
+
+        .card-head {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-head .arrow {
+            font-size: 30px;
+        }
+
+        .card-head .img-container {
+            width: 277px;
+            height: 157px;
+            margin-right: 5px;
+            margin-left: 5px;
+            position: relative;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0px 0px 5px rgba(0, 48, 120, 0.1);
+            background-color: white;
+            overflow: hidden;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
     </style>
 </head>
 
@@ -179,6 +237,10 @@
         window.location.href = "layout.html?page=motor";
     }
 
+    // Tets
+    var motorImages = []
+    //
+
     var filterObj = {
         "pencarian": {
             "nama": ""
@@ -186,7 +248,7 @@
         "tahun": "",
         "transmisi": "",
         "status": "",
-        "tipePemilik":""
+        "tipePemilik": ""
     }
 
     function reloadTable() {
@@ -231,21 +293,28 @@
 
                 data.motors.forEach(function (motor) {
                     motorTable.append(`
-                    <tr>
-                        <td>${motor.id}</td>
-                        <td>${motor.name}</td>
-                        <td>${motor.year}</td>
-                        <td>${motor.transmission}</td>
-                        <td>${motor.status}</td>
-                        <td>${motor.dailyRate}</td>
-                        <td>${motor.owner}</td>
-                        <td><button class="btn-action action-button">Detail</button></td>
-                    </tr>
-                `)
+                            <tr>
+                                <td>${motor.id}</td>
+                                <td>${motor.name}</td>
+                                <td>${motor.year}</td>
+                                <td>${motor.transmission}</td>
+                                <td>${motor.status}</td>
+                                <td>${motor.dailyRate}</td>
+                                <td>${motor.owner}</td>
+                                <td><button class="btn-action action-button">Detail</button></td>
+                            </tr>
+                        `)
+
+                    // Tets
+                    motorTable.add(motor.motorImg)
+                    //
                 })
             }
         )
     }
+
+    reloadTable()
+
     $('.filter-dropdown-box').submit(function (event) {
         let filterValue = $(this).serializeArray();
 
@@ -282,16 +351,42 @@
     $('.filter-options').change(function (event) {
         $('.filter-options').submit()
     })
-    $('.filter, .filter-dropdown-box').click(function (event) {
+    $('.filter').click(function (event) {
         if ($('.filter-dropdown-box').css('display') == 'none') {
             $('.filter-dropdown-box').toggle();
         }
         event.stopPropagation()
     })
 
+    // Karena btn-action ditambahkan secara dinamis. Click event listener harus ditambah ken element yang ada
+    $('.card tbody').on('click', '.btn-action', function (event) {
+        console.log(90);
+
+        if ($('.motor-detail-card').css('display') == 'none') {
+            $('.motor-detail-card').slideToggle(300, function () {
+                $(this).addClass('flex-display'); // Ensure display is flex after sliding down
+            });
+        }
+
+        // Tets
+        let row = $(this).closest('tr')
+        const motorId = row.data();
+        console.log('Motor ID:', motorId);
+        //
+    
+        event.stopPropagation();
+    });
+
+
     $(document).click(function (event) {
-        if (!$(event.target).closest('.dropdown-box').length && !$(event.target).closest('.filter').length) {
+        if (!$(event.target).closest('.filter-dropdown-box').length && !$(event.target).closest('.filter').length) {
             $('.filter-dropdown-box').hide()
+        }
+
+        if (!$(event.target).closest('.motor-detail-card').length) {
+            $('.motor-detail-card').slideToggle(300, function () {
+                $(this).removeClass('flex-display'); // Remove flex display after sliding up
+            });
         }
     })
 
@@ -300,12 +395,23 @@
             <option value="${i}">${i}</option>
         `)
     }
-
-    reloadTable()
 </script>
 
 <body>
+
+    <div class="motor-detail-card">
+        <div class="card-head">
+            <!-- <div class="arrow">&larr;</div> -->
+            <div class="img-container">
+                <img src="./assets/motor/image-1.webp" alt="">
+            </div>
+            <!-- <div class="arrow">&rarr;</div> -->
+        </div>
+        <div class="card-body"></div>
+    </div>
+
     <div class="content">
+
         <div class="breadcrumb">
             <h2>Motor</h2>
             <p>Home / <b>Motor</b></p>
@@ -343,7 +449,7 @@
                 </select>
 
                 <label for="filter-tahun">Tipe Pemilik</label>
-                <select name="status" id="filter-status" class="filter-options">
+                <select name="status" id="filter-tahun" class="filter-options">
                     <option value="" selected>None</option>
                     <option value="Perusahaan">Perusahaan</option>
                     <option value="Mitra">Mitra</option>
@@ -357,7 +463,7 @@
                 <div class="search-button">
                     <img src="./assets/icons/material-symbols_search.png" alt="" class="search-img">
                 </div>
-            </form>    
+            </form>
         </div>
 
         <div class="card">
