@@ -141,10 +141,10 @@
 
         function toggleDialog(name) {
             let boxes = ['.notification', '.messages']
-            boxes.forEach((box) => $(box).hide())
-            $(name).show()
+            boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
+            $(name).toggle()
         }
-        
+
     </script>
     <header>
         <div class="logo flex-center">
