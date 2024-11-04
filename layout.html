@@ -8,6 +8,9 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="sharedStyle.css">
+
+    <script src="popbox/popbox.js"></script>
+    <link rel="stylesheet" href="popbox/popbox.css">
 </head>
 
 <style>
@@ -140,10 +143,15 @@
         })
 
         function toggleDialog(name) {
-            let boxes = ['.notification', '.messages']
-            boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
-            $(name).toggle()
+            // let boxes = ['.notification', '.messages']
+            // boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
+            // $(name).toggle()
         }
+
+        var popbox = new Popbox({
+            blur:true,
+            overlay:true,
+        });
 
     </script>
     <header>
@@ -163,7 +171,7 @@
                     <h3>Messages</h3>
                 </div>
             </div>
-            <div onclick="toggleDialog('.notification')">
+            <div onclick="toggleDialog('.notification');" >
                 <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
                     <path fill="currentColor"
                         d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2m6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5z" />

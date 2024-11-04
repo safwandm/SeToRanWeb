@@ -12,15 +12,9 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
-       <script>
-    $(document).ready(function() {
+    <script>
         let diskonData = []; // Store the data globally
 
-        // Load the JSON data
-        $.getJSON('json/diskon.json', function(data) {
-            diskonData = data.diskon; // Store the data for later use
-            populateTable(diskonData); // Populate the table initially
-        });
 
         // Function to populate table
         function populateTable(data) {
@@ -56,30 +50,60 @@
             }
         }
 
-        // Add event listener for filter
-        document.getElementById('statusPromo').addEventListener('change', filterData);
+        function openPopBox() {
+            $('input#id').val('')
+            $('input#nama').val('')
 
-        // Add event listener for detail buttons
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('btn-action')) {
-                const row = e.target.closest('tr');
-                if (row) {
-                    const id = row.cells[0].textContent;
-                    console.log('Detail clicked for ID:', id);
-                    // Add detail view logic here
+            popbox.open('tambah-diskon')
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault()
+            popbox.close('tambah-diskon')
+
+            diskonData.push({
+                id: $('input#id').val(),
+                namaPromo: $('input#nama').val()
+            })
+
+            populateTable(diskonData)
+
+            popbox.close('tambah-diskon')
+        }
+        
+        $(document).ready(function() {
+
+            // Load the JSON data
+            $.getJSON('json/diskon.json', function(data) {
+                diskonData = data.diskon; // Store the data for later use
+                populateTable(diskonData); // Populate the table initially
+            });
+
+
+            // Add event listener for filter
+            document.getElementById('statusPromo').addEventListener('change', filterData);
+
+            // Add event listener for detail buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-action')) {
+                    const row = e.target.closest('tr');
+                    if (row) {
+                        const id = row.cells[0].textContent;
+                        console.log('Detail clicked for ID:', id);
+                        // Add detail view logic here
+                    }
                 }
+            });
+
+            // Add event listener for Tambah Diskon button
+            const tambahDiskonButton = document.querySelector('.btn-tambah');
+            if (tambahDiskonButton) {
+                tambahDiskonButton.addEventListener('click', function() {
+                    console.log('Tambah Diskon clicked');
+                    // New discount logic here
+                });
             }
         });
-
-        // Add event listener for Tambah Diskon button
-        const tambahDiskonButton = document.querySelector('.btn-tambah');
-        if (tambahDiskonButton) {
-            tambahDiskonButton.addEventListener('click', function() {
-                console.log('Tambah Diskon clicked');
-                // New discount logic here
-            });
-        }
-    });
 </script>
 
     <style>
@@ -159,7 +183,20 @@
                 <option value="Aktif">Aktif</option>
                 <option value="Non Aktif">Non Aktif</option>
             </select>
-            <button class="btn-action btn-tambah" style="width: 100%;">Tambah Diskon</button>
+            <button onclick="openPopBox()" class="btn-action btn-tambah" style="width: 100%;">Tambah Diskon</button>
+        </div>
+
+        <div data-popbox-id="tambah-diskon" class="popbox">
+            <div class="popbox_container">
+                Tambah diskon
+                <form onsubmit="handleSubmit(event)">
+                    <label for="id">Id diskon</label>
+                    <input type="text" id="id" required>
+                    <label for="id">Nama diskon</label>
+                    <input type="text" id="nama" required>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
         </div>
     </div>
 </body>
