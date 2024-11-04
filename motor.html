@@ -185,7 +185,8 @@
         },
         "tahun": "",
         "transmisi": "",
-        "status": ""
+        "status": "",
+        "tipePemilik":""
     }
 
     function reloadTable() {
@@ -202,6 +203,18 @@
 
                 if (filterObj.status) {
                     data.motors = data.motors.filter(motor => motor.status == filterObj.status)
+                }
+
+                if (filterObj.tipePemilik) {
+                    data.motors = data.motors.filter(function (motor) {
+
+                        if (filterObj.tipePemilik == "Perusahaan") {
+                            return motor.owner == "Perusahaan"
+                        } else if (filterObj.tipePemilik == "Mitra") {
+                            return motor.owner != "Perusahaan"
+                        }
+
+                    })
                 }
 
                 let queryNama = filterObj.pencarian.nama
@@ -225,6 +238,7 @@
                         <td>${motor.transmission}</td>
                         <td>${motor.status}</td>
                         <td>${motor.dailyRate}</td>
+                        <td>${motor.owner}</td>
                         <td><button class="btn-action action-button">Detail</button></td>
                     </tr>
                 `)
@@ -238,6 +252,9 @@
         filterObj.tahun = filterValue[0].value
         filterObj.transmisi = filterValue[1].value
         filterObj.status = filterValue[2].value
+        filterObj.tipePemilik = filterValue[3].value
+
+        console.log(filterObj)
 
         reloadTable()
 
@@ -325,6 +342,13 @@
                     <option value="Inactive">Inactive</option>
                 </select>
 
+                <label for="filter-tahun">Tipe Pemilik</label>
+                <select name="status" id="filter-status" class="filter-options">
+                    <option value="" selected>None</option>
+                    <option value="Perusahaan">Perusahaan</option>
+                    <option value="Mitra">Mitra</option>
+                </select>
+
                 <!-- <button class="cancel-filter">x</button> -->
             </form>
 
@@ -346,6 +370,7 @@
                         <th>Transmisi</th>
                         <th>Status</th>
                         <th>Harga Harian</th>
+                        <th>Pemilik</th>
                         <th>Action</th>
                     </tr>
                 </thead>
