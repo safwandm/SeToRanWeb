@@ -1,0 +1,10 @@
+{
+    "transaction": [
+        {
+            "id": "123456789",
+            "username": "Spider-Man",
+            "startDate": "26-10-2024",
+            "endDate": "28-10-2024"
+        }
+    ]
+}
