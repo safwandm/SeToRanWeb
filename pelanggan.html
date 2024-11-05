@@ -3,7 +3,6 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
-        padding: 20px 32px;
     }
 
     .breadcrumb {
@@ -45,8 +44,6 @@
         width: 100%;
     }
 
-    thead {}
-
     th {
         font-weight: 600;
         font-size: 16px;
@@ -73,7 +70,6 @@
     .row {
         display: flex;
         gap: 20px;
-        /* width: 100%; */
     }
 </style>
 
@@ -88,7 +84,7 @@
                 Transaction Active
             </p>
             <div class="card-content">
-                <table>
+                <table id="transaction-table">
                     <thead>
                         <tr>
                             <th>Transaction ID</th>
@@ -99,42 +95,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>123456789</td>
-                            <td>Peter Parker</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>123456789</td>
-                            <td>Bruce Wayne</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>123456789</td>
-                            <td>Steve Roger</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>123456789</td>
-                            <td>Matt Murdock</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -146,7 +106,7 @@
                 Semua Pelanggan
             </p>
             <div class="card-content">
-                <table>
+                <table id="pelanggan-table">
                     <thead>
                         <tr>
                             <th>Username</th>
@@ -157,50 +117,39 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Spider-Man</td>
-                            <td>PeterParker@email.com</td>
-                            <td>Verified</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Batman</td>
-                            <td>BruceWayne@email.com</td>
-                            <td>Verified</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Captain America</td>
-                            <td>SteveRoger@email.com</td>
-                            <td>Not Verified</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Daredevil</td>
-                            <td>Matt Murdock</td>
-                            <td>Verivied</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="card" style="width: 300px">
+        <div class="card" style="width: 300px; height: fit-content;">
             <p class="card-title">Filter</p>
             <div class="card-content">
-
+                <div class="input-select">
+                    <label for="status">Status</label>
+                    <select name="status" id="statusSelect">
+                        <option value="">All</option>
+                        <option value="verified">Verified</option>
+                        <option value="not-verified">Not Verified</option>
+                    </select>
+                </div>
+            </div>
+            <p class="card-title">Sort</p>
+            <div class="card-content">
+                <div class="input-select">
+                    <label for="sortSelect">Sort By</label>
+                    <select name="sort" id="sortSelect">
+                        <option value="">Select</option>
+                        <option value="lastActive">Last Active</option>
+                        <option value="username">username</option>
+                    </select>
+                </div>
+                <div class="input-select">
+                    <label for="">Order</label>
+                    <select name="Order" id="orderSelect">
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -211,4 +160,119 @@
     if (document.layout == undefined) {
         window.location.href = "layout.html?page=dashboard";
     }
+
+    let filter = {
+        status: '',
+        sortBy: '',
+        order: 'ascending',
+    }
+
+    let pelanggan = [];
+
+    let transaction = [];
+
+    function loadTablePelanggan() {
+        $.getJSON('./json/pelanggan.json', (data) => {
+            pelanggan = [];
+            data.pelanggan.forEach(pel => {
+                pelanggan.push(pel);
+                pelanggan[pelanggan.length - 1].lastActive = parseDate(pel.lastActive);
+            })
+
+            if (filter.status) { pelanggan = pelanggan.filter(pel => pel.status === filter.status) };
+
+            if (filter.sortBy) {
+                if (filter.sortBy === 'lastActive') {
+                    pelanggan.sort((a, b) => {
+                        let dateA = a.lastActive;
+                        let dateB = b.lastActive;
+                        return (filter.order === 'ascending' ? dateA - dateB : dateB - dateA);
+                    })
+                }
+
+                if (filter.sortBy === 'username') {
+                    pelanggan.sort((a, b) => {
+                        let x = (filter.order === 'ascending' ? a : b);
+                        let y = (filter.order === 'ascending' ? b : a);
+                        return x.username.localeCompare(y.username);
+                    })
+                }
+            }
+
+            $('#pelanggan-table > tbody').empty();
+            pelanggan.forEach(pel => {
+                $('#pelanggan-table > tbody').append(`
+                    <tr>
+                        <td>${pel.username}</td>
+                        <td>${pel.email}</td>
+                        <td>${pel.status === 'verified' ? 'Verified' : 'Not Verified'}</td>
+                        <td>${formatDate(pel.lastActive)}</td>
+                        <td>
+                            <button class="btn-action">Detail</button>
+                        </td>
+                    </tr>
+                `)
+            });
+        })
+    }
+
+    function loadTableActiveTransaction() {
+        $.getJSON('./json/transaction.json', (data) => {
+            data.transaction.forEach(trans => {
+                transaction.push(
+                    {
+                        id: trans.id,
+                        username: trans.username,
+                        startDate: parseDate(trans.startDate),
+                        endDate: parseDate(trans.endDate),
+                    }
+                )
+            })
+
+            transaction.forEach(trans => {
+                $('#transaction-table > tbody').append(`
+                    <tr>
+                        <td>${trans.id}</td>
+                        <td>${trans.username}</td>
+                        <td>${formatDate(trans.startDate)}</td>
+                        <td>${formatDate(trans.endDate)}</td>
+                        <td>
+                            <button class="btn-action">Detail</button>
+                        </td>
+                    </tr>
+                `)
+            })
+        })
+    }
+
+    function parseDate(dateString) {
+        let [day, month, year] = dateString.split('-');
+        return new Date(year, month - 1, day);
+    }
+
+    function formatDate(date) {
+        let day = date.getDate().toString().padStart(2, '0');
+        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+        let year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+
+    $('#statusSelect').change(function () {
+        filter.status = $(this).val();
+        console.log($(this).val());
+        loadTablePelanggan();
+    });
+
+    $('#sortSelect').change(function () {
+        filter.sortBy = $(this).val();
+        loadTablePelanggan();
+    })
+
+    $('#orderSelect').change(function () {
+        filter.order = $(this).val();
+        loadTablePelanggan();
+    })
+
+    loadTableActiveTransaction();
+    loadTablePelanggan();
 </script>
