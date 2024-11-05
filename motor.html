@@ -179,14 +179,9 @@
             cursor: pointer;
         }
 
-        .motor-detail-card {
+        .popbox_container {
             width: 387px;
             height: 531px;
-
-            display: none;
-            flex-direction: column;
-
-            position: absolute;
 
             top: 20%;
             left: 43%;
@@ -223,6 +218,24 @@
             overflow: hidden;
         }
 
+        .card-body {
+            margin-top: 42px;
+        }
+
+        .card-body p {
+
+            margin-top: 15px;
+
+            font-size: 16;
+            font-weight: 600;
+        }
+
+        .label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+
         .img-container img {
             width: 100%;
             height: 100%;
@@ -237,9 +250,7 @@
         window.location.href = "layout.html?page=motor";
     }
 
-    // Tets
     var motorImages = []
-    //
 
     var filterObj = {
         "pencarian": {
@@ -306,7 +317,7 @@
                         `)
 
                     // Tets
-                    motorTable.add(motor.motorImg)
+                    motorImages.push(motor.motorImg)
                     //
                 })
             }
@@ -355,25 +366,27 @@
         if ($('.filter-dropdown-box').css('display') == 'none') {
             $('.filter-dropdown-box').toggle();
         }
+
         event.stopPropagation()
     })
 
     // Karena btn-action ditambahkan secara dinamis. Click event listener harus ditambah ken element yang ada
     $('.card tbody').on('click', '.btn-action', function (event) {
-        console.log(90);
 
-        if ($('.motor-detail-card').css('display') == 'none') {
-            $('.motor-detail-card').slideToggle(300, function () {
-                $(this).addClass('flex-display'); // Ensure display is flex after sliding down
-            });
-        }
+        let selectedRow = $(this).closest('tr')
 
-        // Tets
-        let row = $(this).closest('tr')
-        const motorId = row.data();
-        console.log('Motor ID:', motorId);
-        //
-    
+        $('.img-container img').prop('src', `assets/motor/${motorImages[selectedRow.index()]}`)
+
+        $('#motor-detail-id').html('<span class="label">ID:</span> ' + selectedRow.find('td:eq(0)').text())
+        $('#motor-detail-nama').html('<span class="label">Nama:</span> ' + selectedRow.find('td:eq(1)').text())
+        $('#motor-detail-tahun').html('<span class="label">Tahun:</span> ' + selectedRow.find('td:eq(2)').text())
+        $('#motor-detail-transmisi').html('<span class="label">Transmisi:</span> ' + selectedRow.find('td:eq(3)').text())
+        $('#motor-detail-status').html('<span class="label">Status:</span> ' + selectedRow.find('td:eq(4)').text())
+        $('#motor-detail-harga').html('<span class="label">Harga Harian:</span> ' + selectedRow.find('td:eq(5)').text())
+        $('#motor-detail-pemilik').html('<span class="label">Pemilik:</span> ' + selectedRow.find('td:eq(6)').text())
+        
+        popbox.open('motor-detail-popbox')
+
         event.stopPropagation();
     });
 
@@ -383,10 +396,9 @@
             $('.filter-dropdown-box').hide()
         }
 
-        if (!$(event.target).closest('.motor-detail-card').length) {
-            $('.motor-detail-card').slideToggle(300, function () {
-                $(this).removeClass('flex-display'); // Remove flex display after sliding up
-            });
+        if (!$(event.target).closest('.popbox_container').length) {
+            console.log('test')
+            popbox.close('motor-detail-popbox')
         }
     })
 
@@ -398,17 +410,28 @@
 </script>
 
 <body>
-
-    <div class="motor-detail-card">
-        <div class="card-head">
-            <!-- <div class="arrow">&larr;</div> -->
-            <div class="img-container">
-                <img src="./assets/motor/image-1.webp" alt="">
+    <div data-popbox-id="motor-detail-popbox" class="popbox">
+        <div class="popbox_container">
+            <div class="card-head">
+                <!-- <div class="arrow">&larr;</div> -->
+                <div class="img-container">
+                    <img src="" alt="">
+                </div>
+                <!-- <div class="arrow">&rarr;</div> -->
             </div>
-            <!-- <div class="arrow">&rarr;</div> -->
+            <div class="card-body">
+                <p id="motor-detail-id"></p>
+                <p id="motor-detail-nama"></p>
+                <p id="motor-detail-tahun"></p>
+                <p id="motor-detail-transmisi"></p>
+                <p id="motor-detail-status"></p>
+                <p id="motor-detail-harga"></p>
+                <p id="motor-detail-pemilik"></p>
+            </div>
+
         </div>
-        <div class="card-body"></div>
     </div>
+
 
     <div class="content">
 
@@ -425,8 +448,6 @@
             </div>
 
             <form class="filter-dropdown-box" style="display: none;">
-
-                <!-- <input type="number" id="filter-tahun" name="tahun" min="1984" max="2024" value="1984"> -->
 
                 <label for="filter-tahun">Tahun</label>
                 <select name="tahun" id="filter-tahun" class="filter-options">
@@ -455,7 +476,6 @@
                     <option value="Mitra">Mitra</option>
                 </select>
 
-                <!-- <button class="cancel-filter">x</button> -->
             </form>
 
             <form class="search-bar">

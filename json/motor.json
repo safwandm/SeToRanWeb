@@ -7,7 +7,7 @@
             "transmission": "Matic",
             "status": "Active",
             "owner": "Jonkler",
-            "motorImg": "motorImg-1.webp",
+            "motorImg": "image-1.webp",
             "dailyRate": 55000
         },
         {
@@ -17,7 +17,7 @@
             "transmission": "Matic",
             "status": "Inactive",
             "owner": "Valery Sablin",
-            "motorImg": "motorImg-1.webp",
+            "motorImg": "image-1.webp",
             "dailyRate": 60000
         },
         {
@@ -27,7 +27,7 @@
             "transmission": "Matic",
             "status": "Active",
             "owner": "Perusahaan",
-            "motorImg": "motorImg-1.webp",
+            "motorImg": "image-2.webp",
             "dailyRate": 65000
         },
         {
@@ -37,7 +37,7 @@
             "transmission": "Manual",
             "status": "Active",
             "owner": "Surya Budiman",
-            "motorImg": "motorImg-1.webp",
+            "motorImg": "image-1.webp",
             "dailyRate": 70000
         },
         {
@@ -47,7 +47,7 @@
             "transmission": "Automatic",
             "status": "Active",
             "owner": "Perusahaan",
-            "motorImg": "motorImg-1.webp",
+            "motorImg": "image-2.webp",
             "dailyRate": 75000
         }
     ]
