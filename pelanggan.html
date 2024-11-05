@@ -95,42 +95,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr>
-                            <td>123456789</td>
-                            <td>Peter Parker</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>123456789</td>
-                            <td>Bruce Wayne</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>123456789</td>
-                            <td>Steve Roger</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>123456789</td>
-                            <td>Matt Murdock</td>
-                            <td>dd-mm-yy</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -153,50 +117,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr>
-                            <td>Spider-Man</td>
-                            <td>PeterParker@email.com</td>
-                            <td>Verified</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Batman</td>
-                            <td>BruceWayne@email.com</td>
-                            <td>Verified</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Captain America</td>
-                            <td>SteveRoger@email.com</td>
-                            <td>Not Verified</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Daredevil</td>
-                            <td>Matt Murdock</td>
-                            <td>Verivied</td>
-                            <td>dd-mm-yy</td>
-                            <td>
-                                <button class="btn-action">Detail</button>
-                            </td>
-                        </tr> -->
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="card" style="width: 300px">
+        <div class="card" style="width: 300px; height: fit-content;">
             <p class="card-title">Filter</p>
             <div class="card-content">
-                <div class="filter">
+                <div class="input-select">
                     <label for="status">Status</label>
                     <select name="status" id="statusSelect">
                         <option value="">All</option>
@@ -204,11 +132,22 @@
                         <option value="not-verified">Not Verified</option>
                     </select>
                 </div>
-                <div class="sort">
+            </div>
+            <p class="card-title">Sort</p>
+            <div class="card-content">
+                <div class="input-select">
                     <label for="sortSelect">Sort By</label>
                     <select name="sort" id="sortSelect">
+                        <option value="">Select</option>
                         <option value="lastActive">Last Active</option>
                         <option value="username">username</option>
+                    </select>
+                </div>
+                <div class="input-select">
+                    <label for="">Order</label>
+                    <select name="Order" id="orderSelect">
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
                     </select>
                 </div>
             </div>
@@ -224,6 +163,8 @@
 
     let filter = {
         status: '',
+        sortBy: '',
+        order: 'ascending',
     }
 
     let pelanggan = [];
@@ -239,6 +180,24 @@
             })
 
             if (filter.status) { pelanggan = pelanggan.filter(pel => pel.status === filter.status) };
+
+            if (filter.sortBy) {
+                if (filter.sortBy === 'lastActive') {
+                    pelanggan.sort((a, b) => {
+                        let dateA = a.lastActive;
+                        let dateB = b.lastActive;
+                        return (filter.order === 'ascending' ? dateA - dateB : dateB - dateA);
+                    })
+                }
+
+                if (filter.sortBy === 'username') {
+                    pelanggan.sort((a, b) => {
+                        let x = (filter.order === 'ascending' ? a : b);
+                        let y = (filter.order === 'ascending' ? b : a);
+                        return x.username.localeCompare(y.username);
+                    })
+                }
+            }
 
             $('#pelanggan-table > tbody').empty();
             pelanggan.forEach(pel => {
@@ -303,6 +262,16 @@
         console.log($(this).val());
         loadTablePelanggan();
     });
+
+    $('#sortSelect').change(function () {
+        filter.sortBy = $(this).val();
+        loadTablePelanggan();
+    })
+
+    $('#orderSelect').change(function () {
+        filter.order = $(this).val();
+        loadTablePelanggan();
+    })
 
     loadTableActiveTransaction();
     loadTablePelanggan();
