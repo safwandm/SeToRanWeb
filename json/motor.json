@@ -6,6 +6,8 @@
             "year": 2020,
             "transmission": "Matic",
             "status": "Active",
+            "owner": "Jonkler",
+            "motorImg": "image-1.webp",
             "dailyRate": 55000
         },
         {
@@ -14,6 +16,8 @@
             "year": 2021,
             "transmission": "Matic",
             "status": "Inactive",
+            "owner": "Valery Sablin",
+            "motorImg": "image-1.webp",
             "dailyRate": 60000
         },
         {
@@ -22,6 +26,8 @@
             "year": 2022,
             "transmission": "Matic",
             "status": "Active",
+            "owner": "Perusahaan",
+            "motorImg": "image-2.webp",
             "dailyRate": 65000
         },
         {
@@ -30,6 +36,8 @@
             "year": 2020,
             "transmission": "Manual",
             "status": "Active",
+            "owner": "Surya Budiman",
+            "motorImg": "image-1.webp",
             "dailyRate": 70000
         },
         {
@@ -38,6 +46,8 @@
             "year": 2023,
             "transmission": "Automatic",
             "status": "Active",
+            "owner": "Perusahaan",
+            "motorImg": "image-2.webp",
             "dailyRate": 75000
         }
     ]
