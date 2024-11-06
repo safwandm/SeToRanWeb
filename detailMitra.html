@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Mitra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        .breadcrumb {
+            margin-bottom: 20px;
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            color: #00236F;
+        }
+        p {
+            margin: 10px 0;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mitraId = urlParams.get('id');
+
+            if (mitraId) {
+                $.getJSON('json/mitra.json', function (data) {
+                    const mitra = data.mitra.find(item => item.mitraId == mitraId);
+
+                    if (mitra) {
+                        const detailHtml = `
+                            <h3>Mitra Details</h3>
+                            <p><strong>Mitra ID:</strong> ${mitra.mitraId}</p>
+                            <p><strong>Username:</strong> ${mitra.username}</p>
+                            <p><strong>Vehicle:</strong> ${mitra.vehicle}</p>
+                            <p><strong>Status:</strong> ${mitra.status}</p>
+
+                            <button class="btn-action">back</button>
+                        `;
+                        $('.card').html(detailHtml);
+                    } else {
+                        $('.card').html('<p>Mitra not found.</p>');
+                    }
+                });
+            } else {
+                $('.card').html('<p>No Mitra ID provided.</p>');
+            }
+        });
+
+        $(document).on('click', '.btn-action', function () {
+            window.location.href = `mitra.html`;
+        });
+    </script>
+</head>
+
+<body>
+    <div class="breadcrumb">
+        <p>Home / <b>Mitra</b></p>
+    </div>
+    <div class="card">
+
+        <button>Back</button>
+    </div>
+</body>
+
+</html>
