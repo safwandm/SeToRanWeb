@@ -1,118 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-<script>
-    if (document.layout == undefined) {
-        window.location.href = "layout.html?page=mitra";
-    }
-</script>
-<style>
-    /* body{
-        background-color: #DFDDDD;
-    } */
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <script>
+        if (document.layout == undefined) {
+            window.location.href = "layout.html?page=test";
+        }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
 
-    /* .card{
-        background-color: white;
-        padding: 16px;
-        border-radius: 4px;
+            $.getJSON('json/mitra.json', function (data) {
+                const mitraList = data.mitra;
+                let mitraRows = '';
 
-       box-shadow: var(--basic-shadow);
-    } */
+                $.each(mitraList, function (index, mitra) {
+                    mitraRows += `
+                        <tr data-id="${mitra.mitraId}">
+                            <td>${mitra.mitraId}</td>
+                            <td>${mitra.username}</td>
+                            <td>${mitra.vehicle}</td>
+                            <td>${mitra.status}</td>
+                            <td style="text-align: center;">
+                                <button class="btn-action">Details</button>
+                            </td>
+                        </tr>
+                    `;
+                });
 
-    /* h2, h3{
-        font-family: "Poppins", sans-serif;
-        font-weight: 500;
-        font-style: normal;
-        font-size: 24px;
-        color: #00236F;
-    } */
+                $('table tbody').html(mitraRows);
 
-    .btn-action{
-        /* font-family: "Poppins", sans-serif;
-        font-weight: 500;
-        font-style: normal;
-        background-color: #007CFF;
-        color: white; */
-        height: 34px;
-        width: 68px; 
-        /*  border: none;
-        border-radius: 4px;
-        font-size: 12px; */
-    }
+                $(document).on('click', '.btn-action', function () {
+                    const mitraId = $(this).closest('tr').data('id');
+                    const mitra = mitraList.find(m => m.mitraId == mitraId);
 
-    .cardSide{
-        /* background-color: white;
-        color: #00236F;
-        font-family: "Poppins", sans-serif;
-        font-weight: 500;
-        font-style: normal;
-        font-size: 20px; */
-        padding: 16px;
-        margin-left: 16px;
-        /* border-radius: 4px; */
-    }
+                    if (mitra) {
+                        $('.mitra-section').hide();
+                        $('.filter-section').hide();
 
-    .btn-filter{
-        /* background-color: #007CFF;
-        color: white;
-        border: none;
-        font-family: "Poppins", sans-serif;
-        font-weight: 500;
-        font-style: normal;
-        font-size: 16px;  */
-        height: 40px;
-        width: 218px;
-        /* border-radius: 4px; */
-    }
+                        $('.details-section').show();
+
+                        const detailHtml = `
+                            <h3>Mitra Details</h3>
+                            <p><strong>Mitra ID:</strong> ${mitra.mitraId}</p>
+                            <p><strong>Username:</strong> ${mitra.username}</p>
+                            <p><strong>Vehicle:</strong> ${mitra.vehicle}</p>
+                            <p><strong>Status:</strong> ${mitra.status}</p>
+                            <button class="btn-action btn-back">Back</button>
+                        `;
+                        $('.details-section').html(detailHtml);
+                    }
+                });
+
+                $(document).on('click', '.btn-back', function () {
+                    $('.mitra-section').show();
+                    $('.filter-section').show();
+
+                    $('.details-section').hide();
+                });
+            });
+        });
+    </script>
     
-</style>
-    <title>Document</title>
+    <style>
+        .btn-action {
+            height: 34px;
+            width: 68px;
+        }
+
+        .cardSide {
+            padding: 16px;
+            margin-left: 16px;
+            width: 250px;
+        }
+
+        .btn-filter {
+            height: 34px;
+            width: 218px;
+        }
+    </style>
+    <title>Mitra Page</title>
 </head>
+
 <body>
-    <!-- pindah ke sharedStyle <div style="padding-left: 32px; padding-top: 20px; padding-right: 16px;"> -->
     <div>
         <h2>Mitra</h2>
         <div class="breadcrumb">
             <p>Home / <b>Mitra</b></p>
         </div>
         <div style="display: flex;">
-            <div class="card" style="width: 100%;">
+            <div class="card mitra-section" style="width: 100%;">
                 <h3>Mitra</h3>
                 <table style="width: 100%;">
-                    <tr>
-                        <th>Mitra ID</th>
-                        <th>Username</th>
-                        <th>Vehicle</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    <tr>
-                        <td>122222022</td>
-                        <td>Galang</td>
-                        <td>1</td>
-                        <td>Active</td>
-                        <td style="text-align: center;" ><button class="btn-action">Details</button></td>
-                    </tr>
-                    <tr>
-                        <td>122222023</td>
-                        <td>Galangg</td>
-                        <td>2</td>
-                        <td>Active</td>
-                        <td style="text-align: center;" ><button class="btn-action">Details</button></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Mitra ID</th>
+                            <th>Username</th>
+                            <th>Vehicle</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
                 </table>
             </div>
-    
-            <div class="card cardSide">
+
+            <div class="card filter-section">
                 <h3>Filter</h3>
-                <button class="btn-action btn-filter">Placeholder</button>
+                <label for="statusMitra" style="display: flex;">Status Promo</label>
+                <select id="statusMitra" style="width: 100%; padding: 5px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc">
+                    <option value="">All</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
             </div>
         </div>
     </div>
+
+    <div class="details-section card">
+    </div>
 </body>
+
 </html>
