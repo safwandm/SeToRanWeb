@@ -16,50 +16,60 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-         $(document).ready(function () {
-            // Check if data is already in sessionStorage
-            const mitraData = sessionStorage.getItem('mitraData');
+        $(document).ready(function () {
 
-            if (mitraData) {
-                populateTable(JSON.parse(mitraData));
-            } else {
-                // Use a timestamp to avoid caching
-                $.getJSON('json/mitra.json?v=', function (data) {
-                    sessionStorage.setItem('mitraData', JSON.stringify(data.mitra));
-                    populateTable(data.mitra);
+            $.getJSON('json/mitra.json', function (data) {
+                const mitraList = data.mitra;
+                let mitraRows = '';
+
+                $.each(mitraList, function (index, mitra) {
+                    mitraRows += `
+                        <tr data-id="${mitra.mitraId}">
+                            <td>${mitra.mitraId}</td>
+                            <td>${mitra.username}</td>
+                            <td>${mitra.vehicle}</td>
+                            <td>${mitra.status}</td>
+                            <td style="text-align: center;">
+                                <button class="btn-action">Details</button>
+                            </td>
+                        </tr>
+                    `;
                 });
-            }
 
-            function populateTable(data) {
-                const tableBody = $('table tbody');
-                tableBody.empty();
-                $.each(data, function (index, item) {
-                    const row = `<tr>
-                        <td>${item.mitraId}</td>
-                        <td>${item.username}</td>
-                        <td>${item.vehicle}</td>
-                        <td>${item.status}</td>
-                        <td style="text-align: center;"><button class="btn-action">Details</button></td>
-                    </tr>`;
-                    tableBody.append(row);
+                $('table tbody').html(mitraRows);
+
+                $(document).on('click', '.btn-action', function () {
+                    const mitraId = $(this).closest('tr').data('id');
+                    const mitra = mitraList.find(m => m.mitraId == mitraId);
+
+                    if (mitra) {
+                        $('.mitra-section').hide();
+                        $('.filter-section').hide();
+
+                        $('.details-section').show();
+
+                        const detailHtml = `
+                            <h3>Mitra Details</h3>
+                            <p><strong>Mitra ID:</strong> ${mitra.mitraId}</p>
+                            <p><strong>Username:</strong> ${mitra.username}</p>
+                            <p><strong>Vehicle:</strong> ${mitra.vehicle}</p>
+                            <p><strong>Status:</strong> ${mitra.status}</p>
+                            <button class="btn-action btn-back">Back</button>
+                        `;
+                        $('.details-section').html(detailHtml);
+                    }
                 });
-            }
 
-            $('#statusMitra').change(function () {
-                const selectedStatus = $(this).val();
-                const filteredData = selectedStatus ?
-                    JSON.parse(sessionStorage.getItem('mitraData')).filter(item => item.status.toLowerCase() === selectedStatus.toLowerCase()) : JSON.parse(sessionStorage.getItem('mitraData'));
-                populateTable(filteredData);
+                $(document).on('click', '.btn-back', function () {
+                    $('.mitra-section').show();
+                    $('.filter-section').show();
+
+                    $('.details-section').hide();
+                });
             });
-
-            $(document).on('click', '.btn-action', function () {
-                const row = $(this).closest('tr');
-                const id = row.find('td:first').text();
-                window.location.href = `detailMitra.html?id=${id}`;
-            });
-
         });
     </script>
+    
     <style>
         .btn-action {
             height: 34px;
@@ -87,7 +97,7 @@
             <p>Home / <b>Mitra</b></p>
         </div>
         <div style="display: flex;">
-            <div class="card" style="width: 100%;">
+            <div class="card mitra-section" style="width: 100%;">
                 <h3>Mitra</h3>
                 <table style="width: 100%;">
                     <thead>
@@ -100,22 +110,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Rows will be added here by jQuery -->
                     </tbody>
                 </table>
             </div>
 
-            <div class="card cardSide">
+            <div class="card filter-section">
                 <h3>Filter</h3>
                 <label for="statusMitra" style="display: flex;">Status Promo</label>
-                <select id="statusMitra"
-                    style="width: 100%; padding: 5px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc">
+                <select id="statusMitra" style="width: 100%; padding: 5px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc">
                     <option value="">All</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                 </select>
             </div>
         </div>
+    </div>
+
+    <div class="details-section card">
     </div>
 </body>
 
