@@ -143,9 +143,9 @@
         })
 
         function toggleDialog(name) {
-            // let boxes = ['.notification', '.messages']
-            // boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
-            // $(name).toggle()
+            let boxes = ['.notification', '.messages']
+            boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
+            $(name).toggle()
         }
 
         var popbox = new Popbox({
