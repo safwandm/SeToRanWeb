@@ -1,78 +1,98 @@
-<style>
-    #pelanggan {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
+<!DOCTYPE html>
+<html lang="en">
 
-    .breadcrumb {
-        display: flex;
-        flex-direction: column;
-    }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pelanggan Page</title>
+    <style>
+        #pelanggan {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-    .breadcrumb-title {
-        font-size: 24px;
-        color: #00236F;
-        font-weight: 500;
-    }
+        .breadcrumb {
+            display: flex;
+            flex-direction: column;
+        }
 
-    .breadcrumb-path {
-        color: #6C6C6C;
-    }
+        .breadcrumb-title {
+            font-size: 24px;
+            color: #00236F;
+            font-weight: 500;
+        }
 
-    .breadcrumb-current-path {
-        color: #4A4A4A;
-    }
+        .breadcrumb-path {
+            color: #6C6C6C;
+        }
 
-    .card {
-        background-color: white;
-        border-radius: 4px;
-        box-shadow: 0px 0px 20px 1px rgba(0, 48, 120, 0.1);
-        padding: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        width: 100%;
-    }
+        .breadcrumb-current-path {
+            color: #4A4A4A;
+        }
 
-    .card-title {
-        font-size: 20px;
-        font-weight: 600;
-    }
+        .card {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0px 0px 20px 1px rgba(0, 48, 120, 0.1);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+        }
 
-    table {
-        width: 100%;
-    }
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
 
-    th {
-        font-weight: 600;
-        font-size: 16px;
-        color: #2F2F30;
-        text-align: left;
-        border-top: 1px solid #DFDDDD;
-        border-bottom: 1px solid #DFDDDD;
-        padding: 8px;
-    }
+        table {
+            width: 100%;
+        }
 
-    td {
-        padding: 12px 8px;
-    }
+        th {
+            font-weight: 600;
+            font-size: 16px;
+            color: #2F2F30;
+            text-align: left;
+            border-top: 1px solid #DFDDDD;
+            border-bottom: 1px solid #DFDDDD;
+            padding: 8px;
+        }
 
-    .btn-action {
-        border: none;
-        border-radius: 4px;
-        color: white;
-        background-color: #007CFF;
-        font-size: 12px;
-        padding: 8px 16px;
-    }
+        td {
+            padding: 12px 8px;
+        }
 
-    .row {
-        display: flex;
-        gap: 20px;
-    }
-</style>
+        .btn-action {
+            border: none;
+            border-radius: 4px;
+            color: white;
+            background-color: #007CFF;
+            font-size: 12px;
+            padding: 8px 16px;
+        }
 
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .input-select {
+            display: flex;
+            flex-direction: column;
+        }
+
+        select {
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+</body>
 <div id="pelanggan">
     <div class="breadcrumb">
         <p class="breadcrumb-title">Pelanggan</p>
@@ -161,15 +181,15 @@
         window.location.href = "layout.html?page=dashboard";
     }
 
-    let filter = {
+    var filter = {
         status: '',
         sortBy: '',
         order: 'ascending',
     }
 
-    let pelanggan = [];
+    var pelanggan = [];
 
-    let transaction = [];
+    var transaction = [];
 
     function loadTablePelanggan() {
         $.getJSON('./json/pelanggan.json', (data) => {
@@ -273,6 +293,17 @@
         loadTablePelanggan();
     })
 
+    $('#pelanggan-table').click(function (ev) {
+        const clickedElm = ev.target;
+
+        if (clickedElm.getAttribute('class') === 'btn-action') {
+            console.log(clickedElm.parentElement.parentElement.firstElementChild.innerHTML);
+            $("#content").load('/detailPagePelanggan.html');
+        }
+    })
+
     loadTableActiveTransaction();
     loadTablePelanggan();
 </script>
+
+</html>
