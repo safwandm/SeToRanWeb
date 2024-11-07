@@ -11,7 +11,7 @@
         rel="stylesheet">
     <script>
         if (document.layout == undefined) {
-            window.location.href = "layout.html?page=test";
+            window.location.href = "layout.html?page=mitra";
         }
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -34,6 +34,28 @@
                             </td>
                         </tr>
                     `;
+                });
+
+                function populateTable(data) {
+                    const tableBody = $('table tbody');
+                    tableBody.empty();
+                    $.each(data, function (index, item) {
+                        const row = `<tr data-id="${item.mitraId}">
+                            <td>${item.mitraId}</td>
+                            <td>${item.username}</td>
+                            <td>${item.vehicle}</td>
+                            <td>${item.status}</td>
+                            <td style="text-align: center;"><button class="btn-action">Details</button></td>
+                        </tr>`;
+                        tableBody.append(row);
+                    });
+                }
+
+                $('#statusMitra').change(function () {
+                    const selectedStatus = $(this).val();
+                    const filteredData = selectedStatus ?
+                        data.mitra.filter(item => item.status.toLowerCase() === selectedStatus.toLowerCase()) : data.mitra;
+                    populateTable(filteredData);
                 });
 
                 $('table tbody').html(mitraRows);
@@ -76,7 +98,7 @@
             width: 68px;
         }
 
-        .cardSide {
+        .cardSide, .filter-section {
             padding: 16px;
             margin-left: 16px;
             width: 250px;
