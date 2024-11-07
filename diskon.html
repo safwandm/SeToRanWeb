@@ -54,6 +54,9 @@
         function openPopBox() {
             $('input#id').val('')
             $('input#nama').val('')
+            $('input#status').val('')
+            $('input#tgl-mulai').val('')
+            $('input#tgl-akhir').val('')
 
             popbox.open('tambah-diskon')
         }
@@ -64,7 +67,10 @@
 
             diskonData.push({
                 id: $('input#id').val(),
-                namaPromo: $('input#nama').val()
+                namaPromo: $('input#nama').val(),
+                statusPromo: $('input#status').val(),
+                tglMulai: $('input#tgl-mulai').val(),
+                tglAkhir: $('input#tgl-akhir').val()
             })
 
             populateTable(diskonData)
@@ -146,6 +152,31 @@
         th {
             background-color: #f8f9fa;
         }
+
+        div[data-popbox-id="tambah-diskon"] div {
+            width: fit-content;
+            height: fit-content;
+            padding: 30px;
+        }
+
+        .diskon-form {
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+
+            margin-top: 20px;
+        }
+
+        .diskon-input {
+            height: 40px;
+            width: 360px;
+    
+            border: 1px solid #DFDDDD;
+            border-radius: 4px;
+
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
     </style>
     <title>Diskon</title>
 </head>
@@ -192,13 +223,21 @@
 
         <div data-popbox-id="tambah-diskon" class="popbox">
             <div class="popbox_container">
-                Tambah diskon
-                <form onsubmit="handleSubmit(event)">
-                    <label for="id">Id diskon</label>
-                    <input type="text" id="id" required>
-                    <label for="id">Nama diskon</label>
-                    <input type="text" id="nama" required>
-                    <input type="submit" value="Submit">
+                <h3>Tambah diskon</h3>
+                <form class="diskon-form" onsubmit="handleSubmit(event)">
+                    <label for="id">ID diskon</label>
+                    <input class="diskon-input" type="text" value="" id="id" required>
+                    <label for="id">Nama promo</label>
+                    <input class="diskon-input" type="text" value="" id="nama">
+                    <label for="id">Status promo</label>
+                    <input class="diskon-input" type="text" value="" id="status">
+                    <label for="id">Tanggal mulai</label>
+                    <input class="diskon-input" type="text" value="" id="tgl-mulai">
+                    <label for="id">Tanggal akhir</label>
+                    <input class="diskon-input" type="text" value="" id="tgl-akhir">
+                    <div class="flex-center" style="width: 100%;">
+                        <input class="btn-action" type="submit" value="Submit">
+                    </div>
                 </form>
             </div>
         </div>
