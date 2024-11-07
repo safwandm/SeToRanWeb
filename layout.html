@@ -137,9 +137,11 @@
         $(document).ready(() => {
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get("page");
-
+            
             // if (availablePages.includes(page))
-            changePage(`/${page}.html`)
+            urlParams.delete("page");
+            const otherParams = urlParams.toString();
+            changePage(`/${page}.html${otherParams ? '?' + otherParams : ''}`);
         })
 
         function toggleDialog(name) {
