@@ -1,0 +1,28 @@
+{
+    "pelanggan": [
+        {
+            "username": "Spider-Man",
+            "email": "peterparker@email.com",
+            "status": "verified",
+            "lastActive": "26-10-2024"
+        },
+        {
+            "username": "Batman",
+            "email": "brucewayne@email.com",
+            "status": "verified",
+            "lastActive": "19-10-2024"
+        },
+        {
+            "username": "Captain America",
+            "email": "steveroger@email.com",
+            "status": "not-verified",
+            "lastActive": "10-10-2024"
+        },
+        {
+            "username": "Daredevil",
+            "email": "mattmurdock@email.com",
+            "status": "verified",
+            "lastActive": "22-10-2024"
+        }
+    ]
+}

@@ -1,161 +1,129 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layout</title>
-
+<svelte:head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="sharedStyle.css">
+</svelte:head>
 
-    <script src="popbox/popbox.js"></script>
-    <link rel="stylesheet" href="popbox/popbox.css">
-</head>
+<script lang="ts">
+	import { page } from '$app/stores';
+	import '../app.css';
+    import { goto } from '$app/navigation'
 
-<style>
-    header {
-        color: white;
-        background-color: #3C6DD7;
+    // kalau di layout harus begini gak tau kenapa
+    const jq = globalThis.$;
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        height: 60px;
-        width: 100vw;
-        padding: 8px 24px;
-        grid-column: 1 / 3;
-        box-shadow: var(--basic-shadow);
-    }
-
-    .header-right {
-        width: 80px;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .logo {
-        display: flex;
-        gap: 80px;
-    }
-
-    .logo p {
-        font-size: 24px;
-        font-weight: 600;
-        line-height: 1;
-    }
-
-    aside {
-        background-color: white;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        grid-column: 1 / 2;
-        box-shadow: var(--basic-shadow);
-        height: 100%;
-    }
-
-    nav {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .nav-button {
-        /* remove default style */
-        background: none;
-        color: inherit;
-        border: none;
-        padding: 0;
-        font: inherit;
-        cursor: pointer;
-        outline: inherit;
-
-        display: flex;
-        align-items: center;
-        justify-content: start;
-
-        height: 44px;
-    }
-
-    .nav-button:hover {
-        background-color: #f5f8ff;
-        color: #2718ce;
-    }
-
-    .nav-icon {
-        margin-right: 8px;
-        margin-left: 8px;
-    }
-
-    .floating-box {
-        display: none;
-        position: fixed;
-        right: inherit;
-        transform: translateX(-100%) translateX(18px);
-
-        width: 400px;
-        height: 400px;
-
-        background-color: white;
-        box-shadow: var(--basic-shadow);
-
-        padding: 20px;
-    }
-</style>
-
-<body>
-    <script>
-        document.layout = true;
-
-        function changePage(target, push = true) {
-            $("#content").load(target);
-
-            // sementara
-            let reg = /\/(.*?)\.html/
-            let title = target.match(reg)[1]
-            $('title').text(title)
-
-            if (push)
-                history.pushState(null, "", target);
-        }
-
-        // gak usah kayaknya kalau user route ke page yang gak ada biarion muncul error aja
-        // let availablePages = ['login', 'dashboard', 'mitra', 'diskon', 'motor']
-
-        // handle forward/backward browser
-        window.addEventListener('popstate', (ev) => {
-            const path = window.location.pathname;
-
-            // if (availablePages.includes(pageName))
-            changePage(path, false)
-        });
-
-        // handle redirect kalau user buka page lain secara langsung
-        $(document).ready(() => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const page = urlParams.get("page");
-            
-            // if (availablePages.includes(page))
-            urlParams.delete("page");
-            const otherParams = urlParams.toString();
-            changePage(`/${page}.html${otherParams ? '?' + otherParams : ''}`);
-        })
-
+    let { children } = $props();
+    
+    // biar gak ada notif error vscode
+    let dialogBoxes = ['.notification', '.messages']
         function toggleDialog(name) {
-            // let boxes = ['.notification', '.messages']
-            // boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
-            // $(name).toggle()
+            dialogBoxes.forEach((box) => box != name?jq(box).hide():null) // kalau box == name do nothing
+            jq(name).toggle()
+        }
+</script>
+
+
+{#if $page.url.href.includes('/login')} 
+    <!-- render page tanpa layout -->
+    {@render children()}
+{:else}
+    <!-- render page dengan layout -->
+    <link rel="stylesheet" href="src/lib/popbox/popbox.css">
+    <link rel="stylesheet" href="src/routes/sharedStyle.css">
+
+    <style>
+        header {
+            color: white;
+            background-color: #3C6DD7;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            height: 60px;
+            width: 100vw;
+            padding: 8px 24px;
+            grid-column: 1 / 3;
+            box-shadow: var(--basic-shadow);
         }
 
-        var popbox = new Popbox({
-            blur:true,
-            overlay:true,
-        });
+        .header-right {
+            width: 80px;
 
-    </script>
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            gap: 80px;
+        }
+
+        .logo p {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        aside {
+            background-color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            grid-column: 1 / 2;
+            box-shadow: var(--basic-shadow);
+            height: 100%;
+        }
+
+        nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-button {
+            /* remove default style */
+            background: none;
+            color: inherit;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            outline: inherit;
+
+            display: flex;
+            align-items: center;
+            justify-content: start;
+
+            height: 44px;
+        }
+
+        .nav-button:hover {
+            background-color: #f5f8ff;
+            color: #2718ce;
+        }
+
+        .nav-icon {
+            margin-right: 8px;
+            margin-left: 8px;
+        }
+
+        .floating-box {
+            display: none;
+            position: fixed;
+            right: inherit;
+            transform: translateX(-100%) translateX(18px);
+
+            width: 400px;
+            height: 400px;
+
+            background-color: white;
+            box-shadow: var(--basic-shadow);
+
+            padding: 20px;
+
+            z-index: 1;
+        }
+    </style>
+
     <header>
         <div class="logo flex-center">
             <p>Setoran</p>
@@ -164,7 +132,7 @@
             </svg>
         </div>
         <div class="header-right flex-center">
-            <div onclick="toggleDialog('.messages')">
+            <button class="button-plain"  onclick={() => {toggleDialog('.messages')}}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
                     <path fill="currentColor"
                         d="M4 4h16v12H5.17L4 17.17zm0-2c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm2 10h8v2H6zm0-3h12v2H6zm0-3h12v2H6z" />
@@ -172,8 +140,8 @@
                 <div class="messages floating-box">
                     <h3>Messages</h3>
                 </div>
-            </div>
-            <div onclick="toggleDialog('.notification');" >
+            </button>
+            <button class="button-plain" onclick={() => toggleDialog('.notification')} >
                 <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
                     <path fill="currentColor"
                         d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2m6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5z" />
@@ -181,17 +149,18 @@
                 <div class="notification floating-box">
                     <h3>Notifications</h3>
                 </div>
-            </div>
+            </button>
         </div>
     </header>
+
     <aside>
         <nav>
-            <button class="nav-button" onclick="window.location.href='/login.html';">
+            <button class="nav-button" onclick={() => goto('/login')}>
                 <div class="nav-icon flex-center">
-                    <img src="assets/icons/ic_outline-dashboard.png" />
+                    <img src="src/lib/assets/icons/ic_outline-dashboard.png" />
                 </div> Login
             </button>
-            <button class="nav-button" onclick="changePage('/dashboard.html')">
+            <button class="nav-button" onclick={() => goto('/dashboard')}>
                 <!-- kayaknya biar pas hover bisa berubah warna iconnya harus di input langsung disini untuk svg -->
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -201,7 +170,7 @@
                 </svg>
                 Dashboard
             </button>
-            <button class="nav-button" onclick="changePage('/pelanggan.html')">
+            <button class="nav-button" onclick={() => goto('/pelanggan')}>
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -210,7 +179,7 @@
                 </svg>
                 Pelanggan
             </button>
-            <button class="nav-button" onclick="changePage('/motor.html')">
+            <button class="nav-button" onclick={() => goto('/motor')}>
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -219,7 +188,7 @@
                 </svg>
                 Motor
             </button>
-            <button class="nav-button" onclick="changePage('/diskon.html')">
+            <button class="nav-button" onclick={() => goto('/diskon')}>
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -234,7 +203,7 @@
                 </svg>
                 Diskon
             </button>
-            <button class="nav-button" onclick="changePage('/mitra.html')">
+            <button class="nav-button" onclick={() => goto('/mitra')}>
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -256,9 +225,7 @@
     </aside>
 
     <div id="content">
-
+        {@render children()}
     </div>
 
-</body>
-
-</html>
+{/if}
