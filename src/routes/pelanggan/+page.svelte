@@ -93,6 +93,8 @@
                             <th>End Date</th>
                             <th>Action</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         {#each transaction as trans}
                             <tr>
                                 <td>{trans.id}</td>
@@ -104,8 +106,6 @@
                                 </td>
                             </tr>
                         {/each}
-                    </thead>
-                    <tbody>
                     </tbody>
                 </table>
             </div>
@@ -126,6 +126,8 @@
                             <th>Last Active</th>
                             <th>Action</th>
                         </tr>
+                    </thead>
+                    <tbody>
                         {#each pelanggan as pel}
                             <tr>
                                 <td>{pel.username}</td>
@@ -137,8 +139,6 @@
                                 </td>
                             </tr>
                         {/each}
-                    </thead>
-                    <tbody>
                     </tbody>
                 </table>
             </div>

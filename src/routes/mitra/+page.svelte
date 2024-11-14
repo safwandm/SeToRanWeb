@@ -89,6 +89,8 @@
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
+                </thead>
+                <tbody>
                     {#each mitraList as mitra}
                         <tr data-id="${mitra.mitraId}">
                             <td>{mitra.mitraId}</td>
@@ -100,8 +102,6 @@
                             </td>
                         </tr>
                     {/each}
-                </thead>
-                <tbody>
                 </tbody>
             </table>
         </div>

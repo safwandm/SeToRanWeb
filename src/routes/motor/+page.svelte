@@ -461,6 +461,8 @@
                     <th>Pemilik</th>
                     <th>Action</th>
                 </tr>
+            </thead>
+            <tbody>
                 {#each motors as motor}
                     <tr>
                         <td>{motor.id}</td>
@@ -473,8 +475,6 @@
                         <td><button class="btn-action action-button" onclick={() => selectMotor(motor.id)}>Detail</button></td>
                     </tr>
                 {/each}
-            </thead>
-            <tbody>
             </tbody>
         </table>
     </div>

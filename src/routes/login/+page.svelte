@@ -119,6 +119,8 @@
     function handleSubmit(e) {
         e.preventDefault()
 
+        window.localStorage.setItem('username', e.target.username.value)
+
         goto('/dashboard')
     }
 </script>
@@ -128,7 +130,7 @@
 
     <div class="login-container row">
         <h1>Login</h1>
-        <form onsubmit={handleSubmit} class="login-form  row">
+        <form onsubmit={handleSubmit} class="login-form row">
             <label>username</label>
             <input name="username" type="text" required>
             <label>password</label>

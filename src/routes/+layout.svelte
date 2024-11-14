@@ -5,7 +5,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import '../app.css';
-    import { goto } from '$app/navigation'
+    import { beforeNavigate, goto, onNavigate } from '$app/navigation'
+	import { onMount } from 'svelte';
+    import { currentUser } from '$lib/store';
 
     // kalau di layout harus begini gak tau kenapa
     const jq = globalThis.$;
@@ -14,10 +16,28 @@
     
     // biar gak ada notif error vscode
     let dialogBoxes = ['.notification', '.messages']
-        function toggleDialog(name) {
-            dialogBoxes.forEach((box) => box != name?jq(box).hide():null) // kalau box == name do nothing
-            jq(name).toggle()
-        }
+    function toggleDialog(name) {
+        dialogBoxes.forEach((box) => box != name?jq(box).hide():null) // kalau box == name do nothing
+        jq(name).toggle()
+    }
+
+    function verifyUser() {
+        currentUser.update((data) => {
+            data.username = window.localStorage.getItem('username')??''
+            return data
+        })
+
+        if ($currentUser.username == '' && !$page.url.href.includes('/login'))
+            window.location.href = '/login'
+    }
+
+    onMount(() => {
+        verifyUser()
+    })
+
+    onNavigate(() => {
+        verifyUser()
+    })
 </script>
 
 
@@ -130,6 +150,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z" />
             </svg>
+            current user: {$currentUser.username} <!-- tes currentUser -->
         </div>
         <div class="header-right flex-center">
             <button class="button-plain"  onclick={() => {toggleDialog('.messages')}}>

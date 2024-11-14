@@ -184,6 +184,9 @@
                     <th>Tgl Akhir</th>
                     <th>Aksi</th>
                 </tr>
+            </thead>
+            <tbody id="diskonTableBody">
+                <!-- Table content will be populated by JavaScript -->
                 {#each diskonDataShow as item}
                     <tr>
                         <td>{item.id}</td>
@@ -196,9 +199,6 @@
                         </td>
                     </tr>
                 {/each}
-            </thead>
-            <tbody id="diskonTableBody">
-                <!-- Table content will be populated by JavaScript -->
             </tbody>
         </table>
     </div>
