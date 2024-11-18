@@ -2,7 +2,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </svelte:head>
 
-<script lang="ts">
+<script>
     import { page } from '$app/stores';
     import '../app.css';
     import { afterNavigate, goto } from '$app/navigation'
@@ -46,8 +46,8 @@
     {@render children()}
 {:else}
     <!-- render page dengan layout -->
-    <link rel="stylesheet" href="src/lib/popbox/popbox.css">
-    <link rel="stylesheet" href="src/routes/sharedStyle.css">
+    <link rel="stylesheet" href="/src/lib/popbox/popbox.css">
+    <link rel="stylesheet" href="/src/routes/sharedStyle.css">
 
     <style>
         header {
@@ -173,7 +173,7 @@
 
             <a class="nav-button" href="/login">
                 <div class="nav-icon flex-center">
-                    <img src="src/lib/assets/icons/ic_outline-dashboard.png" />
+                    <img src="/src/lib/assets/icons/ic_outline-dashboard.png" />
                 </div> Login
             </a>
             <a class="nav-button" href="/dashboard">
