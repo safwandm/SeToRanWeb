@@ -3,11 +3,12 @@
 </svelte:head>
 
 <script lang="ts">
-	import { page } from '$app/stores';
-	import '../app.css';
-    import { beforeNavigate, goto, onNavigate } from '$app/navigation'
-	import { onMount } from 'svelte';
+    import { page } from '$app/stores';
+    import '../app.css';
+    import { afterNavigate, goto } from '$app/navigation'
+    import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
+    import { redirect } from '@sveltejs/kit';
 
     // kalau di layout harus begini gak tau kenapa
     const jq = globalThis.$;
@@ -28,16 +29,15 @@
         })
 
         if ($currentUser.username == '' && !$page.url.href.includes('/login'))
-            window.location.href = '/login'
+            goto('/login')
+        else if ($currentUser.username != '' && $page.url.href.includes('/login'))
+            goto('/dashboard')
     }
 
-    onMount(() => {
+    afterNavigate(() => {
         verifyUser()
     })
 
-    onNavigate(() => {
-        verifyUser()
-    })
 </script>
 
 
