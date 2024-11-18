@@ -100,20 +100,14 @@
         }
 
         .nav-button {
-            /* remove default style */
-            background: none;
-            color: inherit;
-            border: none;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
-            outline: inherit;
-
             display: flex;
             align-items: center;
             justify-content: start;
 
             height: 44px;
+
+            text-decoration: none;
+            color: black;
         }
 
         .nav-button:hover {
@@ -176,12 +170,13 @@
 
     <aside>
         <nav>
-            <button class="nav-button" onclick={() => goto('/login')}>
+
+            <a class="nav-button" href="/login">
                 <div class="nav-icon flex-center">
                     <img src="src/lib/assets/icons/ic_outline-dashboard.png" />
                 </div> Login
-            </button>
-            <button class="nav-button" onclick={() => goto('/dashboard')}>
+            </a>
+            <a class="nav-button" href="/dashboard">
                 <!-- kayaknya biar pas hover bisa berubah warna iconnya harus di input langsung disini untuk svg -->
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -190,8 +185,8 @@
                         fill="currentColor" />
                 </svg>
                 Dashboard
-            </button>
-            <button class="nav-button" onclick={() => goto('/pelanggan')}>
+            </a>
+            <a class="nav-button" href="/pelanggan">
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -199,8 +194,8 @@
                         fill="currentColor" />
                 </svg>
                 Pelanggan
-            </button>
-            <button class="nav-button" onclick={() => goto('/motor')}>
+            </a>
+            <a class="nav-button" href="/motor">
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -208,8 +203,8 @@
                         fill="currentColor" />
                 </svg>
                 Motor
-            </button>
-            <button class="nav-button" onclick={() => goto('/diskon')}>
+            </a>
+            <a class="nav-button" href="/diskon">
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -223,8 +218,8 @@
                         fill="currentColor" />
                 </svg>
                 Diskon
-            </button>
-            <button class="nav-button" onclick={() => goto('/mitra')}>
+            </a>
+            <a class="nav-button" href="/mitra">
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -232,8 +227,8 @@
                         fill="currentColor" />
                 </svg>
                 Mitra
-            </button>
-            <button class="nav-button">
+            </a>
+            <a class="nav-button" href="/voucher">
                 <svg class="nav-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <path
@@ -241,7 +236,7 @@
                         fill="currentColor" />
                 </svg>
                 Voucher
-            </button>
+            </a>
         </nav>
     </aside>
 
