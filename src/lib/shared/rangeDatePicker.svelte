@@ -53,7 +53,7 @@
        bind:value
        bind:startValue
        initialFocus
-       numberOfMonths={2}
+       numberOfMonths={1}
        placeholder={value?.start}
       />
      </Popover.Content>
