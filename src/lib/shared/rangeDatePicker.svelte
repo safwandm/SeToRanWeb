@@ -8,9 +8,9 @@
      getLocalTimeZone
     } from "@internationalized/date";
     import { cn } from "$lib/utils.js";
-    import { Button } from "$lib/shadcn-components/ui/button/index.js";
-    import { RangeCalendar } from "$lib/shadcn-components/ui/range-calendar/index.js";
-    import * as Popover from "$lib/shadcn-components/ui/popover/index.js";
+    import { Button } from "$lib/components/ui/button/index.js";
+    import { RangeCalendar } from "$lib/components/ui/range-calendar/index.js";
+    import * as Popover from "$lib/components/ui/popover/index.js";
     
     const df = new DateFormatter("en-US", {
      dateStyle: "medium"

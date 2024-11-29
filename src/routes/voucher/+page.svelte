@@ -114,13 +114,14 @@
     }
 
     .table-wrapper {
-        flex-grow: 2;
+        /* flex-grow: 3; */
     }
 
     .filter-wrapper {
         margin-left: 20px;
-        flex-grow: 1;
+        /* flex-grow: 1; */
         height: 100%;
+        width: 300px;
 
         display: flex;
         flex-direction: column;
@@ -191,7 +192,7 @@
     </div>
     <div class="card filter-wrapper">
         <h3>Filter</h3>
-        <h4>Sorting</h4>
+        <!-- <h4>Sorting</h4>
         <select bind:value={sortBy}>
             <option value="">All</option>
             {#each Object.entries(labelMap) as [key, val]}
@@ -204,7 +205,7 @@
         <select bind:value={sortDir} disabled={sortBy == ""}>
             <option value="ascending">Ascending</option>
             <option value="descending">Descending</option>
-        </select>
+        </select> -->
         <h4>Filter Status</h4>
         <select bind:value={filterStatus}>  
             <option value="">All</option>   

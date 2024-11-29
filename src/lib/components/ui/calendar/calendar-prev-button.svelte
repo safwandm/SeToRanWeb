@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { RangeCalendar as RangeCalendarPrimitive } from "bits-ui";
+	import { Calendar as CalendarPrimitive } from "bits-ui";
 	import ChevronLeft from "lucide-svelte/icons/chevron-left";
-	import { buttonVariants } from "$lib/shadcn-components/ui/button/index.js";
+	import { buttonVariants } from "$lib/components/ui/button/index.js";
 	import { cn } from "$lib/utils.js";
 
-	type $$Props = RangeCalendarPrimitive.PrevButtonProps;
-	type $$Events = RangeCalendarPrimitive.PrevButtonEvents;
+	type $$Props = CalendarPrimitive.PrevButtonProps;
+	type $$Events = CalendarPrimitive.PrevButtonEvents;
 
 	let className: $$Props["class"] = undefined;
 	export { className as class };
 </script>
 
-<RangeCalendarPrimitive.PrevButton
+<CalendarPrimitive.PrevButton
 	on:click
 	class={cn(
 		buttonVariants({ variant: "outline" }),
@@ -24,4 +24,4 @@
 	<slot {builder}>
 		<ChevronLeft class="h-4 w-4" />
 	</slot>
-</RangeCalendarPrimitive.PrevButton>
+</CalendarPrimitive.PrevButton>

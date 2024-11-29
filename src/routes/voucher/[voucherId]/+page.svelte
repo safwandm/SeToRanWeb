@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import { json } from '@sveltejs/kit';
 
-    import RangeDatePicker from '$lib/components/rangeDatePicker.svelte';
+    import RangeDatePicker from '/src/lib/shared/rangeDatePicker.svelte';
     import {
      CalendarDate,
      parseDate
@@ -100,7 +100,7 @@
     }
 
     .input-edit {
-        border: 1px solid black;
+        /* border: 1px solid black; */
     }
 
     .control {
@@ -148,8 +148,8 @@
                 <option id="nonAktif" value="nonAktif">Non Aktif</option>
             </select>
         </div>
-        {@render input('tgl-mulai', 'Tanggal Mulai', 'tglMulai', false)}
-        {@render input('tgl-akhir', 'Tanggal Akhir', 'tglAkhir', false)}
+        <!-- {@render input('tgl-mulai', 'Tanggal Mulai', 'tglMulai', false)}
+        {@render input('tgl-akhir', 'Tanggal Akhir', 'tglAkhir', false)} -->
         <div class="input-row">
             <label for='date'>Tanggal Aktif Voucher</label>
             <RangeDatePicker bind:value={daterangevalue} />
@@ -186,7 +186,7 @@
                 <button type="submit" class={"btn-action " + (!editing?"disabled":"")} onclick={onSubmit}>
                     save
                 </button>
-                <button class={"btn-action " + (!editing?"disabled":"")} onclick={onCancel}>
+                <button class={"btn-action" + (!editing?"disabled":"")} style="background-color: red;" onclick={onCancel}>
                     cancel
                 </button>
             {:else if (!selectedVoucher.id)}
