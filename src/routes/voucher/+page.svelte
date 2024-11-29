@@ -100,7 +100,7 @@
         width: 68px;
     }
 
-    .container {
+    .content-container {
         /* display: flex; */
         justify-content: center;
         align-items: start;
@@ -159,7 +159,7 @@
     <p>Home / <b>Voucher</b></p>
 </div>
 
-<div class="container row">
+<div class="content-container row">
     <div class="card table-wrapper">
         <h3>Daftar Voucher</h3>
         <table style="width: 100%;">

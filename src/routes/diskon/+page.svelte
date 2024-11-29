@@ -17,7 +17,7 @@
             width: 68px;
         }
 
-        .container {
+        .content-container {
             display: flex;
             gap: 20px;
         }
@@ -170,7 +170,7 @@
     <p>Home / <b>Diskon</b></p>
 </div>
 
-<div class="container">
+<div class="content-container">
     <!-- Main Content for Diskon Page -->
     <div class="main-content card">
         <h3>Daftar Diskon</h3>
