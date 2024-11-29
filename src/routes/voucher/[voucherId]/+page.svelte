@@ -3,11 +3,28 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { json } from '@sveltejs/kit';
+
+    import RangeDatePicker from '$lib/components/rangeDatePicker.svelte';
+    import {
+     CalendarDate,
+     parseDate
+    } from "@internationalized/date";
     
     let selectedVoucherId = $page.params['voucherId']
     let selectedVoucher = $state({
         statusVoucher: "aktif"
     })
+    
+    let daterangevalue = $state({
+     start: new CalendarDate(2022, 1, 20),
+     end: new CalendarDate(2022, 1, 20).add({ days: 20 })
+    });
+
+    $effect(() => {
+        selectedVoucher.tglMulai = daterangevalue.start?.toString()??''
+        selectedVoucher.tglAkhir = daterangevalue.end?.toString()??''
+    })
+    
     let originalVoucher;
     // $derived(
     //     voucher.find((item) => {
@@ -24,26 +41,30 @@
             if (item.id == selectedVoucherId)
                 return item
         })??{}
-        
+        daterangevalue.start = parseDate(selectedVoucher.tglMulai)
+        daterangevalue.end = parseDate(selectedVoucher.tglAkhir)
+
         originalVoucher = $state.snapshot(selectedVoucher)
     })
 
     $effect(() => {
         // selectedVoucher.namaVoucher;selectedVoucher.statusVoucher;selectedVoucher.tglMulai;selectedVoucher.tglAkhir
-
         editing = JSON.stringify($state.snapshot(selectedVoucher)) != JSON.stringify(originalVoucher)
-        console.log(originalVoucher, $state.snapshot(selectedVoucher))
-        console.log(editing)
     })
 
     function onSubmit(e) {
         e.preventDefault()
         originalVoucher = $state.snapshot(selectedVoucher)
+        editing = false;
     }
 
     function onCancel(e) {
         selectedVoucher = originalVoucher;
+        
+        daterangevalue.start = parseDate(selectedVoucher.tglMulai)
+        daterangevalue.end = parseDate(selectedVoucher.tglAkhir)
     }
+
 </script>
 
 <style>
@@ -129,7 +150,10 @@
         </div>
         {@render input('tgl-mulai', 'Tanggal Mulai', 'tglMulai', false)}
         {@render input('tgl-akhir', 'Tanggal Akhir', 'tglAkhir', false)}
-
+        <div class="input-row">
+            <label for='date'>Tanggal Aktif Voucher</label>
+            <RangeDatePicker bind:value={daterangevalue} />
+        </div>
         <!-- <div class="input-row">
             <label for='nama'>Nama</label>
             <input id="nama" bind:value={selectedVoucher.namaVoucher} readonly=
