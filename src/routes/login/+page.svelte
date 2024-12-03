@@ -53,13 +53,13 @@
         margin-top: 30px;
 
         /* height: 156px; */
-        width: 360px;
+        width: 100%;    
         justify-content: space-between;
     }
 
     input {
         height: 40px;
-        width: 360px;
+        width: 100%;
 
         border: 1px solid #DFDDDD;
         border-radius: 4px;
@@ -90,7 +90,7 @@
         padding: 8px 32px;
         gap: 10px;
 
-        width: 360px;
+        width: 100%;
         height: 40px;
 
         background: #007CFF;
