@@ -57,7 +57,6 @@
         
         console.log($page.url)
     })
-
     $effect(() => {
         // nanti jadi panggilan query ulang dengan param
         let tmp = voucher
@@ -84,6 +83,11 @@
         console.log(voucher)
     })
 
+    const jq = globalThis.$
+    onMount(() => {
+        console.log(jq)
+        jq('.breadcrumb').toggle
+    })
 
 
 </script>

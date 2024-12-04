@@ -93,7 +93,7 @@
         width: 100%;
         height: 40px;
 
-        background: #007CFF;
+        background-color: #007CFF;
         border-radius: 4px;
 
         /* Inside auto layout */
