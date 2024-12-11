@@ -26,7 +26,7 @@
 
 <!-- render page dengan layout -->
 <link rel="stylesheet" href="/src/lib/popbox/popbox.css">
-<link rel="stylesheet" href="/src/routes/sharedStyle.css">
+<link rel="stylesheet" href="/src/routes/(layout)/sharedStyle.css">
 
 <style>
     header {
