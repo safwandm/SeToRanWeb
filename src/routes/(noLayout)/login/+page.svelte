@@ -111,13 +111,8 @@
         height: 362px;
         width: 403px;
     }
-    </style>
-    </style>
-    
-</svelte:head>
+
 </style>
-    
-</svelte:head>
 
 <script>
 	import { goto } from "$app/navigation";
