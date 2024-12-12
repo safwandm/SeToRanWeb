@@ -1,4 +1,6 @@
 
+export let backendHost = "http://127.0.0.1:8000"
+
 /**
  * Sends an authenticated fetch request.
  *
@@ -12,7 +14,7 @@ export function fetchAuth(input, init = {}) {
         {
             ...init,
             headers: {
-                'Authorization': "Bearer " + this.cookiesProvider.get('accessToken'),
+                // 'Authorization': "Bearer " + this.cookiesProvider.get('accessToken'),
                 ...init.headers
             }
         }
@@ -36,7 +38,7 @@ export function postAuth(input, data, init = {}) {
             body: JSON.stringify(data),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer " + this.cookiesProvider.get('accessToken'),
+                // 'Authorization': "Bearer " + this.cookiesProvider.get('accessToken'),
                 ...init.headers
             }
         }
