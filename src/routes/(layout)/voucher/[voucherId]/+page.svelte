@@ -148,40 +148,12 @@
                 <option id="nonAktif" value="nonAktif">Non Aktif</option>
             </select>
         </div>
-        <!-- {@render input('tgl-mulai', 'Tanggal Mulai', 'tglMulai', false)}
-        {@render input('tgl-akhir', 'Tanggal Akhir', 'tglAkhir', false)} -->
         <div class="input-row">
             <label for='date'>Tanggal Aktif Voucher</label>
-            <RangeDatePicker bind:value={daterangevalue} />
+            <RangeDatePicker bind:value={daterangevalue} width="360px"/>
         </div>
-        <!-- <div class="input-row">
-            <label for='nama'>Nama</label>
-            <input id="nama" bind:value={selectedVoucher.namaVoucher} readonly=
-        console.log(selectedVoucher){!editing}/>
-        </div>
-        <div class="input-row">
-            <label for='status'>Status</label>
-            <input id="status" bind:value={selectedVoucher.statusVoucher} readonly={!editing}/>
-        </div>
-        <div class="input-row">
-            <label for='tgl-mulai'>Tanggal Mulai</label>
-            <input id="tgl-mulai" bind:value={selectedVoucher.tglMulai} readonly={!editing}/>
-        </div>
-        <div class="input-row">
-            <label for='tgl-akhir'>Tanggal Akhir</label>
-            <input id="tgl-akhir" bind:value={selectedVoucher.tglAkhir} readonly={!editing}/>
-        </div> -->
         <div class="input-row">
             <a class="flex-center a-unstyle btn-action" href="/voucher">Back</a>
-            <!-- <button class={"btn-action " + (editing?"disabled":"")} disabled={editing} onclick={onEdit}>
-                edit
-            </button>
-            <button type="submit" class={"btn-action " + (!editing?"disabled":"")} disabled={!editing} onclick={onSubmit}>
-                save
-            </button>
-            <button class={"btn-action " + (!editing?"disabled":"")} disabled={!editing} onclick={onCancel}>
-                cancel
-            </button> -->
             {#if editing}
                 <button type="submit" class={"btn-action " + (!editing?"disabled":"")} onclick={onSubmit}>
                     save

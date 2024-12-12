@@ -16,7 +16,7 @@
      dateStyle: "medium"
     });
     
-    let { value=$bindable() } = $props()
+    let { value=$bindable(), width="100%" } = $props()
     
     let startValue: DateValue | undefined = undefined;
    </script>
@@ -27,9 +27,12 @@
       <Button
        variant="outline"
        class={cn(
-        "w-[360px] justify-start text-left font-normal ",
+        "justify-start text-left font-normal ",
         !value && "text-muted-foreground"
        )}
+
+        style={`width: ${width}`}
+
        builders={[builder]}
       >
        <CalendarIcon class="mr-2 h-4 w-4" />
