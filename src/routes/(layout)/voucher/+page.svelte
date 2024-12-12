@@ -2,13 +2,13 @@
     import * as Dialog from "$lib/components/ui/dialog";
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-    import voucher from '$lib/json/voucher.json'
 	import { json } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
 	import Button from "$lib/components/ui/button/button.svelte";
 	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
-	import { postAuth } from "$lib/utilities";
+	import { backendHost, fetchAuth, postAuth } from "$lib/utilities";
     
+    let voucher = $state([])
     let voucherShown = $state([])
     
     let sortBy = $state($page.url.searchParams.get('sortBy')??'')
@@ -65,7 +65,7 @@
         
         tmp = tmp.filter((item) => {
             for (const [key, val] of Object.entries(item)) {
-                if (val.toLowerCase().includes(search.toLowerCase())) {
+                if (val.toString(   ).toLowerCase().includes(search.toLowerCase())) {
                     return true
                 }
             }
@@ -77,20 +77,60 @@
     })
 
     function addVoucher(e) {
+        e.preventDefault()
+
         let data = {
             "id": e.target.id.value,
-            "namaVoucher": e.target.namaVoucher.value,
-            "statusVoucher": e.target.statusVoucher.value,
-            "tglMulai": dateRangeValue.start?.toString()??'',
-            "tglAkhir": dateRangeValue.end?.toString()??''
+            "nama_voucher": e.target.namaVoucher.value,
+            "status_voucher": e.target.statusVoucher.value,
+            "tanggal_mulai": dateRangeValue.start?.toString()??'',
+            "tanggal_akhir": dateRangeValue.end?.toString()??''
         }
         
-        postAuth("http://127.0.0.1:8000/api/vouchers/", data)
+        postAuth("http://127.0.0.1:8000/api/vouchers", data).then(async res => {
+            if (res.ok) {
+                getVoucher()
+                dialogOpen = false
+            } else {
+                console.log(await res.text())
+            }
+            console.log(res.ok)
+        })
     }
 
-    // $effect(() => {
-    //     selectedVoucher.tglMulai = daterangevalue.start?.toString()??''
-    //     selectedVoucher.tglAkhir = daterangevalue.end?.toString()??''
+    function getVoucher() {
+        // Function to convert snake_case to camelCase
+        function toCamelCase(str) {
+            return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+        }
+
+        // Function to recursively convert object keys
+        function convertKeysToCamelCase(obj) {
+            if (Array.isArray(obj)) {
+                return obj.map(item => convertKeysToCamelCase(item)); // Handle arrays
+            } else if (obj !== null && typeof obj === 'object') {
+                return Object.keys(obj).reduce((acc, key) => {
+                    const camelCaseKey = toCamelCase(key);
+                    acc[camelCaseKey] = convertKeysToCamelCase(obj[key]); // Recurse for nested objects/arrays
+                    return acc;
+                }, {});
+            }
+            return obj; // Return values unchanged
+        }
+
+        fetchAuth(backendHost + "/api/vouchers").then(async res => {
+            if (res.ok) {
+                let js = await res.json()
+                voucher = js
+                // voucher=convertKeysToCamelCase(js)
+            } else {
+                console.log(await res.text())
+            }
+        })
+    }
+
+    getVoucher()
+    // onMount(() => {
     // })
 </script>
 
@@ -187,13 +227,13 @@
             <tbody>
                 {#each voucherShown as item}
                     <tr>
-                        <td>{item.id}</td>
-                        <td>{item.namaVoucher}</td>
-                        <td>{statusMap[item.statusVoucher]}</td>
-                        <td>{item.tglMulai}</td>
-                        <td>{item.tglAkhir}</td>
+                        <td>{item.id_voucher}</td>
+                        <td>{item.nama_voucher}</td>
+                        <td>{statusMap[item.status_voucher]}</td>
+                        <td>{item.tanggal_mulai}</td>
+                        <td>{item.tanggal_akhir}</td>
                         <td style="text-align: center;">
-                            <a class="flex-center btn-action" href={"/voucher/" + item.id}>Detail</a>
+                            <a class="flex-center btn-action" href={"/voucher/" + item.idVoucher}>Detail</a>
                         </td>
                     </tr>
                 {/each}
