@@ -60,12 +60,12 @@
         }
 
         if (filterStatus != '') {
-            tmp = tmp.filter((item) => item.statusVoucher == filterStatus)
+            tmp = tmp.filter((item) => item.status_voucher == filterStatus)
         }
         
         tmp = tmp.filter((item) => {
             for (const [key, val] of Object.entries(item)) {
-                if (val.toString(   ).toLowerCase().includes(search.toLowerCase())) {
+                if (val.toString().toLowerCase().includes(search.toLowerCase())) {
                     return true
                 }
             }
@@ -233,7 +233,7 @@
                         <td>{item.tanggal_mulai}</td>
                         <td>{item.tanggal_akhir}</td>
                         <td style="text-align: center;">
-                            <a class="flex-center btn-action" href={"/voucher/" + item.idVoucher}>Detail</a>
+                            <a class="flex-center btn-action" href={"/voucher/" + item.id_voucher}>Detail</a>
                         </td>
                     </tr>
                 {/each}
