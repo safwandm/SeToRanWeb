@@ -16,18 +16,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        body {
-            display: grid;
-
-            position: relative;
-
-
-            grid-template-columns: 1fr 5fr;
-            grid-template-rows: min-content auto;
-            background-color: #F6FAFF;
-            padding: 0px;
-        }
-
         header {
             grid-column: 1 / 3;
             background-color: #3C6DD7;
