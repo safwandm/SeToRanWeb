@@ -1,16 +1,24 @@
 <script>
+    import * as Dialog from "$lib/components/ui/dialog";
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
     import voucher from '$lib/json/voucher.json'
 	import { json } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
+	import Button from "$lib/components/ui/button/button.svelte";
+	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
+	import { postAuth } from "$lib/utilities";
     
+    let voucher = $state([])
     let voucherShown = $state([])
     
     let sortBy = $state($page.url.searchParams.get('sortBy')??'')
     let sortDir = $state($page.url.searchParams.get('sortDir')??'')
     let filterStatus = $state($page.url.searchParams.get('filterStatus')??'')
     let search = $state($page.url.searchParams.get('search')??'')
+
+    let dialogOpen = $state(false)
+    let dateRangeValue = $state({})
 
     // simple dulu aja
     // $effect(() => {
@@ -43,20 +51,6 @@
         "Tgl Akhir": "tglAkhir"
     }
 
-    onMount(() => {
-        // voucherShown = voucher;
-        // console.log($page.url.searchParams.get('test'))
-        // $page.url.searchParams.set('nest', 12)
-        // window.history.pushState($page.url.href + JSON.stringify({
-        //     sortBy: sortBy,
-        //     sortDir: sortDir,
-        //     filterStatus: filterStatus,
-        //     search: search
-        // }))
-        // sortBy
-        
-        console.log($page.url)
-    })
     $effect(() => {
         // nanti jadi panggilan query ulang dengan param
         let tmp = voucher
@@ -83,13 +77,22 @@
         console.log(voucher)
     })
 
-    const jq = globalThis.$
-    onMount(() => {
-        console.log(jq)
-        jq('.breadcrumb').toggle
-    })
+    function addVoucher(e) {
+        let data = {
+            "id": e.target.id.value,
+            "namaVoucher": e.target.namaVoucher.value,
+            "statusVoucher": e.target.statusVoucher.value,
+            "tglMulai": dateRangeValue.start?.toString()??'',
+            "tglAkhir": dateRangeValue.end?.toString()??''
+        }
+        
+        postAuth("http://127.0.0.1:8000/api/vouchers/", data)
+    }
 
-
+    // $effect(() => {
+    //     selectedVoucher.tglMulai = daterangevalue.start?.toString()??''
+    //     selectedVoucher.tglAkhir = daterangevalue.end?.toString()??''
+    // })
 </script>
 
 <style>
@@ -131,11 +134,16 @@
         flex-direction: column;
     }
 
+    .filter-item {
+        width: 100%;
+        margin-top: 10px;
+    }
+
     select, input {
         margin-top: 10px;
 
         height: 40px;
-        /* width: 360px; */
+        width: 100%;
 
         border: 1px solid #DFDDDD;
         border-radius: 4px;
@@ -155,7 +163,6 @@
         font-weight: 500;
         font-style: normal;
         color: #00236F;
-        margin-top: 10px;
     }
 </style>
 
@@ -210,14 +217,49 @@
             <option value="ascending">Ascending</option>
             <option value="descending">Descending</option>
         </select> -->
-        <h4>Filter Status</h4>
-        <select bind:value={filterStatus}>  
-            <option value="">All</option>   
-            {#each Object.entries(statusMap) as [key, val]}
-                <option value={key}>{val}</option>
-            {/each}
-        </select>
-        <h4>Search</h4>
-        <input bind:value={search}/>
+        <div class="filter-item">
+            <h4>Filter Status</h4>
+            <select bind:value={filterStatus}>
+                <option value="">All</option>
+                {#each Object.entries(statusMap) as [key, val]}
+                    <option value={key}>{val}</option>
+                {/each}
+            </select>
+        </div>
+        <div class="filter-item">
+            <h4>Search</h4>
+            <input bind:value={search}/>
+        </div>
+        <div class="filter-item">
+            <button class="btn-action" style="width: 100%;" onclick={() => dialogOpen = true}>Tambah Voucher</button>
+        </div>
     </div>
 </div>
+
+<Dialog.Root bind:open={dialogOpen}>
+    <Dialog.Content>
+      <Dialog.Header>
+        <Dialog.Title>Tambah Voucher</Dialog.Title>
+        <Dialog.Description>
+            <form onsubmit={addVoucher}>
+                <label for="id">ID</label>
+                <input id="id" name="id" />
+                <label for="namaVoucher">Nama Voucher</label>
+                <input id="namaVoucher" name="namaVoucher" />
+                <label for="statusVoucher">Status Voucher</label>
+                <select id="statusVoucher" name="statusVoucher">
+                    {#each Object.entries(statusMap) as [key, val]}
+                        <option value={key}>{val}</option>
+                    {/each}
+                </select>
+                <RangeDatePicker bind:value={dateRangeValue} />
+                <div class="flex-center">
+                    <button type="submit" class="btn-action">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </Dialog.Description>
+      </Dialog.Header>
+    </Dialog.Content>
+</Dialog.Root>
