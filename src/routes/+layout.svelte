@@ -9,10 +9,9 @@
     import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
     import { redirect } from '@sveltejs/kit';
-
+    import * as jqa from 'jquery'
+    const jq = jqa.default
     // kalau di layout harus begini gak tau kenapa
-    const jq = globalThis.$;
-
     let { children } = $props();
     
     // biar gak ada notif error vscode

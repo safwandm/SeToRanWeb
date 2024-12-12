@@ -179,7 +179,8 @@
 
 <script>
 	import { onMount } from 'svelte';
-    const jq = globalThis.$
+    import * as jqa from 'jquery'
+    const jq = jqa.default
     
     let filter = $state({
         status: '',

@@ -9,7 +9,6 @@
 	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
 	import { postAuth } from "$lib/utilities";
     
-    let voucher = $state([])
     let voucherShown = $state([])
     
     let sortBy = $state($page.url.searchParams.get('sortBy')??'')
