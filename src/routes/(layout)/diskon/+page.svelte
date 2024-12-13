@@ -77,7 +77,8 @@
 <script>
 	import { Popbox } from "$lib/popbox/popbox";
 	import { onMount } from "svelte";
-    let jq = globalThis.$
+    import * as jqa from 'jquery'
+    const jq = jqa.default
 
     let diskonData = $state([]) // Store the data globally
     let diskonDataShow = $state([]); 
