@@ -1,7 +1,3 @@
-<svelte:head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-</svelte:head>
-
 <script>
     import { page } from '$app/stores';
     import '/src/app.css';
@@ -9,20 +5,10 @@
     import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
     import { redirect } from '@sveltejs/kit';
-    import * as jqa from 'jquery'
-    const jq = jqa.default
+    import * as Popover from "$lib/components/ui/popover";
     
-    // kalau di layout harus begini gak tau kenapa
-
     let { children } = $props();
     
-    // biar gak ada notif error vscode
-    let dialogBoxes = ['.notification', '.messages']
-    function toggleDialog(name) {
-        dialogBoxes.forEach((box) => box != name?jq(box).hide():null) // kalau box == name do nothing
-        jq(name).toggle()
-    }
-
 </script>
 
 <!-- render page dengan layout -->
@@ -128,24 +114,24 @@
             current user: {$currentUser.username} <!-- tes currentUser -->
         </div>
         <div class="header-right flex-center">
-            <button class="button-plain"  onclick={() => {toggleDialog('.messages')}}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
-                    <path fill="currentColor"
-                        d="M4 4h16v12H5.17L4 17.17zm0-2c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm2 10h8v2H6zm0-3h12v2H6zm0-3h12v2H6z" />
-                </svg>
-                <div class="messages floating-box">
-                    <h3>Messages</h3>
-                </div>
-            </button>
-            <button class="button-plain" onclick={() => toggleDialog('.notification')} >
-                <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
-                    <path fill="currentColor"
-                        d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2m6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5z" />
-                </svg>
-                <div class="notification floating-box">
-                    <h3>Notifications</h3>
-                </div>
-            </button>
+            <Popover.Root>
+                <Popover.Trigger>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M4 4h16v12H5.17L4 17.17zm0-2c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm2 10h8v2H6zm0-3h12v2H6zm0-3h12v2H6z" />
+                    </svg>
+                </Popover.Trigger>
+            <Popover.Content><h3>Messages</h3></Popover.Content>
+            </Popover.Root>
+            <Popover.Root>
+                <Popover.Trigger>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2m6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5z" />
+                    </svg>
+                </Popover.Trigger>
+                <Popover.Content><h3>Notifications</h3></Popover.Content>
+            </Popover.Root>
         </div>
     </header>
 
