@@ -116,13 +116,35 @@
 
 <script>
 	import { goto } from "$app/navigation";
+	import { backendHost } from "$lib/utilities";
+    import Cookies from "js-cookie";
+
+    let error = $state("")
 
     function handleSubmit(e) {
         e.preventDefault()
 
-        window.localStorage.setItem('username', e.target.username.value)
+        let data = {
+            "email": e.target.email.value,
+            "password": e.target.password.value
+        }
 
-        goto('/dashboard')
+        fetch(backendHost + "/api/login?admin", {
+            body: JSON.stringify(data),
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(async res => {
+            let js = await res.json()
+
+            if (res.ok) {
+                Cookies.set("access_token", js["access_token"])
+                goto('/dashboard')
+            } else {
+                error = js["message"]
+            }
+        })
     }
 </script>
 
@@ -132,10 +154,11 @@
     <div class="login-container row">
         <h1>Login</h1>
         <form onsubmit={handleSubmit} class="login-form row">
-            <label>username</label>
-            <input name="username" type="text" required>
+            <label>email</label>
+            <input name="email" type="text" required>
             <label>password</label>
             <input name="password" type="password"  required>
+            <p class="text-red-500">{error}</p>
             <button type="submit">Login</button>
         </form>
     </div>

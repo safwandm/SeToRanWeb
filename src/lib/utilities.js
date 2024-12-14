@@ -1,3 +1,6 @@
+import Cookies from "js-cookie";
+
+// mungkin bisa buat api client lib seperti flutter
 
 export let backendHost = "http://127.0.0.1:8000"
 
@@ -10,11 +13,12 @@ export let backendHost = "http://127.0.0.1:8000"
  */
 export function fetchAuth(input, init = {}) {
     return fetch(
-        input, 
+        backendHost + input, 
         {
             ...init,
             headers: {
-                // 'Authorization': "Bearer " + this.cookiesProvider.get('accessToken'),
+                'Accept': 'application/json',
+                'Authorization': "Bearer " + Cookies.get('access_token'),
                 ...init.headers
             }
         }
@@ -31,15 +35,16 @@ export function fetchAuth(input, init = {}) {
  */
 export function postAuth(input, data, init = {}) {
     return fetch(
-        input, 
+        backendHost + input, 
         {
             method: 'POST',
             ...init,
             body: JSON.stringify(data),
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                // 'Authorization': "Bearer " + this.cookiesProvider.get('accessToken'),
-                ...init.headers
+                'Authorization': "Bearer " + Cookies.get('access_token'),
+                ...init.header
             }
         }
     );

@@ -10,6 +10,7 @@
     import { currentUser } from '$lib/store';
     import { redirect } from '@sveltejs/kit';
     import * as jqa from 'jquery'
+	import { fetchAuth } from '$lib/utilities';
     const jq = jqa.default
     // kalau di layout harus begini gak tau kenapa
     let { children } = $props();
@@ -21,15 +22,24 @@
         jq(name).toggle()
     }
 
-    function verifyUser() {
-        currentUser.update((data) => {
-            data.username = window.localStorage.getItem('username')??''
-            return data
-        })
+    async function verifyUser() {
+        await fetchAuth("/api/current-user")
+            .then(async res => {
+                let js = await res.json()
 
-        if ($currentUser.username == '' && !$page.url.href.includes('/login'))
+                if (res.ok) {
+                    currentUser.update((data) => {
+                        data.username = js.user.nama
+                        return data
+                    })
+                } else {
+                    currentUser.set({}) // unauthorized
+                }
+            })
+        
+        if (!$currentUser.username && !$page.url.href.includes('/login'))
             goto('/login')
-        else if ($currentUser.username != '' && $page.url.href.includes('/login'))
+        else if ($currentUser.username && $page.url.href.includes('/login'))
             goto('/dashboard')
     }
 

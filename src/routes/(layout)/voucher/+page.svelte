@@ -50,30 +50,15 @@
         "Tgl Akhir": "tglAkhir"
     }
 
+
+    const controller = new AbortController()
+    const signal = controller.signal
+
     $effect(() => {
-        // nanti jadi panggilan query ulang dengan param
-        let tmp = voucher
-        if (sortBy == "")
-            sortDir = ""
-        else if (sortBy != "" && sortDir != "") {
-            
-        }
-
-        if (filterStatus != '') {
-            tmp = tmp.filter((item) => item.status_voucher == filterStatus)
-        }
-        
-        tmp = tmp.filter((item) => {
-            for (const [key, val] of Object.entries(item)) {
-                if (val.toString().toLowerCase().includes(search.toLowerCase())) {
-                    return true
-                }
-            }
-        })
-
-        voucherShown = tmp
-
-        console.log(voucher)
+        let url = `/api/voucher/filtered?search=${search}`
+        if (filterStatus !== "")
+            url+= `&status=${filterStatus}`
+        fetchAuth(url, {signal: signal}).then(res => res.json()).then(res => voucherShown = res)
     })
 
     function addVoucher(e) {
@@ -87,38 +72,20 @@
             "tanggal_akhir": dateRangeValue.end?.toString()??''
         }
         
-        postAuth("http://127.0.0.1:8000/api/vouchers", data).then(async res => {
+        controller.abort()
+        postAuth("/api/vouchers", data).then(async res => {
             if (res.ok) {
                 getVoucher()
                 dialogOpen = false
             } else {
                 console.log(await res.text())
             }
-            console.log(res.ok)
         })
     }
 
     function getVoucher() {
-        // Function to convert snake_case to camelCase
-        function toCamelCase(str) {
-            return str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
-        }
 
-        // Function to recursively convert object keys
-        function convertKeysToCamelCase(obj) {
-            if (Array.isArray(obj)) {
-                return obj.map(item => convertKeysToCamelCase(item)); // Handle arrays
-            } else if (obj !== null && typeof obj === 'object') {
-                return Object.keys(obj).reduce((acc, key) => {
-                    const camelCaseKey = toCamelCase(key);
-                    acc[camelCaseKey] = convertKeysToCamelCase(obj[key]); // Recurse for nested objects/arrays
-                    return acc;
-                }, {});
-            }
-            return obj; // Return values unchanged
-        }
-
-        fetchAuth(backendHost + "/api/vouchers").then(async res => {
+        fetchAuth("/api/vouchers").then(async res => {
             if (res.ok) {
                 let js = await res.json()
                 voucher = js
