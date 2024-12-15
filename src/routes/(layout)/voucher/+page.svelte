@@ -18,26 +18,7 @@
 
     let dialogOpen = $state(false)
     let dateRangeValue = $state({})
-
-    // simple dulu aja
-    // $effect(() => {
-    //     let param = new URLSearchParams(window.location.search)
-    //     param.set('sortBy', sortBy)
-    //     if (!sortBy)
-    //         param.delete('sortBy')
-    //     param.set('sortDir', sortDir)
-    //     if (!sortDir)
-    //         param.delete('sortDir')
-    //     param.set('search', search)
-    //     if (!search)
-    //         param.delete('search')
-    //     param.set('filterStatus', filterStatus)
-    //     if (!filterStatus)
-    //         param.delete('filterStatus')
-
-    //     window.history.pushState(null, "", $page.url.href + '?' + param.toString())
-    // })
-
+    
     let statusMap = {
         nonAktif: "Non Aktif",
         aktif: "Aktif"
@@ -50,15 +31,21 @@
         "Tgl Akhir": "tglAkhir"
     }
 
-
+    let controller
 
     let queryUrl = "/api/voucher/filtered?search"
     $effect(() => {
-        // invalidate query sebelumnya sebelum buat query baru
+        
+        if (controller)
+            controller.abort()
+
+        controller = new AbortController()
+        let signal = controller.signal
+
         queryUrl = `/api/voucher/filtered?search=${search}`
         if (filterStatus !== "")
             queryUrl+= `&status=${filterStatus}`
-        fetchAuth(queryUrl).then(res => res.json()).then(res => vouchers = res)
+        fetchAuth(queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
     })
 
     function addVoucher(e) {
@@ -209,20 +196,6 @@
     </div>
     <div class="card filter-wrapper">
         <h3>Filter</h3>
-        <!-- <h4>Sorting</h4>
-        <select bind:value={sortBy}>
-            <option value="">All</option>
-            {#each Object.entries(labelMap) as [key, val]}
-                {#if val != "statusVoucher"}
-                    <option value={val}>{key}</option>
-                {/if}
-            {/each}
-        </select>
-        <h4>Sort Direction</h4>
-        <select bind:value={sortDir} disabled={sortBy == ""}>
-            <option value="ascending">Ascending</option>
-            <option value="descending">Descending</option>
-        </select> -->
         <div class="filter-item">
             <h4>Filter Status</h4>
             <select bind:value={filterStatus}>
