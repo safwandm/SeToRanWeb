@@ -8,8 +8,7 @@
 	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
 	import { backendHost, fetchAuth, postAuth } from "$lib/utilities";
     
-    let voucher = $state([])
-    let voucherShown = $state([])
+    let vouchers = $state([])
     
     let sortBy = $state($page.url.searchParams.get('sortBy')??'')
     let sortDir = $state($page.url.searchParams.get('sortDir')??'')
@@ -51,14 +50,14 @@
     }
 
 
-    const controller = new AbortController()
-    const signal = controller.signal
 
+    let queryUrl = "/api/voucher/filtered?search"
     $effect(() => {
-        let url = `/api/voucher/filtered?search=${search}`
+        // invalidate query sebelumnya sebelum buat query baru
+        queryUrl = `/api/voucher/filtered?search=${search}`
         if (filterStatus !== "")
-            url+= `&status=${filterStatus}`
-        fetchAuth(url, {signal: signal}).then(res => res.json()).then(res => voucherShown = res)
+            queryUrl+= `&status=${filterStatus}`
+        fetchAuth(queryUrl, {signal: signal}).then(res => res.json()).then(res => vouchers = res)
     })
 
     function addVoucher(e) {
@@ -72,7 +71,6 @@
             "tanggal_akhir": dateRangeValue.end?.toString()??''
         }
         
-        controller.abort()
         postAuth("/api/vouchers", data).then(async res => {
             if (res.ok) {
                 getVoucher()
@@ -85,11 +83,10 @@
 
     function getVoucher() {
 
-        fetchAuth("/api/vouchers").then(async res => {
+        fetchAuth(queryUrl).then(async res => {
             if (res.ok) {
                 let js = await res.json()
-                voucher = js
-                // voucher=convertKeysToCamelCase(js)
+                vouchers = js
             } else {
                 console.log(await res.text())
             }
@@ -192,7 +189,7 @@
                 </tr>
             </thead>
             <tbody>
-                {#each voucherShown as item}
+                {#each vouchers as item}
                     <tr>
                         <td>{item.id_voucher}</td>
                         <td>{item.nama_voucher}</td>
