@@ -3,16 +3,18 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { json } from '@sveltejs/kit';
+    import { toast } from "svelte-sonner";
 
-    import RangeDatePicker from '/src/lib/shared/rangeDatePicker.svelte';
+    import RangeDatePicker from '$lib/shared/rangeDatePicker.svelte';
     import {
      CalendarDate,
      parseDate
     } from "@internationalized/date";
+	import { fetchAuth, postAuth } from '$lib/utilities';
     
     let selectedVoucherId = $page.params['voucherId']
     let selectedVoucher = $state({
-        statusVoucher: "aktif"
+        status_voucher: "aktif"
     })
     
     let daterangevalue = $state({
@@ -20,11 +22,6 @@
      end: new CalendarDate(2022, 1, 20).add({ days: 20 })
     });
 
-    $effect(() => {
-        selectedVoucher.tglMulai = daterangevalue.start?.toString()??''
-        selectedVoucher.tglAkhir = daterangevalue.end?.toString()??''
-    })
-    
     let originalVoucher;
     // $derived(
     //     voucher.find((item) => {
@@ -34,36 +31,72 @@
     // )
 
     let editing = $state(false);
-    let original = {}
+    let loading = $state(true)
 
     onMount(() => {
-        selectedVoucher = voucher.find((item) => {
-            if (item.id == selectedVoucherId)
-                return item
-        })??{}
-        daterangevalue.start = parseDate(selectedVoucher.tglMulai)
-        daterangevalue.end = parseDate(selectedVoucher.tglAkhir)
-
-        originalVoucher = $state.snapshot(selectedVoucher)
+        fetchVoucher()
     })
 
     $effect(() => {
         // selectedVoucher.namaVoucher;selectedVoucher.statusVoucher;selectedVoucher.tglMulai;selectedVoucher.tglAkhir
         editing = JSON.stringify($state.snapshot(selectedVoucher)) != JSON.stringify(originalVoucher)
+        console.log($state.snapshot(selectedVoucher), originalVoucher)
     })
 
     function onSubmit(e) {
         e.preventDefault()
-        originalVoucher = $state.snapshot(selectedVoucher)
-        editing = false;
+
+        postAuth("/api/vouchers/" + selectedVoucherId, selectedVoucher, {
+            "method": "PUT"
+        }).then(res => {
+            if (res.ok) {
+                originalVoucher = $state.snapshot(selectedVoucher)
+                editing = false;
+                toast.success("Voucher berhasil di update!")
+            } else {
+                toast.error("Voucher gagal di update")
+            }
+        })
     }
 
     function onCancel(e) {
         selectedVoucher = originalVoucher;
-        
-        daterangevalue.start = parseDate(selectedVoucher.tglMulai)
-        daterangevalue.end = parseDate(selectedVoucher.tglAkhir)
+        setInitialValue(originalVoucher)
     }
+
+    function fetchVoucher() {
+        fetchAuth("/api/vouchers/" + selectedVoucherId).then(async res => {
+            if (res.ok) {
+                let js = await res.json()
+
+                // biar gak ke update di server nya
+                delete js.created_at
+                delete js.updated_at
+
+                selectedVoucher = js
+                setInitialValue(js)
+
+                loading = false
+            } else {
+                console.log(await res.text())
+            }
+        })
+    }
+
+    function setInitialValue(js) {
+        if (js.tanggal_mulai && js.tanggal_akhir) {
+            daterangevalue.start = parseDate(js.tanggal_mulai)
+            daterangevalue.end = parseDate(js.tanggal_akhir)
+        }
+
+        originalVoucher = $state.snapshot(js)
+    }
+
+    $effect(() => {
+        selectedVoucher.tanggal_mulai = daterangevalue.start?.toString()??''
+        selectedVoucher.tanggal_akhir = daterangevalue.end?.toString()??''
+    })
+    
 
 </script>
 
@@ -138,12 +171,12 @@
 <div class="card">
     <h3>Detail Voucher</h3>
     <form onsubmit={onSubmit}>
-        {@render input('id', 'Id', 'id', true)}
-        {@render input('nama', 'Nama', 'namaVoucher', false)}        
+        {@render input('id', 'Id', 'id_voucher', true)}
+        {@render input('nama', 'Nama', 'nama_voucher', false)}        
         <div class="input-row">
             <label for='status'>Status</label>
             <!-- <input id="status" type="" bind:value={selectedVoucher.statusVoucher} readonly={!editing}/> -->
-            <select bind:value={selectedVoucher.statusVoucher} id="status" class={!editing?'':'input-edit'} disabled={false}>
+            <select bind:value={selectedVoucher.status_voucher} id="status" class={!editing?'':'input-edit'} disabled={false}>
                 <option id="aktif" value="aktif">Aktif</option>
                 <option id="nonAktif" value="nonAktif">Non Aktif</option>
             </select>
@@ -154,18 +187,16 @@
         </div>
         <div class="input-row">
             <a class="flex-center a-unstyle btn-action" href="/voucher">Back</a>
-            {#if editing}
+            {#if editing && selectedVoucher.id_voucher}
                 <button type="submit" class={"btn-action " + (!editing?"disabled":"")} onclick={onSubmit}>
                     save
                 </button>
                 <button class={"btn-action" + (!editing?"disabled":"")} style="background-color: red;" onclick={onCancel}>
                     cancel
                 </button>
-            {:else if (!selectedVoucher.id)}
-                <!-- <button class={"btn-action " + (editing?"disabled":"")}  onclick={onEdit}>
-                    edit
-                </button>
-            {:else} -->
+            {:else if (loading)}
+                Loading ...
+            {:else if (!selectedVoucher.id_voucher)}
                 Data not found
             {/if}
         </div>

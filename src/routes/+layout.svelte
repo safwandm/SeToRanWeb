@@ -9,18 +9,10 @@
     import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
     import { redirect } from '@sveltejs/kit';
-    import * as jqa from 'jquery'
 	import { fetchAuth } from '$lib/utilities';
-    const jq = jqa.default
-    // kalau di layout harus begini gak tau kenapa
+	import { Toaster } from '$lib/components/ui/sonner';
+
     let { children } = $props();
-    
-    // biar gak ada notif error vscode
-    let dialogBoxes = ['.notification', '.messages']
-    function toggleDialog(name) {
-        dialogBoxes.forEach((box) => box != name?jq(box).hide():null) // kalau box == name do nothing
-        jq(name).toggle()
-    }
 
     async function verifyUser() {
         await fetchAuth("/api/current-user")
@@ -49,5 +41,6 @@
 
 </script>
 
+<Toaster theme="light"/>
 
 {@render children()}

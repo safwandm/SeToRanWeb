@@ -45,7 +45,7 @@ export function postAuth(input, data, init = {}) {
                 'Content-Type': 'application/json',
                 'Authorization': "Bearer " + Cookies.get('access_token'),
                 ...init.header
-            }
+            },
         }
     );
 }

@@ -7,6 +7,7 @@
 	import Button from "$lib/components/ui/button/button.svelte";
 	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
 	import { backendHost, fetchAuth, postAuth } from "$lib/utilities";
+	import { toast } from "svelte-sonner";
     
     let vouchers = $state([])
     
@@ -57,7 +58,7 @@
         queryUrl = `/api/voucher/filtered?search=${search}`
         if (filterStatus !== "")
             queryUrl+= `&status=${filterStatus}`
-        fetchAuth(queryUrl, {signal: signal}).then(res => res.json()).then(res => vouchers = res)
+        fetchAuth(queryUrl).then(res => res.json()).then(res => vouchers = res)
     })
 
     function addVoucher(e) {
@@ -75,8 +76,10 @@
             if (res.ok) {
                 getVoucher()
                 dialogOpen = false
+                toast.success("Voucher berhasil di buat!")
             } else {
                 console.log(await res.text())
+                toast.error("Voucher gagal di buat")
             }
         })
     }
