@@ -18,35 +18,11 @@
 
     let dialogOpen = $state(false)
     let dateRangeValue = $state({})
-    
+
     let statusMap = {
         nonAktif: "Non Aktif",
         aktif: "Aktif"
     }
-    let labelMap = { 
-        "ID": 'id',
-        "Nama Voucher": "namaVoucher",
-        "Status Voucher": "statusVoucher",
-        "Tgl Mulai": "tglMulai",
-        "Tgl Akhir": "tglAkhir"
-    }
-
-    let controller
-
-    let queryUrl = "/api/voucher/filtered?search"
-    $effect(() => {
-        
-        if (controller)
-            controller.abort()
-
-        controller = new AbortController()
-        let signal = controller.signal
-
-        queryUrl = `/api/voucher/filtered?search=${search}`
-        if (filterStatus !== "")
-            queryUrl+= `&status=${filterStatus}`
-        fetchAuth(queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
-    })
 
     function addVoucher(e) {
         e.preventDefault()
@@ -70,6 +46,23 @@
             }
         })
     }
+
+    let controller
+    let queryUrl = "/api/voucher/filtered?search"
+    
+    $effect(() => {
+        
+        if (controller)
+            controller.abort()
+
+        controller = new AbortController()
+        let signal = controller.signal
+
+        queryUrl = `/api/voucher/filtered?search=${search}`
+        if (filterStatus !== "")
+            queryUrl+= `&status=${filterStatus}`
+        fetchAuth(queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
+    })
 
     function getVoucher() {
 
@@ -125,6 +118,8 @@
 
         display: flex;
         flex-direction: column;
+
+        height: fit-content;
     }
 
     .filter-item {
@@ -234,7 +229,7 @@
                 <RangeDatePicker bind:value={dateRangeValue} />
                 <div class="flex-center">
                     <button type="submit" class="btn-action">
-                        Simpan
+                        Submit
                     </button>
                 </div>
             </form>
