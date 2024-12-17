@@ -29,10 +29,17 @@
                 }
             })
         
-        if (!$currentUser.username && !$page.url.href.includes('/login'))
-            goto('/login')
-        else if ($currentUser.username && $page.url.href.includes('/login'))
-            goto('/dashboard')
+        let allowRoutes = [
+            "/login",
+            "/register"
+        ]
+        
+        const currentRoute = $page.url.pathname; 
+        if (!$currentUser.username && !allowRoutes.includes(currentRoute)) {
+            goto('/login');
+        } else if ($currentUser.username && allowRoutes.includes(currentRoute)) {
+            goto('/dashboard');
+        }
     }
 
     afterNavigate(() => {

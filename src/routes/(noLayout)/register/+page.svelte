@@ -42,7 +42,7 @@
         background-color: white;
 
         width: 360px;
-        height: 344px;
+        height: fit-content;
 
         justify-content: start;
 
@@ -125,25 +125,38 @@
         e.preventDefault()
 
         let data = {
+            "nama": e.target.nama.value,
             "email": e.target.email.value,
             "password": e.target.password.value
         }
 
-        fetch(backendHost + "/api/login?admin", {
-            body: JSON.stringify(data),
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
+        fetch(backendHost + "/api/register-admin", {
+                body: JSON.stringify(data),
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             }
-        }).then(async res => {
-            let js = await res.json()
+        ).then(async res => {
+            if (res.ok)
+                fetch(backendHost + "/api/login?admin", {
+                    body: JSON.stringify(data),
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(async res => {
+                    let js = await res.json()
 
-            if (res.ok) {
-                Cookies.set("access_token", js["access_token"])
-                goto('/dashboard')
-            } else {
-                error = js["message"]
-            }
+                    if (res.ok) {
+                        Cookies.set("access_token", js["access_token"])
+                        goto('/dashboard')
+                    } else {
+                        error = js["message"]
+                    }
+                })
+            else
+                console.log(await res.text())
         })
     }
 </script>
@@ -152,15 +165,16 @@
     <img src="src/lib/assets/login-image.svg"/>
 
     <div class="login-container row">
-        <h1>Login</h1>
+        <h1>Register</h1>
         <form onsubmit={handleSubmit} class="login-form row">
+            <label>nama</label>
+            <input name="nama" type="text" required>
             <label>email</label>
             <input name="email" type="text" required>
             <label>password</label>
             <input name="password" type="password"  required>
             <p class="text-red-500">{error}</p>
-            <button type="submit">Login</button>
+            <button type="submit">Register</button>
         </form>
-        <a href="/register">buat akun admin (dev)</a>
     </div>
 </div>
