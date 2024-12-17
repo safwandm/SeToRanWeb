@@ -1,4 +1,4 @@
-<style>
+<style>        
     #pelanggan {
         display: flex;
         flex-direction: column;
@@ -71,6 +71,15 @@
         display: flex;
         gap: 20px;
     }
+
+    .input-select {
+        display: flex;
+        flex-direction: column;
+    }
+
+    select {
+        padding: 5px;
+    }
 </style>
 
 <div id="pelanggan">
@@ -135,7 +144,7 @@
                                 <td>{pel.status === 'verified' ? 'Verified' : 'Not Verified'}</td>
                                 <td>{formatDate(pel.lastActive)}</td>
                                 <td>
-                                    <button class="btn-action">Detail</button>
+                                    <a class="btn-action" href="/pelanggan/detail">Detail</a>
                                 </td>
                             </tr>
                         {/each}
