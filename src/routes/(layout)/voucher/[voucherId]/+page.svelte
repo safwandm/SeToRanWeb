@@ -16,19 +16,14 @@
     let selectedVoucher = $state({
         status_voucher: "aktif"
     })
+    let originalVoucher;
     
     let daterangevalue = $state({
-     start: new CalendarDate(2022, 1, 20),
-     end: new CalendarDate(2022, 1, 20).add({ days: 20 })
+     start: null,
+     end: null
     });
 
-    let originalVoucher;
-    // $derived(
-    //     voucher.find((item) => {
-    //         if (item.id == selectedVoucherId)
-    //             return item
-    //     })??{}
-    // )
+    let errors = $state({})
 
     let editing = $state(false);
     let loading = $state(true)
@@ -45,6 +40,18 @@
 
     function onSubmit(e) {
         e.preventDefault()
+        // TODO: implement input validation
+
+        errors = {}
+        if (!selectedVoucher.tanggal_mulai) {
+            errors.tanggal = "Required!"
+        }
+        if (!selectedVoucher.nama_voucher) {
+            errors.nama_voucher = "Required!"
+        }
+
+        if (errors)
+            return
 
         postAuth("/api/vouchers/" + selectedVoucherId, selectedVoucher, {
             "method": "PUT"
@@ -62,6 +69,7 @@
     function onCancel(e) {
         selectedVoucher = originalVoucher;
         setInitialValue(originalVoucher)
+        errors = {}
     }
 
     function fetchVoucher() {
@@ -154,6 +162,10 @@
     .a-unstyle {
         text-decoration: none;
     }
+
+    .error-container {
+
+    }
 </style>
 
 <div class="breadcrumb">
@@ -164,7 +176,10 @@
 {#snippet input(name, label, voucherKey, readonly)}
     <div class="input-row">
         <label for={name}>{label}</label>
-        <input id={name} class={editing&&!readonly?'input-edit':''} bind:value={selectedVoucher[voucherKey]} readonly={readonly}/>
+        <input id={name} class={editing&&!readonly?'input-edit':''} bind:value={selectedVoucher[voucherKey]} readonly={readonly} />
+        {#if errors[voucherKey]}
+                <div class="pl-5 text-red-600">{errors[voucherKey]}</div>
+        {/if}
     </div>
 {/snippet}
 
@@ -175,7 +190,6 @@
         {@render input('nama', 'Nama', 'nama_voucher', false)}        
         <div class="input-row">
             <label for='status'>Status</label>
-            <!-- <input id="status" type="" bind:value={selectedVoucher.statusVoucher} readonly={!editing}/> -->
             <select bind:value={selectedVoucher.status_voucher} id="status" class={!editing?'':'input-edit'} disabled={false}>
                 <option id="aktif" value="aktif">Aktif</option>
                 <option id="nonAktif" value="nonAktif">Non Aktif</option>
@@ -184,11 +198,14 @@
         <div class="input-row">
             <label for='date'>Tanggal Aktif Voucher</label>
             <RangeDatePicker bind:value={daterangevalue} width="360px"/>
+            {#if errors.tanggal}
+                <div class="pl-5 text-red-600">{errors.tanggal}</div>
+            {/if}
         </div>
         <div class="input-row">
             <a class="flex-center a-unstyle btn-action" href="/voucher">Back</a>
             {#if editing && selectedVoucher.id_voucher}
-                <button type="submit" class={"btn-action " + (!editing?"disabled":"")} onclick={onSubmit}>
+                <button type="submit" class={"btn-action " + (!editing?"disabled":"")}>
                     save
                 </button>
                 <button class={"btn-action" + (!editing?"disabled":"")} style="background-color: red;" onclick={onCancel}>

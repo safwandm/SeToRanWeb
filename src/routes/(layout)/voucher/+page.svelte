@@ -8,6 +8,7 @@
 	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
 	import { backendHost, fetchAuth, postAuth } from "$lib/utilities";
 	import { toast } from "svelte-sonner";
+	import { validate } from "./voucherValidation";
     
     let vouchers = $state([])
     
@@ -18,6 +19,7 @@
 
     let dialogOpen = $state(false)
     let dateRangeValue = $state({})
+    let errors = $state({})
 
     let statusMap = {
         nonAktif: "Non Aktif",
@@ -28,13 +30,17 @@
         e.preventDefault()
 
         let data = {
-            "id": e.target.id.value,
-            "nama_voucher": e.target.namaVoucher.value,
-            "status_voucher": e.target.statusVoucher.value,
+            "kode_voucher": e.target.kode_voucher.value, // implementasi backend
+            "nama_voucher": e.target.nama_voucher.value,
+            "status_voucher": e.target.status_voucher.value,
             "tanggal_mulai": dateRangeValue.start?.toString()??'',
             "tanggal_akhir": dateRangeValue.end?.toString()??''
         }
         
+        errors = validate(data)
+        if (errors)
+            return
+
         postAuth("/api/vouchers", data).then(async res => {
             if (res.ok) {
                 getVoucher()
@@ -127,8 +133,12 @@
         margin-top: 10px;
     }
 
-    select, input {
+    .input-row {
         margin-top: 10px;
+    }
+
+    select, input {
+        margin-top: 5px;
 
         height: 40px;
         width: 100%;
@@ -210,24 +220,40 @@
     </div>
 </div>
 
+{#snippet input(key, label)}
+    <div class="input-row">
+        <label for={key}>{label}</label>
+        <input id={key} name="id" />
+        {#if errors[key]}
+            <p class="text-red-600">{errors[key]}</p>
+        {/if}
+    </div>
+{/snippet}
+
 <Dialog.Root bind:open={dialogOpen}>
     <Dialog.Content>
       <Dialog.Header>
         <Dialog.Title>Tambah Voucher</Dialog.Title>
         <Dialog.Description>
             <form onsubmit={addVoucher}>
-                <label for="id">ID</label>
-                <input id="id" name="id" />
-                <label for="namaVoucher">Nama Voucher</label>
-                <input id="namaVoucher" name="namaVoucher" />
-                <label for="statusVoucher">Status Voucher</label>
-                <select id="statusVoucher" name="statusVoucher">
-                    {#each Object.entries(statusMap) as [key, val]}
-                        <option value={key}>{val}</option>
-                    {/each}
-                </select>
-                <RangeDatePicker bind:value={dateRangeValue} />
-                <div class="flex-center">
+                {@render input("kode_voucher", "Kode Voucher")}
+                {@render input("nama_voucher", "Nama Voucher")}
+                <div class="input-row">
+                    <label for="status_voucher">Status Voucher</label>
+                    <select id="status_voucher" name="status_voucher">
+                        {#each Object.entries(statusMap) as [key, val]}
+                            <option value={key}>{val}</option>
+                        {/each}
+                    </select>
+                </div>
+                <div class="input-row">
+                    <label>Tanggal Aktif Voucher</label>
+                    <RangeDatePicker bind:value={dateRangeValue} />
+                    {#if errors.tanggal}
+                        <p class="text-red-600">{errors.tanggal}</p>
+                    {/if}
+                </div>
+                <div class="flex-center mt-3">
                     <button type="submit" class="btn-action">
                         Submit
                     </button>
