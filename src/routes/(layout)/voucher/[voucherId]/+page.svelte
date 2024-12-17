@@ -11,6 +11,7 @@
      parseDate
     } from "@internationalized/date";
 	import { fetchAuth, postAuth } from '$lib/utilities';
+	import { validate } from '../voucherValidation';
     
     let selectedVoucherId = $page.params['voucherId']
     let selectedVoucher = $state({
@@ -42,15 +43,9 @@
         e.preventDefault()
         // TODO: implement input validation
 
-        errors = {}
-        if (!selectedVoucher.tanggal_mulai) {
-            errors.tanggal = "Required!"
-        }
-        if (!selectedVoucher.nama_voucher) {
-            errors.nama_voucher = "Required!"
-        }
+        errors = validate(selectedVoucher)
 
-        if (errors)
+        if (Object.keys(errors).length !== 0)
             return
 
         postAuth("/api/vouchers/" + selectedVoucherId, selectedVoucher, {
@@ -63,6 +58,8 @@
             } else {
                 toast.error("Voucher gagal di update")
             }
+        }).catch(res => {
+            toast.error("Voucher gagal di update")
         })
     }
 

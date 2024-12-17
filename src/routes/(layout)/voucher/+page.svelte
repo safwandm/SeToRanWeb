@@ -38,7 +38,7 @@
         }
         
         errors = validate(data)
-        if (errors)
+        if (Object.keys(errors).length !== 0)
             return
 
         postAuth("/api/vouchers", data).then(async res => {
@@ -50,6 +50,8 @@
                 console.log(await res.text())
                 toast.error("Voucher gagal di buat")
             }
+        }).catch(res => {
+            toast.error("Voucher gagal di buat")
         })
     }
 
