@@ -9,13 +9,18 @@
     import { onMount } from 'svelte';
     import { currentUser } from '$lib/store';
     import { redirect } from '@sveltejs/kit';
-	import { fetchAuth } from '$lib/utilities';
 	import { Toaster } from '$lib/components/ui/sonner';
+	import { BaseApi } from '$lib/baseApi';
 
     let { children } = $props();
 
+    // init base api pertama kali untuk semua aplikasi sisi client
+    $effect.pre(() => {
+        BaseApi.initInstance()
+    })
+
     async function verifyUser() {
-        await fetchAuth("/api/current-user")
+        await BaseApi.ins.fetchAuth("/api/current-user")
             .then(async res => {
                 let js = await res.json()
 
@@ -33,7 +38,7 @@
             "/login",
             "/register"
         ]
-        
+
         const currentRoute = $page.url.pathname; 
         if (!$currentUser.username && !allowRoutes.includes(currentRoute)) {
             goto('/login');

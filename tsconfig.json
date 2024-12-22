@@ -11,6 +11,7 @@
 		"strict": false,
 		"moduleResolution": "bundler",
 		"noImplicitAny": false,
+		"allowImportingTsExtensions": true,
 		"paths": {
 			"$lib/*": ["./src/lib/*"],
 			"src/*" : [

@@ -10,9 +10,11 @@
      CalendarDate,
      parseDate
     } from "@internationalized/date";
-	import { fetchAuth, postAuth } from '$lib/utilities';
 	import { validate } from '../voucherValidation';
+	import { BaseApi } from '$lib/baseApi.js';
     
+    let { data } = $props()
+
     let selectedVoucherId = $page.params['voucherId']
     let selectedVoucher = $state({
         status_voucher: "aktif"
@@ -27,28 +29,26 @@
     let errors = $state({})
 
     let editing = $state(false);
-    let loading = $state(true)
 
     onMount(() => {
-        fetchVoucher()
+        selectedVoucher = data.voucher
+        setInitialValue(selectedVoucher)
     })
 
     $effect(() => {
         // selectedVoucher.namaVoucher;selectedVoucher.statusVoucher;selectedVoucher.tglMulai;selectedVoucher.tglAkhir
         editing = JSON.stringify($state.snapshot(selectedVoucher)) != JSON.stringify(originalVoucher)
-        console.log($state.snapshot(selectedVoucher), originalVoucher)
     })
 
     function onSubmit(e) {
         e.preventDefault()
-        // TODO: implement input validation
 
         errors = validate(selectedVoucher)
 
         if (Object.keys(errors).length !== 0)
             return
 
-        postAuth("/api/vouchers/" + selectedVoucherId, selectedVoucher, {
+        BaseApi.ins.postAuth("/api/vouchers/" + selectedVoucherId, selectedVoucher, {
             "method": "PUT"
         }).then(res => {
             if (res.ok) {
@@ -67,25 +67,6 @@
         selectedVoucher = originalVoucher;
         setInitialValue(originalVoucher)
         errors = {}
-    }
-
-    function fetchVoucher() {
-        fetchAuth("/api/vouchers/" + selectedVoucherId).then(async res => {
-            if (res.ok) {
-                let js = await res.json()
-
-                // biar gak ke update di server nya
-                delete js.created_at
-                delete js.updated_at
-
-                selectedVoucher = js
-                setInitialValue(js)
-
-                loading = false
-            } else {
-                console.log(await res.text())
-            }
-        })
     }
 
     function setInitialValue(js) {
@@ -208,8 +189,6 @@
                 <button class={"btn-action" + (!editing?"disabled":"")} style="background-color: red;" onclick={onCancel}>
                     cancel
                 </button>
-            {:else if (loading)}
-                Loading ...
             {:else if (!selectedVoucher.id_voucher)}
                 Data not found
             {/if}
