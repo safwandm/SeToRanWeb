@@ -11,7 +11,7 @@
      parseDate
     } from "@internationalized/date";
 	import { validate } from '../voucherValidation';
-	import { BaseApi } from '$lib/baseApi.js';
+	import { BaseApi } from '$lib/baseApi';
     
     let { data } = $props()
 
