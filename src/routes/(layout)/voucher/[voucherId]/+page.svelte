@@ -82,8 +82,6 @@
         selectedVoucher.tanggal_mulai = daterangevalue.start?.toString()??''
         selectedVoucher.tanggal_akhir = daterangevalue.end?.toString()??''
     })
-    
-
 </script>
 
 <style>
@@ -151,10 +149,10 @@
     <p>Home / Voucher / <b>{selectedVoucherId}</b></p>
 </div>
 
-{#snippet input(name, label, voucherKey, readonly)}
+{#snippet input(label, voucherKey, readonly, type="text")}
     <div class="input-row">
-        <label for={name}>{label}</label>
-        <input id={name} class={editing&&!readonly?'input-edit':''} bind:value={selectedVoucher[voucherKey]} readonly={readonly} />
+        <label for={voucherKey}>{label}</label>
+        <input type={type} id={voucherKey} class={editing&&!readonly?'input-edit':''} bind:value={selectedVoucher[voucherKey]} readonly={readonly} />
         {#if errors[voucherKey]}
                 <div class="pl-5 text-red-600">{errors[voucherKey]}</div>
         {/if}
@@ -164,8 +162,10 @@
 <div class="card">
     <h3>Detail Voucher</h3>
     <form onsubmit={onSubmit}>
-        {@render input('id', 'Id', 'id_voucher', true)}
-        {@render input('nama', 'Nama', 'nama_voucher', false)}        
+        {@render input('Id', 'id_voucher', true)}
+        {@render input('Nama', 'nama_voucher', false)}
+        {@render input('Kode', 'kode_voucher', false)}     
+        {@render input('Persen Voucher', 'persen_voucher', false, "number")}           
         <div class="input-row">
             <label for='status'>Status</label>
             <select bind:value={selectedVoucher.status_voucher} id="status" class={!editing?'':'input-edit'} disabled={false}>

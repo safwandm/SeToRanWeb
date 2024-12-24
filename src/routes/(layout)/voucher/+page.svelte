@@ -26,13 +26,13 @@
         aktif: "Aktif"
     }
 
+    let formData = $state({})
+
     function addVoucher(e) {
         e.preventDefault()
 
         let data = {
-            "kode_voucher": e.target.kode_voucher.value, // implementasi backend
-            "nama_voucher": e.target.nama_voucher.value,
-            "status_voucher": e.target.status_voucher.value,
+            ...formData,
             "tanggal_mulai": dateRangeValue.start?.toString()??'',
             "tanggal_akhir": dateRangeValue.end?.toString()??''
         }
@@ -177,8 +177,9 @@
         <table style="width: 100%;">
             <thead>
                 <tr>
-                    <th class="w-[77px]">ID</th>
+                    <th class="w-[130px]">Kode</th>
                     <th class="w-[308px]">Nama Voucher</th>
+                    <th class="w-[77px]">Persentase</th>
                     <th class="w-[145px]">Status Voucher</th>
                     <th class="w-[145px]">Tgl Mulai</th>
                     <th class="w-[145px]">Tgl Akhir</th>
@@ -188,8 +189,9 @@
             <tbody>
                 {#each vouchers as item}
                     <tr>
-                        <td>{item.id_voucher}</td>
+                        <td>{item.kode_voucher}</td>
                         <td>{item.nama_voucher}</td>
+                        <td>{item.persen_voucher}%</td>
                         <td>{statusMap[item.status_voucher]}</td>
                         <td>{item.tanggal_mulai}</td>
                         <td>{item.tanggal_akhir}</td>
@@ -222,10 +224,10 @@
     </div>
 </div>
 
-{#snippet input(key, label)}
+{#snippet input(key, label, type="text")}
     <div class="input-row">
         <label for={key}>{label}</label>
-        <input id={key} name="id" />
+        <input bind:value={formData[key]} type={type} id={key} name="id" />
         {#if errors[key]}
             <p class="text-red-600">{errors[key]}</p>
         {/if}
@@ -240,9 +242,10 @@
             <form onsubmit={addVoucher}>
                 {@render input("kode_voucher", "Kode Voucher")}
                 {@render input("nama_voucher", "Nama Voucher")}
+                {@render input('persen_voucher','Persen Voucher', "number")}  
                 <div class="input-row">
                     <label for="status_voucher">Status Voucher</label>
-                    <select id="status_voucher" name="status_voucher">
+                    <select bind:value={formData.status_voucher} id="status_voucher" name="status_voucher">
                         {#each Object.entries(statusMap) as [key, val]}
                             <option value={key}>{val}</option>
                         {/each}
