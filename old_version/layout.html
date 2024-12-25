@@ -128,7 +128,7 @@
         // handle forward/backward browser
         window.addEventListener('popstate', (ev) => {
             const path = window.location.pathname;
-
+            console.log(path)
             // if (availablePages.includes(pageName))
             changePage(path, false)
         });
@@ -137,15 +137,17 @@
         $(document).ready(() => {
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get("page");
-
+            console.log(page, window.location.search, window.location.href)
             // if (availablePages.includes(page))
-            changePage(`/${page}.html`)
+            urlParams.delete("page");
+            const otherParams = urlParams.toString();
+            changePage(`/${page}.html${otherParams ? '?' + otherParams : ''}`);
         })
 
         function toggleDialog(name) {
-            // let boxes = ['.notification', '.messages']
-            // boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
-            // $(name).toggle()
+            let boxes = ['.notification', '.messages']
+            boxes.forEach((box) => box != name?$(box).hide():null) // kalau box == name do nothing
+            $(name).toggle()
         }
 
         var popbox = new Popbox({

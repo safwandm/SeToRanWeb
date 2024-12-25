@@ -1,0 +1,39 @@
+{
+    "diskon": [
+        {
+            "id": "DSK001",
+            "namaPromo": "Diskon Akhir Tahun",
+            "statusPromo": "Aktif",
+            "tglMulai": "01-12-2024",
+            "tglAkhir": "31-12-2024"
+        },
+        {
+            "id": "DSK002",
+            "namaPromo": "Promo Imlek",
+            "statusPromo": "Aktif",
+            "tglMulai": "10-02-2024",
+            "tglAkhir": "20-02-2024"
+        },
+        {
+            "id": "DSK003",
+            "namaPromo": "Diskon Valentine",
+            "statusPromo": "Non Aktif",
+            "tglMulai": "14-02-2024",
+            "tglAkhir": "14-02-2024"
+        },
+        {
+            "id": "DSK004",
+            "namaPromo": "Promo Ramadhan",
+            "statusPromo": "Aktif",
+            "tglMulai": "01-03-2024",
+            "tglAkhir": "31-03-2024"
+        },
+        {
+            "id": "DSK005",
+            "namaPromo": "Diskon Lebaran",
+            "statusPromo": "Non Aktif",
+            "tglMulai": "01-04-2024",
+            "tglAkhir": "15-04-2024"
+        }
+    ]
+}
