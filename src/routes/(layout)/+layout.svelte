@@ -6,8 +6,16 @@
 	import { currentUser } from '$lib/store';
 	import { redirect } from '@sveltejs/kit';
 	import * as Popover from '$lib/components/ui/popover';
+	import * as AlertDialog from "$lib/components/ui/alert-dialog/index";
+	import { LogOut } from 'lucide-svelte';
+	import Cookies from 'js-cookie';
 
 	let { children } = $props();
+
+	function logOut() {
+		Cookies.remove("access_token")
+		document.location.reload()
+	}
 </script>
 
 <!-- render page dengan layout -->
@@ -47,6 +55,21 @@
 				</Popover.Trigger>
 				<Popover.Content><h3>Notifications</h3></Popover.Content>
 			</Popover.Root>
+			<AlertDialog.Root>
+				<AlertDialog.Trigger><LogOut /> 	</AlertDialog.Trigger>
+				<AlertDialog.Content class="w-[300px]">
+				  <AlertDialog.Header>
+					<AlertDialog.Title>Konfirmasi Log Out</AlertDialog.Title>
+					<AlertDialog.Description>
+					  Anda yakin ingin log out dari aplikasi?
+					</AlertDialog.Description>
+				  </AlertDialog.Header>
+				  <AlertDialog.Footer>
+					<AlertDialog.Cancel>Batal</AlertDialog.Cancel>
+					<AlertDialog.Action onclick={logOut}>Log Out</AlertDialog.Action>
+				  </AlertDialog.Footer>
+				</AlertDialog.Content>
+			  </AlertDialog.Root>
 		</div>
 	</header>
 
@@ -188,7 +211,7 @@
 	}
 
 	.header-right {
-		width: 80px;
+		width: 120px;
 
 		display: flex;
 		align-items: center;

@@ -1,3 +1,7 @@
+<svelte:head>
+    <title>Detail Voucher</title>
+</svelte:head>
+
 <script>
     import voucher from '$lib/json/voucher.json'
 	import { onMount } from 'svelte';
@@ -40,10 +44,10 @@
         editing = JSON.stringify($state.snapshot(selectedVoucher)) != JSON.stringify(originalVoucher)
     })
 
-    function onSubmit(e) {
+    async function onSubmit(e) {
         e.preventDefault()
 
-        errors = validate(selectedVoucher)
+        errors = await validate(selectedVoucher)
 
         if (Object.keys(errors).length !== 0)
             return
