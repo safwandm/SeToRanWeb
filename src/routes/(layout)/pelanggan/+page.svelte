@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { BaseApi } from '$lib/baseApi';
 	import * as jqa from 'jquery';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.ts';
 	const jq = jqa.default;
 
 	let filter = $state({
@@ -20,6 +21,16 @@
 
 			pelanggan = data;
 		});
+
+		if (filter.sortBy) {
+			if (filter.sortBy === 'username') {
+				pelanggan.sort((a, b) => {
+					let x = filter.order === 'ascending' ? a : b;
+					let y = filter.order === 'ascending' ? b : a;
+					return x.nama.localeCompare(y.nama);
+				});
+			}
+		}
 
 		// jq.getJSON('src/lib/json/pelanggan.json', (data) => {
 		// 	pelanggan = [];
@@ -53,20 +64,29 @@
 	}
 
 	function loadTableActiveTransaction() {
-		jq.getJSON('src/lib/json/transaction.json', (data) => {
-			data.transaction.forEach((trans) => {
-				transaction.push({
-					id: trans.id,
-					username: trans.username,
-					startDate: parseDate(trans.startDate),
-					endDate: parseDate(trans.endDate)
-				});
-			});
+		BaseApi.ins.fetchAuth('/api/transaksi/aktif').then(async (res) => {
+			const data = await res.json();
+			// console.log(data.data);
+
+			transaction = data.data;
+			console.log(transaction);
+			console.log(typeof transaction[0].tanggal_mulai);
 		});
+		// jq.getJSON('src/lib/json/transaction.json', (data) => {
+		// 	data.transaction.forEach((trans) => {
+		// 		transaction.push({
+		// 			id: trans.id,
+		// 			username: trans.username,
+		// 			startDate: parseDate(trans.startDate),
+		// 			endDate: parseDate(trans.endDate)
+		// 		});
+		// 	});
+		// });
 	}
 
 	function parseDate(dateString) {
-		let [day, month, year] = dateString.split('-');
+		let [date, time] = dateString.split(' ');
+		let [year, month, day] = date.split('-');
 		return new Date(year, month - 1, day);
 	}
 
@@ -74,6 +94,13 @@
 		let day = date.getDate().toString().padStart(2, '0');
 		let month = (date.getMonth() + 1).toString().padStart(2, '0');
 		let year = date.getFullYear();
+		return `${day}-${month}-${year}`;
+	}
+
+	function formatStringDate(dateString) {
+		// asumsi format dari db yyyy-mm-dd hh:mm:ss
+		let [date, time] = dateString.split(' ');
+		let [year, month, day] = date.split('-');
 		return `${day}-${month}-${year}`;
 	}
 
@@ -91,19 +118,29 @@
 </script>
 
 <div id="pelanggan">
-	<div class="breadcrumb">
-		<p class="breadcrumb-title">Pelanggan</p>
-		<p class="breadcrumb-path">Home / <span class="breadcrumb-current-path">Pelanggan</span></p>
+	<div>
+		<h1 class="text-2xl font-medium">Pelanggan</h1>
+		<Breadcrumb.Root>
+			<Breadcrumb.List>
+				<Breadcrumb.Item>
+					<Breadcrumb.Link>Home</Breadcrumb.Link>
+				</Breadcrumb.Item>
+				<Breadcrumb.Separator />
+				<Breadcrumb.Item>
+					<Breadcrumb.Page>Pelanggan</Breadcrumb.Page>
+				</Breadcrumb.Item>
+			</Breadcrumb.List>
+		</Breadcrumb.Root>
 	</div>
 	<div class="row">
-		<div class="card">
-			<p class="card-title">Transaction Active</p>
+		<div class="card" style="width: 100%;">
+			<p class="card-title">Active Transaction</p>
 			<div class="card-content">
 				<table id="transaction-table">
 					<thead>
 						<tr>
-							<th>Transaction ID</th>
-							<th>Username</th>
+							<th>ID</th>
+							<th>Nama</th>
 							<th>Start Date</th>
 							<th>End Date</th>
 							<th>Action</th>
@@ -112,10 +149,10 @@
 					<tbody>
 						{#each transaction as trans}
 							<tr>
-								<td>{trans.id}</td>
-								<td>{trans.username}</td>
-								<td>{formatDate(trans.startDate)}</td>
-								<td>{formatDate(trans.endDate)}</td>
+								<td>{trans.id_transaksi}</td>
+								<td>{trans.nama}</td>
+								<td>{formatStringDate(trans.tanggal_mulai)}</td>
+								<td>{formatStringDate(trans.tanggal_selesai)}</td>
 								<td>
 									<button class="btn-action">Detail</button>
 								</td>
@@ -127,36 +164,24 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="card">
+		<div class="card" id="semua-pelanggan-card">
 			<p class="card-title">Semua Pelanggan</p>
 			<div class="card-content">
 				<table id="pelanggan-table">
 					<thead>
 						<tr>
-							<!-- <th>Nama</th>
-							<th>Email</th>
-							<th>Status</th>
-							<th>Last Active</th>
-							<th>Action</th> -->
 							<th>Nama</th>
 							<th>Email</th>
-							<th>Nomor SIM</th>
+							<th>Nomor Telepon</th>
 							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
 						{#each pelanggan as pel}
 							<tr>
-								<!-- <td>{pel.username}</td>
-								<td>{pel.email}</td>
-								<td>{pel.status === 'verified' ? 'Verified' : 'Not Verified'}</td>
-								<td>{formatDate(pel.lastActive)}</td>
-								<td>
-									<a class="btn-action" href="/pelanggan/detail">Detail</a>
-								</td> -->
 								<td>{pel.nama}</td>
 								<td>{pel.email}</td>
-								<td>{pel.nomor_SIM}</td>
+								<td>{pel.nomor_telepon}</td>
 								<td>
 									<a class="btn-action" href="/pelanggan/{pel.id_pelanggan}">Detail</a>
 								</td>
@@ -166,8 +191,8 @@
 				</table>
 			</div>
 		</div>
-		<div class="card">
-			<p class="card-title">Filter</p>
+		<div class="card" id="filter-sort-card">
+			<p class="card-title">Filter & Sort</p>
 			<div class="card-content">
 				<div class="input-select">
 					<label for="status">Status</label>
@@ -233,7 +258,7 @@
 		padding: 16px;
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
+		gap: 16px;
 		/* width: 100%; */
 	}
 
@@ -274,6 +299,14 @@
 		gap: 20px;
 	}
 
+	#semua-pelanggan-card {
+		flex-grow: 2;
+	}
+
+	#filter-sort-card {
+		flex-grow: 1;
+	}
+
 	.input-select {
 		display: flex;
 		flex-direction: column;
@@ -281,5 +314,23 @@
 
 	select {
 		padding: 5px;
+	}
+
+	select {
+		margin-top: 5px;
+
+		height: 40px;
+		width: 100%;
+
+		border: 1px solid #dfdddd;
+		border-radius: 4px;
+
+		padding-left: 10px;
+
+		background-color: white;
+		color: black;
+	}
+	select[disabled] {
+		background-color: #e9e9ed;
 	}
 </style>
