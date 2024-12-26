@@ -2,18 +2,18 @@ import { BaseApi } from "$lib/baseApi"
 
 export async function validate(formData) {
     let errors = {}
-    // TODO: cek kode voucher udah kepake apa belum ke backend
-
-    var res = await BaseApi.ins.fetchAuth("/api/voucher/kode/" + formData.kode_voucher)
-    if (res.ok) {
-        var js = await res.json()
-        if (js.id_voucher != formData.id_voucher)
-            errors.kode_voucher = "Kode voucher sudah digunakan"
-    }
 
     if (!formData.kode_voucher) {
         errors.kode_voucher = "Required!"
+    } else {
+        var res = await BaseApi.ins.fetchAuth("/api/voucher/kode/" + formData.kode_voucher)
+        if (res.ok) {
+            var js = await res.json()
+            if (js.id_voucher != formData.id_voucher)
+                errors.kode_voucher = "Kode voucher sudah digunakan"
+        }
     }
+    
     if (!formData.tanggal_mulai) {
         errors.tanggal = "Required!"
     }
