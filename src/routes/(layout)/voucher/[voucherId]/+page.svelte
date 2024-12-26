@@ -40,10 +40,10 @@
         editing = JSON.stringify($state.snapshot(selectedVoucher)) != JSON.stringify(originalVoucher)
     })
 
-    function onSubmit(e) {
+    async function onSubmit(e) {
         e.preventDefault()
 
-        errors = validate(selectedVoucher)
+        errors = await validate(selectedVoucher)
 
         if (Object.keys(errors).length !== 0)
             return

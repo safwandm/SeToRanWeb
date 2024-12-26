@@ -28,7 +28,7 @@
 
     let formData = $state({})
 
-    function addVoucher(e) {
+    async function addVoucher(e) {
         e.preventDefault()
 
         let data = {
@@ -37,7 +37,7 @@
             "tanggal_akhir": dateRangeValue.end?.toString()??''
         }
         
-        errors = validate(data)
+        errors = await validate(data)
         if (Object.keys(errors).length !== 0)
             return
 
@@ -189,8 +189,8 @@
             <tbody>
                 {#each vouchers as item}
                     <tr>
-                        <td>{item.kode_voucher}</td>
                         <td>{item.nama_voucher}</td>
+                        <td>{item.kode_voucher}</td>
                         <td>{item.persen_voucher}%</td>
                         <td>{statusMap[item.status_voucher]}</td>
                         <td>{item.tanggal_mulai}</td>
