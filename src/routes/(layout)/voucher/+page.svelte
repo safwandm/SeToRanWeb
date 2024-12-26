@@ -1,3 +1,7 @@
+<svelte:head>
+    <title>Voucher</title>
+</svelte:head>
+
 <script>
     import * as Dialog from "$lib/components/ui/dialog";
 	import { goto } from '$app/navigation';
@@ -90,8 +94,37 @@
 </script>
 
 <style>
-    table {
+    /* table {
         padding-top: 16px;
+        width: 100%;
+        max-width: 966px;
+    }
+
+    td {
+        overflow-x: scroll;
+    } */
+
+    table {
+        width: 100%;
+        max-width: 966px;
+        margin: auto; 
+        border-collapse: collapse;
+    }
+
+    th, td {
+        word-wrap: break-word;
+        word-break: break-word; 
+        white-space: normal; 
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        white-space: nowrap;
+    }
+
+    td:nth-child(5), td:nth-child(6) {
+        white-space: nowrap;
     }
     
     .btn-action {
@@ -177,13 +210,13 @@
         <table style="width: 100%;">
             <thead>
                 <tr>
-                    <th class="w-[130px]">Kode</th>
-                    <th class="w-[308px]">Nama Voucher</th>
-                    <th class="w-[77px]">Persentase</th>
-                    <th class="w-[145px]">Status Voucher</th>
-                    <th class="w-[145px]">Tgl Mulai</th>
-                    <th class="w-[145px]">Tgl Akhir</th>
-                    <th class="w-[112px]">Aksi</th>
+                    <th class="max-w-[308px]">Nama Voucher</th>
+                    <th class="max-w-[130px]">Kode</th>
+                    <th class="max-w-[77px]">Persen</th>
+                    <th class="max-w-[145px]">Status Voucher</th>
+                    <th class="max-w-[145px]">Tgl Mulai</th>
+                    <th class="max-w-[145px]">Tgl Akhir</th>
+                    <th class="max-w-[112px]">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -193,8 +226,8 @@
                         <td>{item.kode_voucher}</td>
                         <td>{item.persen_voucher}%</td>
                         <td>{statusMap[item.status_voucher]}</td>
-                        <td>{item.tanggal_mulai}</td>
-                        <td>{item.tanggal_akhir}</td>
+                        <td class="whitespace-nowrap">{item.tanggal_mulai}</td>
+                        <td class="whitespace-nowrap">{item.tanggal_akhir}</td>
                         <td style="text-align: center;">
                             <a class="flex-center btn-action" href={"/voucher/" + item.id_voucher}>Detail</a>
                         </td>

@@ -1,3 +1,7 @@
+<svelte:head>
+    <title>Detail Voucher</title>
+</svelte:head>
+
 <script>
     import voucher from '$lib/json/voucher.json'
 	import { onMount } from 'svelte';
