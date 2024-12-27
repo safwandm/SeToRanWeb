@@ -45,7 +45,7 @@
         if (Object.keys(errors).length !== 0)
             return
 
-        BaseApi.ins.postAuth("/api/vouchers", data).then(async res => {
+        BaseApi.ins.postAuth("/api/voucher", data).then(async res => {
             if (res.ok) {
                 getVoucher()
                 dialogOpen = false

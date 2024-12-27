@@ -52,7 +52,7 @@
         if (Object.keys(errors).length !== 0)
             return
 
-        BaseApi.ins.postAuth("/api/vouchers/" + selectedVoucherId, selectedVoucher, {
+        BaseApi.ins.postAuth("/api/voucher/" + selectedVoucherId, selectedVoucher, {
             "method": "PUT"
         }).then(res => {
             if (res.ok) {
