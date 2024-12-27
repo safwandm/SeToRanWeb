@@ -13,6 +13,7 @@
 	import { toast } from "svelte-sonner";
 	import { validate } from "./voucherValidation";
 	import { BaseApi } from "$lib/baseApi";
+	import { DateFormatter, getLocalTimeZone, parseDate } from "@internationalized/date";
     
     let vouchers = $state([])
     
@@ -91,6 +92,11 @@
     getVoucher()
     // onMount(() => {
     // })
+
+    const df = new DateFormatter("en-GB", {
+        dateStyle: "medium"
+    });
+
 </script>
 
 <style>
@@ -226,8 +232,8 @@
                         <td>{item.kode_voucher}</td>
                         <td>{item.persen_voucher}%</td>
                         <td>{statusMap[item.status_voucher]}</td>
-                        <td class="whitespace-nowrap">{item.tanggal_mulai}</td>
-                        <td class="whitespace-nowrap">{item.tanggal_akhir}</td>
+                        <td class="whitespace-nowrap">{df.format(parseDate(item.tanggal_mulai).toDate(getLocalTimeZone()))}</td>
+                        <td class="whitespace-nowrap">{df.format(parseDate(item.tanggal_akhir).toDate(getLocalTimeZone()))}</td>
                         <td style="text-align: center;">
                             <a class="flex-center btn-action" href={"/voucher/" + item.id_voucher}>Detail</a>
                         </td>
