@@ -263,64 +263,68 @@
     }
 
     function reloadTable() {
-        $.get('./json/motor.json',
-            function (data, status) {
+        $.ajax(
+            {
+                url: './json/motor.json',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (filterObj.tahun) {
+                        data.motors = data.motors.filter(motor => motor.year == filterObj.tahun)
+                    }
 
-                if (filterObj.tahun) {
-                    data.motors = data.motors.filter(motor => motor.year == filterObj.tahun)
-                }
+                    if (filterObj.transmisi) {
+                        data.motors = data.motors.filter(motor => motor.transmission == filterObj.transmisi)
+                    }
 
-                if (filterObj.transmisi) {
-                    data.motors = data.motors.filter(motor => motor.transmission == filterObj.transmisi)
-                }
+                    if (filterObj.status) {
+                        data.motors = data.motors.filter(motor => motor.status == filterObj.status)
+                    }
 
-                if (filterObj.status) {
-                    data.motors = data.motors.filter(motor => motor.status == filterObj.status)
-                }
+                    if (filterObj.tipePemilik) {
+                        data.motors = data.motors.filter(function (motor) {
 
-                if (filterObj.tipePemilik) {
-                    data.motors = data.motors.filter(function (motor) {
+                            if (filterObj.tipePemilik == "Perusahaan") {
+                                return motor.owner == "Perusahaan"
+                            } else if (filterObj.tipePemilik == "Mitra") {
+                                return motor.owner != "Perusahaan"
+                            }
 
-                        if (filterObj.tipePemilik == "Perusahaan") {
-                            return motor.owner == "Perusahaan"
-                        } else if (filterObj.tipePemilik == "Mitra") {
-                            return motor.owner != "Perusahaan"
-                        }
+                        })
+                    }
 
+                    let queryNama = filterObj.pencarian.nama
+                    if (queryNama) {
+                        console.log('test')
+                        let regex = new RegExp(queryNama, "i")
+                        data.motors = data.motors.filter(motor => regex.test(motor.name))
+                    }
+
+                    let motorTable = $('.card tbody');
+                    if (motorTable.children($('tr')).length != 0) {
+                        motorTable.empty()
+                    }
+
+                    data.motors.forEach(function (motor) {
+                        motorTable.append(`
+                                    <tr>
+                                        <td>${motor.id}</td>
+                                        <td>${motor.name}</td>
+                                        <td>${motor.year}</td>
+                                        <td>${motor.transmission}</td>
+                                        <td>${motor.status}</td>
+                                        <td>${motor.dailyRate}</td>
+                                        <td>${motor.owner}</td>
+                                        <td><button class="btn-action action-button">Detail</button></td>
+                                    </tr>
+                                `)
+
+                        // Tets
+                        motorImages.push(motor.motorImg)
+                        //
                     })
                 }
-
-                let queryNama = filterObj.pencarian.nama
-                if (queryNama) {
-                    console.log('test')
-                    let regex = new RegExp(queryNama, "i")
-                    data.motors = data.motors.filter(motor => regex.test(motor.name))
-                }
-
-                let motorTable = $('.card tbody');
-                if (motorTable.children($('tr')).length != 0) {
-                    motorTable.empty()
-                }
-
-                data.motors.forEach(function (motor) {
-                    motorTable.append(`
-                            <tr>
-                                <td>${motor.id}</td>
-                                <td>${motor.name}</td>
-                                <td>${motor.year}</td>
-                                <td>${motor.transmission}</td>
-                                <td>${motor.status}</td>
-                                <td>${motor.dailyRate}</td>
-                                <td>${motor.owner}</td>
-                                <td><button class="btn-action action-button">Detail</button></td>
-                            </tr>
-                        `)
-
-                    // Tets
-                    motorImages.push(motor.motorImg)
-                    //
-                })
-            }
+            },
         )
     }
 
@@ -384,7 +388,7 @@
         $('#motor-detail-status').html('<span class="label">Status:</span> ' + selectedRow.find('td:eq(4)').text())
         $('#motor-detail-harga').html('<span class="label">Harga Harian:</span> ' + selectedRow.find('td:eq(5)').text())
         $('#motor-detail-pemilik').html('<span class="label">Pemilik:</span> ' + selectedRow.find('td:eq(6)').text())
-        
+
         popbox.open('motor-detail-popbox')
 
         event.stopPropagation();

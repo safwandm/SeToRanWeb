@@ -1,0 +1,28 @@
+{
+    "mitra":[
+        {
+            "mitraId": "122222022",
+            "username": "Galang",
+            "vehicle": "1",
+            "status": "Inactive"
+        },
+        {
+            "mitraId": "122222023",
+            "username": "Galangg",
+            "vehicle": "2",
+            "status": "Active"
+        },
+        {
+            "mitraId": "122222024",
+            "username": "Galanggg",
+            "vehicle": "1",
+            "status": "Active"
+        },
+        {
+            "mitraId": "122222025",
+            "username": "Galangggg",
+            "vehicle": "1",
+            "status": "Inactive"
+        }
+    ]
+}
