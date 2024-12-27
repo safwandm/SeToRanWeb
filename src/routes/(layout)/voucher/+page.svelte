@@ -8,7 +8,7 @@
 	import { page } from '$app/stores';
 	import { json } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
-	import Button from "$lib/components/ui/button/button.svelte";
+	import Button, { buttonVariants } from "$lib/components/ui/button/button.svelte";
 	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
 	import { toast } from "svelte-sonner";
 	import { validate } from "./voucherValidation";
@@ -76,6 +76,11 @@
             queryUrl+= `&status=${filterStatus}`
         BaseApi.ins.fetchAuth(queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
     })
+
+    function clearFilter() {
+        search = ""
+        filterStatus = ""
+    }
 
     function getVoucher() {
 
@@ -243,7 +248,12 @@
         </table>
     </div>
     <div class="card filter-wrapper">
-        <h3>Filter</h3>
+        <div class="flex justify-between flex-row">
+            <h3>Filter</h3>
+            <button class={buttonVariants({ variant: "ghost" })} onclick={clearFilter}>
+                clear
+            </button>
+        </div>
         <div class="filter-item">
             <h4>Filter Status</h4>
             <select bind:value={filterStatus}>
