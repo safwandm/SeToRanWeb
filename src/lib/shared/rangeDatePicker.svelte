@@ -12,7 +12,7 @@
     import { RangeCalendar } from "$lib/components/ui/range-calendar/index.js";
     import * as Popover from "$lib/components/ui/popover/index.js";
     
-    const df = new DateFormatter("en-US", {
+    const df = new DateFormatter("en-GB", {
      dateStyle: "medium"
     });
     

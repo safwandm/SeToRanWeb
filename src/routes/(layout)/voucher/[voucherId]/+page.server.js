@@ -4,7 +4,7 @@ import { BaseApi } from '$lib/baseApi'
 export async function load({ params }) {
 
     async function fetchVoucher() {
-        return BaseApi.ins.fetchAuth("/api/vouchers/" + params['voucherId']).then(async res => {
+        return BaseApi.ins.fetchAuth("/api/generic/vouchers/" + params['voucherId']).then(async res => {
             if (res.ok) {
                 let js = await res.json()
 
