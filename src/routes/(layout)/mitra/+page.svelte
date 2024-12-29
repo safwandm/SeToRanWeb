@@ -1,5 +1,3 @@
-
-
 <svelte:head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,6 +31,7 @@
 <script>
     import { onMount } from "svelte";
     import * as jqa from 'jquery'
+	import { BaseApi } from "$lib/baseApi";
     const jq = jqa.default
 
     let dataMitra = $state({})
@@ -43,15 +42,19 @@
     // let selectedMitra = $derived(dataMitra.mitra ? dataMitra.mitra.find(m => m.mitraId == selectedMitraId) : {})
 
     onMount(() => {
-        jq.getJSON('src/lib/json/mitra.json', function (data) {
-            dataMitra = data;
-            const mitraList = data.mitra;
-        });
+        
+        BaseApi.ins.fetchAuth('/api/mitras').then(async res => {
+            console.log(res)
+            let data = await res.json()
+            dataMitra = data
+            console.log(data)
+        })
     })
 
     $effect(() => {
         mitraList = selectedStatus ?
-            dataMitra.mitra.filter(item => item.status.toLowerCase() === selectedStatus.toLowerCase()) :  dataMitra.mitra;
+            dataMitra.filter(item => item.status.toLowerCase() === selectedStatus.toLowerCase()) :  dataMitra;
+        
     })
 
     function selectMitra(mitraId) {
@@ -60,7 +63,7 @@
 
         jq('.details-section').show();
 
-        selectedMitra = dataMitra.mitra ? dataMitra.mitra.find(m => m.mitraId == mitraId) : {}
+        selectedMitra = dataMitra? dataMitra.find(m => m.id_mitra == mitraId) : {}
         
     }
 
@@ -93,13 +96,13 @@
                 </thead>
                 <tbody>
                     {#each mitraList as mitra}
-                        <tr data-id="${mitra.mitraId}">
-                            <td>{mitra.mitraId}</td>
-                            <td>{mitra.username}</td>
-                            <td>{mitra.vehicle}</td>
+                        <tr data-id="${mitra.id_mitra}">
+                            <td>{mitra.id_mitra}</td>
+                            <td>{mitra.pengguna.nama}</td>
+                            <td>{mitra.pengguna.umur}</td>
                             <td>{mitra.status}</td>
                             <td style="text-align: center;">
-                                <button onclick={() => selectMitra(mitra.mitraId)} class="btn-action">Details</button>
+                                <button onclick={() => selectMitra(mitra.id_mitra)} class="btn-action">Details</button>
                             </td>
                         </tr>
                     {/each}
@@ -121,9 +124,10 @@
 
 <div class="details-section card" style="display: none;">
     <h3>Mitra Details</h3>
-    <p><strong>Mitra ID:</strong> {selectedMitra.mitraId}</p>
-    <p><strong>Username:</strong> {selectedMitra.username}</p>
-    <p><strong>Vehicle:</strong> {selectedMitra.vehicle}</p>
+    <p><strong>Mitra ID:</strong> {selectedMitra.id_mitra}</p>
+    <p><strong>Username:</strong> {selectedMitra.pengguna?.nama}</p>
+    <p><strong>Vehicle:</strong> {selectedMitra.pengguna?.umur}</p>
+    <p><strong>Email:</strong> {selectedMitra.pengguna?.email}</p>
     <p><strong>Status:</strong> {selectedMitra.status}</p>
     <button onclick={selectMitraBack} class="btn-action btn-back">Back</button>
 </div>

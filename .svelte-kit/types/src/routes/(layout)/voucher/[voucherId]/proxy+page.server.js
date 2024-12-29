@@ -1,10 +1,11 @@
+// @ts-nocheck
 import { BaseApi } from '$lib/baseApi'
 
-/** @type {import('./$types').PageLoad} */
+/** @param {Parameters<import('./$types').PageLoad>[0]} event */
 export async function load({ params }) {
 
     async function fetchVoucher() {
-        return BaseApi.ins.fetchAuth("/api/generic/vouchers/" + params['voucherId']).then(async res => {
+        return BaseApi.ins.fetchAuth("/api/vouchers/" + params['voucherId']).then(async res => {
             if (res.ok) {
                 let js = await res.json()
 
