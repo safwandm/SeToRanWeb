@@ -1,0 +1,64 @@
+<svelte:head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</svelte:head>
+
+<style>
+    .wide-card {
+        width: 347px;
+        height: 92px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card-title {
+        color: #00236F;
+    }
+
+    .wide-card p {
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    .tall {
+        height: 176px;
+        display: block;
+        margin-right: 4vw;
+    }
+</style>
+
+<h2>Dashboard</h2>
+<div class="breadcrumb">
+    <p>Home / <b>Dashboard</b></p>
+</div>
+
+<div class="card wide-card">
+    <p class="card-title">Pendapatan / Minggu</p>
+    <p>Rp 1,500,000</p>
+</div>
+
+<div style="display: flex; justify-content:center; width: 100%; margin-top: 16px;">
+    <div class="card wide-card tall">
+        <p class="card-title">Motor</p>
+        <p>Jumlah: <span>15</span></p>
+        <p>Aktif: <span>12</span></p>
+        <p>Non-aktif: <span>3</span></p>
+    </div>
+    <div class="card wide-card tall">
+        <p class="card-title">Pelanggan</p>
+        <p>Aktif: <span>50</span></p>
+        <p>Baru / minggu: 5</p>
+        <p>Belum terverifikasi: <span>2</span></p>
+    </div>
+    <div class="card wide-card tall">
+        <p class="card-title">Diskon</p>
+        <p>Jumlah: <span>3</span></p>
+        <p>Aktif: <span>2</span></p>
+        <p>Non-aktif: <span>1</span></p>
+    </div>
+</div>
+
