@@ -203,8 +203,8 @@
             {/if}
         </div>
         <div class="input-row">
-            <div class="flex justify-between w-full">
-                <div class="flex flex-row">
+            <div class="flex justify-between w-full items-center">
+                <div class="flex-center flex-row">
                     <a class="flex-center a-unstyle btn-action" href="/voucher">Back</a>
                     {#if editing && selectedVoucher.id_voucher}
                         <button type="submit" class={"btn-action " + (!editing?"disabled":"")}>
@@ -217,7 +217,7 @@
                         Data not found
                     {/if}
                 </div>
-                <div>
+                <div class="flex-center">
                     <Dialog.Root bind:open={confirmDialogOpen}>
                         <Dialog.Trigger type="button"><Trash2 /></Dialog.Trigger>
                         <Dialog.Content class="w-[300px]">
