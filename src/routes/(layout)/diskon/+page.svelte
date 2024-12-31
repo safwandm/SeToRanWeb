@@ -78,6 +78,7 @@
 	import { Popbox } from "$lib/popbox/popbox";
 	import { onMount } from "svelte";
     import * as jqa from 'jquery'
+	import { BaseApi } from "$lib/baseApi";
     const jq = jqa.default
 
     let diskonData = $state([]) // Store the data globally
@@ -127,43 +128,62 @@
         popbox.close('tambah-diskon')
     }
 
-    let popbox
-    onMount(function () {
-        popbox = new Popbox({
-            blur:true,
-            overlay:true,
+    function loadDiskonData(){
+        BaseApi.ins.fetchAuth('/api/diskon').then(async (res) => {
+            const data = await res.json();
+            console.log(data);
+            diskonData = data.data;
         });
+    }
+    onMount(() => {
+		loadDiskonData();
+	});
 
-        // Load the JSON data
-        jq.getJSON('src/lib/json/diskon.json', function (data) {
-            diskonData = data.diskon; // Store the data for later use
-            diskonDataShow = diskonData
-        });
-
-        // Add event listener for filter
-        document.getElementById('statusPromo').addEventListener('change', filterData);
-
-        // Add event listener for detail buttons
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('btn-action')) {
-                const row = e.target.closest('tr');
-                if (row) {
-                    const id = row.cells[0].textContent;
-                    console.log('Detail clicked for ID:', id);
-                    // Add detail view logic here
-                }
-            }
-        });
-
-        // Add event listener for Tambah Diskon button
-        const tambahDiskonButton = document.querySelector('.btn-tambah');
-        if (tambahDiskonButton) {
-            tambahDiskonButton.addEventListener('click', function () {
-                console.log('Tambah Diskon clicked');
-                // New discount logic here
-            });
+    function formatStringDate(dateString) {
+		const [datePart] = dateString.split('T');
+        if (datePart) {
+        const [year, month, day] = datePart.split('-');
+        return `${day}-${month}-${year}`;
         }
-    });
+        return "Invalid input format";
+	}
+    // let popbox
+    // onMount(function () {
+    //     popbox = new Popbox({
+    //         blur:true,
+    //         overlay:true,
+    //     });
+
+    //     // Load the JSON data
+    //     jq.getJSON('src/lib/json/diskon.json', function (data) {
+    //         diskonData = data.diskon; // Store the data for later use
+    //         diskonDataShow = diskonData
+    //     });
+
+    //     // Add event listener for filter
+    //     document.getElementById('statusPromo').addEventListener('change', filterData);
+
+    //     // Add event listener for detail buttons
+    //     document.addEventListener('click', function (e) {
+    //         if (e.target.classList.contains('btn-action')) {
+    //             const row = e.target.closest('tr');
+    //             if (row) {
+    //                 const id = row.cells[0].textContent;
+    //                 console.log('Detail clicked for ID:', id);
+    //                 // Add detail view logic here
+    //             }
+    //         }
+    //     });
+
+    //     // Add event listener for Tambah Diskon button
+    //     const tambahDiskonButton = document.querySelector('.btn-tambah');
+    //     if (tambahDiskonButton) {
+    //         tambahDiskonButton.addEventListener('click', function () {
+    //             console.log('Tambah Diskon clicked');
+    //             // New discount logic here
+    //         });
+    //     }
+    // });
 </script>
 
 <div class="breadcrumb">
@@ -188,13 +208,13 @@
             </thead>
             <tbody id="diskonTableBody">
                 <!-- Table content will be populated by JavaScript -->
-                {#each diskonDataShow as item}
+                {#each diskonData as item}
                     <tr>
                         <td>{item.id}</td>
-                        <td>{item.namaPromo}</td>
-                        <td>{item.statusPromo}</td>
-                        <td>{item.tglMulai}</td>
-                        <td>{item.tglAkhir}</td>
+                        <td>{item.nama}</td>
+                        <td>{item.status_promo}</td>
+                        <td>{formatStringDate(item.tanggal_mulai)}</td>
+						<td>{formatStringDate(item.tanggal_akhir)}</td>
                         <td style="text-align: center;">
                             <button class="btn-action">Detail</button>
                         </td>
