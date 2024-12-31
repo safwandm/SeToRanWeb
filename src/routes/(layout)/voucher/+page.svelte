@@ -8,11 +8,12 @@
 	import { page } from '$app/stores';
 	import { json } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
-	import Button from "$lib/components/ui/button/button.svelte";
+	import Button, { buttonVariants } from "$lib/components/ui/button/button.svelte";
 	import RangeDatePicker from "$lib/shared/rangeDatePicker.svelte";
 	import { toast } from "svelte-sonner";
 	import { validate } from "./voucherValidation";
 	import { BaseApi } from "$lib/baseApi";
+	import { DateFormatter, getLocalTimeZone, parseDate } from "@internationalized/date";
     
     let vouchers = $state([])
     
@@ -45,7 +46,7 @@
         if (Object.keys(errors).length !== 0)
             return
 
-        BaseApi.ins.postAuth("/api/vouchers", data).then(async res => {
+        BaseApi.ins.postAuth("/api/voucher", data).then(async res => {
             if (res.ok) {
                 getVoucher()
                 dialogOpen = false
@@ -76,6 +77,11 @@
         BaseApi.ins.fetchAuth(queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
     })
 
+    function clearFilter() {
+        search = ""
+        filterStatus = ""
+    }
+
     function getVoucher() {
 
         BaseApi.ins.fetchAuth(queryUrl).then(async res => {
@@ -91,6 +97,11 @@
     getVoucher()
     // onMount(() => {
     // })
+
+    const df = new DateFormatter("en-GB", {
+        dateStyle: "medium"
+    });
+
 </script>
 
 <style>
@@ -226,8 +237,8 @@
                         <td>{item.kode_voucher}</td>
                         <td>{item.persen_voucher}%</td>
                         <td>{statusMap[item.status_voucher]}</td>
-                        <td class="whitespace-nowrap">{item.tanggal_mulai}</td>
-                        <td class="whitespace-nowrap">{item.tanggal_akhir}</td>
+                        <td class="whitespace-nowrap">{df.format(parseDate(item.tanggal_mulai).toDate(getLocalTimeZone()))}</td>
+                        <td class="whitespace-nowrap">{df.format(parseDate(item.tanggal_akhir).toDate(getLocalTimeZone()))}</td>
                         <td style="text-align: center;">
                             <a class="flex-center btn-action" href={"/voucher/" + item.id_voucher}>Detail</a>
                         </td>
@@ -237,7 +248,12 @@
         </table>
     </div>
     <div class="card filter-wrapper">
-        <h3>Filter</h3>
+        <div class="flex justify-between flex-row">
+            <h3>Filter</h3>
+            <button class={buttonVariants({ variant: "ghost" })} onclick={clearFilter}>
+                clear
+            </button>
+        </div>
         <div class="filter-item">
             <h4>Filter Status</h4>
             <select bind:value={filterStatus}>
