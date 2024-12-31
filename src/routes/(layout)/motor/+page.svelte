@@ -1,4 +1,3 @@
-
 <svelte:head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -167,7 +166,7 @@
 
         .popbox_container {
             width: 387px;
-            height: 531px;
+            height: 600px;
 
             top: 20%;
             left: 43%;
@@ -231,9 +230,146 @@
     </style>
 </svelte:head>
 
+<!-- <script>
+    import { Popbox } from '$lib/popbox/popbox';
+    import { onMount } from 'svelte';
+    import { BaseApi } from '$lib/baseApi';
+    import * as jqa from 'jquery'
+    const jq = jqa.default
+
+    let popbox;
+
+    // States
+    var motorImages = $state([])
+    var motors = $state([])
+    var motorDetail = $state({
+        id: "",
+        name: "",
+        year: "",
+        transmission: "",
+        status: "",
+        dailyRate: "",
+        owner: "",
+        motorImg: ""
+    })
+
+    var filterObj = $state({
+        "pencarian": {
+            "nama": ""
+        },
+        "tahun": "2019",
+        "transmisi": "",
+        "status": "",
+        "tipePemilik": ""
+    })
+
+    var test = fetchMotors();
+
+    // Fetch motors from API
+    async function fetchMotors() {
+        try {
+            // var data;
+            BaseApi.ins.fetchAuth('/api/motors').then(async (res) => {
+                const data = await res.json();
+                if (!data) throw new Error("Invalid data structure from API");
+                motors = data
+                motorImages = data.map((motor) => motor.motorImg || "");
+                return data
+
+            });
+
+
+        } catch (error) {
+            console.error("Failed to fetch motor data:", error.message);
+            motors = [];
+        }
+    }
+
+    function reloadTable() {
+        let filteredMotors = [...motors];
+
+        if (filterObj.tahun) {
+            filteredMotors = filteredMotors.filter(motor => motor.tahun == filterObj.tahun);
+        }
+        if (filterObj.transmisi) {
+            filteredMotors = filteredMotors.filter(motor => motor.transmisi == filterObj.transmisi);
+        }
+        if (filterObj.status) {
+            filteredMotors = filteredMotors.filter(motor => motor.status_motor == filterObj.status);
+        }
+        // if (filterObj.tipePemilik) {
+        //     filteredMotors = filteredMotors.filter(motor => 
+        //         filterObj.tipePemilik === "Perusahaan" ? motor.owner === "Perusahaan" : motor.owner !== "Perusahaan"
+        //     );
+        // }
+        if (filterObj.pencarian.nama) {
+            const regex = new RegExp(filterObj.pencarian.nama, "i");
+            filteredMotors = filteredMotors.filter(motor => regex.test(motor.model));
+        }
+
+        motors = filteredMotors;
+    }
+
+    $effect(() => {
+        // dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
+        filterObj.pencarian.nama, filterObj.tahun, filterObj.transmisi, filterObj.status, filterObj.tipePemilik;
+        
+        // reloadTable();
+    })
+
+    onMount(async () => {
+        popbox = new Popbox({
+            blur:true,
+            overlay:true,
+        });
+        await fetchMotors();
+
+        jq('.filter').click(function (event) {
+            if (jq('.filter-dropdown-box').css('display') == 'none') {
+                jq('.filter-dropdown-box').toggle();
+            }
+
+            event.stopPropagation();
+        })
+
+        jq(document).click(function (event) {
+            if (!jq(event.target).closest('.filter-dropdown-box').length && !jq(event.target).closest('.filter').length) {
+                jq('.filter-dropdown-box').hide()
+            }
+
+            if (!jq(event.target).closest('.popbox_container').length) {
+                popbox.close('motor-detail-popbox')
+            }
+        })
+
+        for (let i = 2000; i <= 2024; ++i) {
+            jq('#filter-tahun').append(`
+                <option value="${i}">${i}</option>
+            `)
+        }
+
+        reloadTable();
+    });
+
+    function selectMotor(id) {
+        // motorDetail = motors.find(motor => motor.id_motor === id) || {};
+        popbox.open('motor-detail-popbox');
+
+        // for (let motor of motors) {
+        //     if (motor.id === id)
+        //         motorDetail = motor
+        // }
+
+        popbox.open('motor-detail-popbox')
+
+        event.stopPropagation()
+    }
+</script> -->
+
 <script>
     import { Popbox } from '$lib/popbox/popbox';
     import { onMount } from 'svelte';
+    import { BaseApi } from '$lib/baseApi';
     import * as jqa from 'jquery'
     const jq = jqa.default
 
@@ -263,48 +399,54 @@
     })
 
     function reloadTable() {
-        jq.get('src/lib/json/motor.json',
-            function (data, status) {
+
+        try {
+            // var data;
+            BaseApi.ins.fetchAuth('/api/motors').then(async (res) => {
+                let data = await res.json();
+                if (!data) throw new Error("Invalid data structure from API");
 
                 if (filterObj.tahun) {
-                    data.motors = data.motors.filter(motor => motor.year == filterObj.tahun)
+                    data = data.filter(motor => motor.tahun == filterObj.tahun);
                 }
-
                 if (filterObj.transmisi) {
-                    data.motors = data.motors.filter(motor => motor.transmission == filterObj.transmisi)
+                    data = data.filter(motor => motor.transmisi == filterObj.transmisi);
                 }
-
                 if (filterObj.status) {
-                    data.motors = data.motors.filter(motor => motor.status == filterObj.status)
+                    data = data.filter(motor => motor.status_motor == filterObj.status);
                 }
-
                 if (filterObj.tipePemilik) {
-                    data.motors = data.motors.filter(function (motor) {
-
-                        if (filterObj.tipePemilik == "Perusahaan") {
-                            return motor.owner == "Perusahaan"
-                        } else if (filterObj.tipePemilik == "Mitra") {
-                            return motor.owner != "Perusahaan"
-                        }
-
-                    })
+                    data = data.filter(motor => 
+                        filterObj.tipePemilik === "Perusahaan" ? motor.nama_pemilik === "SeToRan" : motor.owner !== "SeToRan"
+                    );
                 }
 
-                let queryNama = filterObj.pencarian.nama
-                if (queryNama) {
-                    console.log('test')
-                    let regex = new RegExp(queryNama, "i")
-                    data.motors = data.motors.filter(motor => regex.test(motor.name))
-                }
 
-                motors = data.motors
-                data.motors.forEach(function (motor) {
-                    // Tets
-                    motorImages.push(motor.motorImg)
-                    //
+                let mitras_res = await BaseApi.ins.fetchAuth('/api/mitras');
+
+                let mitras = await mitras_res.json()
+
+                data = data.map(motor => {
+
+                    let ownerName = mitras.find(mitra => mitra.id_mitra === motor.id_mitra).pengguna.nama;
+
+                    return {...motor, 'nama_pemilik': ownerName}
+
                 })
-            }
-        )
+
+                if (filterObj.pencarian.nama) {
+                    const regex = new RegExp(filterObj.pencarian.nama, "i");
+                    data = data.filter(motor => regex.test(motor.model));
+                }
+
+                motors = data;
+
+            });
+
+        } catch (error) {
+            console.error("Failed to fetch motor data:", error.message);
+            motors = [];
+        }
     }
 
     $effect(() => {
@@ -344,7 +486,7 @@
             `)
         }
 
-        reloadTable()
+        reloadTable();
     })
 
     // Karena btn-action ditambahkan secara dinamis. Click event listener harus ditambah ken element yang ada
@@ -360,25 +502,38 @@
         event.stopPropagation()
     };
 
+    async function deleteMotor(id) {
+        try {
+            await BaseApi.ins.deleteAuth(`/api/motors/${id}`);
+            location.reload()
+        } catch (error) {
+            console.error("Failed to delete motor:", error);
+        }
+    }
+
 </script>
+
 
 <div data-popbox-id="motor-detail-popbox" class="popbox">
     <div class="popbox_container">
         <div class="card-head">
-            <!-- <div class="arrow">&larr;</div> -->
-            <div class="img-container">
-                <img src={motorDetail.motorImg?"src/lib/assets/motor/" + motorDetail.motorImg:""} alt="">
-            </div>
-            <!-- <div class="arrow">&rarr;</div> -->
+            <button class="btn-action action-button" style="background-color: #f44336;" onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus Motor</button>
         </div>
+
         <div class="card-body">
-            <p id="motor-detail-id"><span class="label">ID:</span>  {motorDetail.id}</p>
-            <p id="motor-detail-nama"><span class="label">Nama:</span> {motorDetail.name}</p>
-            <p id="motor-detail-tahun"><span class="label">Tahun:</span> {motorDetail.year}</p>
-            <p id="motor-detail-transmisi"><span class="label">Transmisi:</span> {motorDetail.transmission}</p>
-            <p id="motor-detail-status"><span class="label">Status:</span> {motorDetail.status}</p>
-            <p id="motor-detail-harga"><span class="label">Harga Harian:</span> {motorDetail.dailyRate}</p>
-            <p id="motor-detail-pemilik"><span class="label">Pemilik:</span> {motorDetail.owner}</p>
+            <p id="motor-detail-id"><span class="label">ID:</span>  {motorDetail.id_motor}</p>
+            <p id="motor-detail-nama"><span class="label">Nama:</span> {motorDetail.model}</p>
+            <p id="motor-detail-tahun"><span class="label">Tahun:</span> {motorDetail.tahun}</p>
+            <p id="motor-detail-transmisi"><span class="label">Transmisi:</span> {motorDetail.transmisi}</p>
+            <p id="motor-detail-status"><span class="label">Status:</span> {motorDetail.status_motor}</p>
+            <p id="motor-detail-harga"><span class="label">Harga Harian:</span> {motorDetail.harga_harian}</p>
+            <p id="motor-detail-pemilik"><span class="label">Pemilik:</span> {motorDetail.nama_pemilik}</p>
+
+            <p id="motor-detail-plat-nomor"><span class="label">Plat Nomor:</span> {motorDetail.plat_nomor}</p>
+            <p id="motor-detail-stnk"><span class="label">Nomor STNK:</span> {motorDetail.nomor_STNK}</p>
+            <p id="motor-detail-bpkb"><span class="label">Nomor BPKB:</span> {motorDetail.nomor_BPKB}</p>
+            <p id="motor-detail-brand"><span class="label">Brand:</span> {motorDetail.brand}</p>
+            <p id="motor-detail-tipe"><span class="label">Tipe:</span> {motorDetail.tipe}</p>
         </div>
 
     </div>
@@ -417,8 +572,8 @@
             <label for="filter-tahun">Status</label>
             <select name="status" id="filter-status" class="filter-options" bind:value={filterObj.status}>
                 <option value="" selected>None</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="Available">Available</option>
+                <option value="Unavailableu">Unavailable</option>
             </select>
 
             <label for="filter-tahun">Tipe Pemilik</label>
@@ -455,13 +610,13 @@
             <tbody>
                 {#each motors as motor}
                     <tr>
-                        <td>{motor.id}</td>
-                        <td>{motor.name}</td>
-                        <td>{motor.year}</td>
-                        <td>{motor.transmission}</td>
-                        <td>{motor.status}</td>
-                        <td>{motor.dailyRate}</td>
-                        <td>{motor.owner}</td>
+                        <td>{motor.id_motor}</td>
+                        <td>{motor.model}</td>
+                        <td>{motor.tahun}</td>
+                        <td>{motor.transmisi}</td>
+                        <td>{motor.status_motor}</td>
+                        <td>{motor.harga_harian}</td>
+                        <td>{motor.nama_pemilik}</td>
                         <td><button class="btn-action action-button" onclick={() => selectMotor(motor.id)}>Detail</button></td>
                     </tr>
                 {/each}

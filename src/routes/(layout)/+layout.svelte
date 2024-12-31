@@ -6,9 +6,10 @@
 	import { currentUser } from '$lib/store';
 	import { redirect } from '@sveltejs/kit';
 	import * as Popover from '$lib/components/ui/popover';
-	import * as AlertDialog from "$lib/components/ui/alert-dialog/index";
+	import * as Dialog from "$lib/components/ui/dialog/index";
 	import { LogOut } from 'lucide-svelte';
 	import Cookies from 'js-cookie';
+	import { buttonVariants } from '$lib/components/ui/button';
 
 	let { children } = $props();
 
@@ -55,32 +56,26 @@
 				</Popover.Trigger>
 				<Popover.Content><h3>Notifications</h3></Popover.Content>
 			</Popover.Root>
-			<AlertDialog.Root>
-				<AlertDialog.Trigger><LogOut /> 	</AlertDialog.Trigger>
-				<AlertDialog.Content class="w-[300px]">
-				  <AlertDialog.Header>
-					<AlertDialog.Title>Konfirmasi Log Out</AlertDialog.Title>
-					<AlertDialog.Description>
-					  Anda yakin ingin log out dari aplikasi?
-					</AlertDialog.Description>
-				  </AlertDialog.Header>
-				  <AlertDialog.Footer>
-					<AlertDialog.Cancel>Batal</AlertDialog.Cancel>
-					<AlertDialog.Action onclick={logOut}>Log Out</AlertDialog.Action>
-				  </AlertDialog.Footer>
-				</AlertDialog.Content>
-			  </AlertDialog.Root>
+			<Dialog.Root>
+				<Dialog.Trigger><LogOut /></Dialog.Trigger>
+				<Dialog.Content class="w-[300px]">
+				  <Dialog.Header>
+					<Dialog.Title>Konfirmasi Log Out</Dialog.Title>
+					<Dialog.Description>
+						Anda yakin ingin log out dari aplikasi?
+					</Dialog.Description>
+				  </Dialog.Header>
+				  <Dialog.Footer>
+					<Dialog.Close class={buttonVariants({ variant: "outline" })}>Batal</Dialog.Close>
+					<Dialog.Close class={buttonVariants()} onclick={logOut}>Log Out</Dialog.Close>
+				  </Dialog.Footer>
+				</Dialog.Content>
+			  </Dialog.Root>
 		</div>
 	</header>
 
 	<aside>
 		<nav>
-			<a class="nav-button" href="/login">
-				<div class="nav-icon flex-center">
-					<img src="/src/lib/assets/icons/ic_outline-dashboard.png" />
-				</div>
-				Login
-			</a>
 			<a class="nav-button" href="/dashboard">
 				<!-- kayaknya biar pas hover bisa berubah warna iconnya harus di input langsung disini untuk svg -->
 				<svg
