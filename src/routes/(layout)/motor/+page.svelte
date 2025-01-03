@@ -402,7 +402,7 @@
 
         try {
             // var data;
-            BaseApi.ins.fetchAuth('/api/motors').then(async (res) => {
+            BaseApi.ins.fetchAuth('/api/generic/motors').then(async (res) => {
                 let data = await res.json();
                 if (!data) throw new Error("Invalid data structure from API");
 

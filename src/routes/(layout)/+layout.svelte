@@ -10,8 +10,11 @@
 	import { LogOut } from 'lucide-svelte';
 	import Cookies from 'js-cookie';
 	import { buttonVariants } from '$lib/components/ui/button';
+	import FormNotif from '$lib/shared/formNotif.svelte';
 
 	let { children } = $props();
+
+	let formNotifOpen = $state(false)
 
 	function logOut() {
 		Cookies.remove("access_token")
@@ -181,6 +184,9 @@
 				</svg>
 				Voucher
 			</a>
+			<button class="nav-button" onclick={() => formNotifOpen = !formNotifOpen}>
+				Kirim Notifikasi Pengguna
+			</button>
 		</nav>
 	</aside>
 
@@ -188,6 +194,8 @@
 		{@render children()}
 	</div>
 </div>
+
+<FormNotif bind:open={formNotifOpen}/>
 
 <style>
 	header {
