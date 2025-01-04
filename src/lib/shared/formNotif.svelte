@@ -47,9 +47,13 @@
     })
 
     $effect(() => {
-        if (open) {
-            getPengguna()
+        if (open)
             targetPengguna = null
+    })
+
+    $effect(() => {
+        if (commandOpen) {
+            getPengguna()
             errors = {}
         }
     })

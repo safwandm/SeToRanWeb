@@ -11,6 +11,7 @@
 	import Cookies from 'js-cookie';
 	import { buttonVariants } from '$lib/components/ui/button';
 	import FormNotif from '$lib/shared/formNotif.svelte';
+	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
 
 	let { children } = $props();
 
@@ -185,7 +186,8 @@
 				Voucher
 			</a>
 			<button class="nav-button" onclick={() => formNotifOpen = !formNotifOpen}>
-				Kirim Notifikasi Pengguna
+				<SendHorizontal class="mx-[8px]" size=16 />
+				Kirim Notifikasi
 			</button>
 		</nav>
 	</aside>
