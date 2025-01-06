@@ -119,13 +119,11 @@
             diskonDataShow = diskonData;
         } catch (error) {
             toast.error("Gagal memuat data diskon");
-            diskonData = [];
-            diskonDataShow = [];
         } finally {
             loading = false;
         }
     }
-
+    
     function formatDate(dateString) {
         if (!dateString) return '';
         const [datePart] = dateString.split('T');
@@ -435,8 +433,21 @@
         <Dialog.Body>
             {#if selectedDiskon}
                 <p><b>ID:</b> {selectedDiskon.id}</p>
-                <p><b>Nama Promo:</b> {selectedDiskon.nama}</p>
-                <p><b>Status Promo:</b> {statusMap[selectedDiskon.status_promo]}</p>
+                <p><b>Nama Promo:</b></p>
+                <input 
+                    type="text" 
+                    bind:value={selectedDiskon.nama} 
+                    disabled={loading} 
+                />
+                <p><b>Status Promo:</b></p>
+                <select 
+                    bind:value={selectedDiskon.status_promo}
+                    disabled={loading}
+                >
+                    {#each Object.entries(statusMap) as [key, val]}
+                        <option value={key}>{val}</option>
+                    {/each}
+                </select>
                 <p><b>Tanggal Mulai:</b> {formatDate(selectedDiskon.tanggal_mulai)}</p>
                 <p><b>Tanggal Akhir:</b> {formatDate(selectedDiskon.tanggal_akhir)}</p>
                 <div class="flex justify-end gap-2 mt-6">
@@ -445,26 +456,29 @@
                         onclick={updateDiskon}
                         disabled={loading}
                     >
-                        {loading ? 'Loading...' : 'Update'}
+                        {loading ? "Memperbarui..." : "Update"}
                     </button>
                     <button
                         class="btn-action"
                         onclick={deleteDiskon}
                         disabled={loading}
                     >
-                        {loading ? 'Loading...' : 'Delete'}
+                        {loading ? "Menghapus..." : "Hapus"}
                     </button>
                 </div>
+            {:else}
+                <p>Data tidak tersedia</p>
             {/if}
         </Dialog.Body>
         <Dialog.Footer>
             <button
                 class="btn-action"
-                onclick={() => (detailDialogOpen = false)}
+                onclick={() => detailDialogOpen = false}
             >
                 Tutup
             </button>
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>
+
 
