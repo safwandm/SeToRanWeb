@@ -58,7 +58,7 @@
 		<form class="flex grow flex-col gap-y-4" action="">
 			<div class="input-group">
 				<label for="inputNama">Nama Lengkap</label>
-				<input type="text" bind:value={nama} name="nama" id="inputNama" />
+				<input type="text" value={nama} name="nama" id="inputNama" />
 			</div>
 			<div class="input-group">
 				<label for="inputEmail">Email</label>

@@ -376,7 +376,7 @@
     function selectMotor (id) {
 
         for (let motor of motors) {
-            if (motor.id === id)
+            if (motor.id_motor === id)
                 motorDetail = motor
         }
 
@@ -476,8 +476,8 @@
                 <option value="Unavailableu">Unavailable</option>
             </select>
 
-            <label for="filter-tahun">Tipe Pemilik</label>
-            <select name="status" id="filter-tahun" class="filter-options" bind:value={filterObj.tipePemilik}>
+            <label for="filter-pemilik">Tipe Pemilik</label>
+            <select name="status" id="filter-pemilik" class="filter-options" bind:value={filterObj.tipePemilik}>
                 <option value="" selected>None</option>
                 <option value="Perusahaan">Perusahaan</option>
                 <option value="Mitra">Mitra</option>
@@ -517,7 +517,7 @@
                         <td>{motor.status_motor}</td>
                         <td>{motor.harga_harian}</td>
                         <td>{motor.nama_pemilik}</td>
-                        <td><button class="btn-action action-button" onclick={() => selectMotor(motor.id)}>Detail</button></td>
+                        <td><button class="btn-action action-button" onclick={() => selectMotor(motor.id_motor)}>Detail</button></td>
                     </tr>
                 {/each}
             </tbody>
