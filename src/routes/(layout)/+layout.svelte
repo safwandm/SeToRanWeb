@@ -6,7 +6,7 @@
 	import { currentUser } from '$lib/store';
 	import { redirect } from '@sveltejs/kit';
 	import * as Popover from '$lib/components/ui/popover';
-	import * as Dialog from "$lib/components/ui/dialog/index";
+	import * as Dialog from '$lib/components/ui/dialog/index';
 	import { LogOut } from 'lucide-svelte';
 	import Cookies from 'js-cookie';
 	import { buttonVariants } from '$lib/components/ui/button';
@@ -14,8 +14,8 @@
 	let { children } = $props();
 
 	function logOut() {
-		Cookies.remove("access_token")
-		document.location.reload()
+		Cookies.remove('access_token');
+		document.location.reload();
 	}
 </script>
 
@@ -59,18 +59,16 @@
 			<Dialog.Root>
 				<Dialog.Trigger><LogOut /></Dialog.Trigger>
 				<Dialog.Content class="w-[300px]">
-				  <Dialog.Header>
-					<Dialog.Title>Konfirmasi Log Out</Dialog.Title>
-					<Dialog.Description>
-						Anda yakin ingin log out dari aplikasi?
-					</Dialog.Description>
-				  </Dialog.Header>
-				  <Dialog.Footer>
-					<Dialog.Close class={buttonVariants({ variant: "outline" })}>Batal</Dialog.Close>
-					<Dialog.Close class={buttonVariants()} onclick={logOut}>Log Out</Dialog.Close>
-				  </Dialog.Footer>
+					<Dialog.Header>
+						<Dialog.Title>Konfirmasi Log Out</Dialog.Title>
+						<Dialog.Description>Anda yakin ingin log out dari aplikasi?</Dialog.Description>
+					</Dialog.Header>
+					<Dialog.Footer>
+						<Dialog.Close class={buttonVariants({ variant: 'outline' })}>Batal</Dialog.Close>
+						<Dialog.Close class={buttonVariants()} onclick={logOut}>Log Out</Dialog.Close>
+					</Dialog.Footer>
 				</Dialog.Content>
-			  </Dialog.Root>
+			</Dialog.Root>
 		</div>
 	</header>
 
@@ -108,6 +106,26 @@
 					/>
 				</svg>
 				Pelanggan
+			</a>
+			<a class="nav-button" href="/transaksi">
+				<svg
+					class="nav-icon"
+					width="16"
+					height="16"
+					viewBox="0 0 16 16"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+				>
+					<path
+						d="M13 2.33333L12 1.33333L11 2.33333L10 1.33333L9 2.33333L8 1.33333L7 2.33333L6 1.33333L5 2.33333L4 1.33333V10.6667H2V12.6667C2 13.7733 2.89333 14.6667 4 14.6667H12C13.1067 14.6667 14 13.7733 14 12.6667V1.33333L13 2.33333ZM10 13.3333H4C3.63333 13.3333 3.33333 13.0333 3.33333 12.6667V12H10V13.3333ZM12.6667 12.6667C12.6667 13.0333 12.3667 13.3333 12 13.3333C11.6333 13.3333 11.3333 13.0333 11.3333 12.6667V10.6667H5.33333V3.33333H12.6667V12.6667Z"
+						fill="currentColor"
+					/>
+					<path
+						d="M6 4.66667H10V6.00001H6V4.66667ZM10.6667 4.66667H12V6.00001H10.6667V4.66667ZM6 6.66667H10V8.00001H6V6.66667ZM10.6667 6.66667H12V8.00001H10.6667V6.66667Z"
+						fill="currentColor"
+					/>
+				</svg>
+				Transaksi
 			</a>
 			<a class="nav-button" href="/motor">
 				<svg
