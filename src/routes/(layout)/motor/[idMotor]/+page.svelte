@@ -22,7 +22,6 @@
 	let tipe = $state();
 
 	async function loadData() {
-
 		await BaseApi.ins.fetchAuth(`/api/generic/motors/${data.idMotor}`).then(async (res) => {
 			const resBody = await res.json();
 
@@ -45,9 +44,25 @@
 		await loadData();
 	});
 
-	// function updateMotor() {
-	// 	BaseApi.ins.postAuth('');
-	// }
+	import { goto } from '$app/navigation';
+
+
+	function updateMotor() {
+		BaseApi.ins.putAuth(`/api/generic/motors/${data.idMotor}`, {
+			brand: brand,
+			harga_harian: hargaHarian,
+			model: nama,
+			nomor_BPKB: nomorBPKB,
+			nomor_STNK: nomorSTNK,
+			plat_nomor: platNomor,
+			status_motor: status,
+			tahun: tahun,
+			tipe: tipe,
+			transmisi: transmisi
+		});
+
+		goto(`/`);
+	}
 </script>
 
 <svelte:head>
@@ -81,7 +96,7 @@
 <div class="card">
 	<p class="text-xl font-semibold">Edit Form</p>
 	<div class="card-content">
-		<form class="flex grow flex-col gap-y-4" action="POST">
+		<form class="flex grow flex-col gap-y-4">
 			<div class="input-group">
 				<label for="inputNama">Nama</label>
 				<input type="text" name="nama" bind:value={nama} id="inputNama" />
@@ -112,8 +127,12 @@
 					<option value="Tersedia" selected={status === 'Tersedia'}>Tersedia</option>
 					<option value="Disewa" selected={status === 'Disewa'}>Disewa</option>
 					<option value="Dipesan" selected={status === 'Dipesan'}>Dipesan</option>
-					<option value="Dalam Perbaikan" selected={status === 'Dalam Perbaikan'}>Dalam Perbaikan</option>
-					<option value="Tidak Tersedia" selected={status === 'Tidak Tersedia'}>Tidak Tersedia</option>
+					<option value="Dalam Perbaikan" selected={status === 'Dalam Perbaikan'}
+						>Dalam Perbaikan</option
+					>
+					<option value="Tidak Tersedia" selected={status === 'Tidak Tersedia'}
+						>Tidak Tersedia</option
+					>
 				</select>
 			</div>
 
@@ -147,8 +166,7 @@
 				<input type="text" name="tipe" bind:value={tipe} id="inputTipe" />
 			</div>
 
-			<!-- <button type="submit" class="btn btn-primary" onclick={updateMotor}>Submit</button> -->
-
+			<button class="btn btn-primary" onclick={updateMotor}>Submit</button>
 		</form>
 		<!-- <div class="flex w-80 grow-0 justify-center">
 			<div class="h-60 w-60 rounded-full bg-black"></div>

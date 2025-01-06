@@ -380,9 +380,8 @@
                 motorDetail = motor
         }
 
-        popbox.open('motor-detail-popbox')
-
-        event.stopPropagation()
+        popbox.open('motor-detail-popbox');
+        event.stopPropagation();
     };
 
     async function deleteMotor(id) {
