@@ -137,13 +137,14 @@
         // Logika untuk update diskon
         try {
             loading = true;
-            const response = await BaseApi.ins.putAuth(`/api/diskon/${selectedDiskon.id}`, selectedDiskon);
+            const response = await BaseApi.ins.putAuth(`/api/diskon/${selectedDiskon.id}`, selectedDiskon,)
             if (!response.ok) throw new Error(await response.text());
             toast.success("Diskon berhasil diperbarui!");
             await loadDiskonData();
             dialogOpen = false;
         } catch (error) {
             toast.error("Gagal memperbarui diskon");
+            throw error;
         } finally {
             loading = false;
         }
@@ -429,8 +430,7 @@
     <Dialog.Content>
         <Dialog.Header>
             <Dialog.Title>Detail Diskon</Dialog.Title>
-        </Dialog.Header>
-        <Dialog.Body>
+            </Dialog.Header>
             {#if selectedDiskon}
                 <p><b>ID:</b> {selectedDiskon.id}</p>
                 <p><b>Nama Promo:</b></p>
@@ -469,8 +469,7 @@
             {:else}
                 <p>Data tidak tersedia</p>
             {/if}
-        </Dialog.Body>
-        <Dialog.Footer>
+            <Dialog.Footer>
             <button
                 class="btn-action"
                 onclick={() => detailDialogOpen = false}
