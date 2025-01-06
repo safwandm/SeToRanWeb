@@ -46,7 +46,27 @@
         if (Object.keys(errors).length !== 0)
             return
 
-        BaseApi.ins.postAuth("/api/voucher", data).then(async res => {
+        // BaseApi.ins.postAuth("/api/voucher", data).then(async res => {
+        //     if (res.ok) {
+        //         getVoucher()
+        //         dialogOpen = false
+        //         toast.success("Voucher berhasil di buat!")
+        //     } else {
+        //         console.log(await res.text())
+        //         toast.error("Voucher gagal di buat")
+        //     }
+        // }).catch(res => {
+        //     toast.error("Voucher gagal di buat")
+        // })
+
+        fetch("http://localhost:3000/api/voucher", {
+            body: JSON.stringify(data),
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        }).then(async res => {
             if (res.ok) {
                 getVoucher()
                 dialogOpen = false
@@ -74,7 +94,8 @@
         queryUrl = `/api/voucher/filtered?search=${search}`
         if (filterStatus !== "")
             queryUrl+= `&status=${filterStatus}`
-        BaseApi.ins.fetchAuth(queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
+        // BaseApi.ins.fetchAuth(queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
+        fetch("http://localhost:3000" + queryUrl, { signal }).then(res => res.json()).then(res => vouchers = res)
     })
 
     function clearFilter() {
@@ -84,19 +105,21 @@
 
     function getVoucher() {
 
-        BaseApi.ins.fetchAuth(queryUrl).then(async res => {
-            if (res.ok) {
-                let js = await res.json()
-                vouchers = js
-            } else {
-                console.log(await res.text())
-            }
-        })
-    }
+        // BaseApi.ins.fetchAuth(queryUrl).then(async res => {
+        //     if (res.ok) {
+        //         let js = await res.json()
+        //         vouchers = js
+        //     } else {
+        //         console.log(await res.text())
+        //     }
+        // })
 
-    getVoucher()
-    // onMount(() => {
-    // })
+        fetch("http://localhost:3000" + queryUrl).then(res => res.json()).then(res => vouchers = res)
+    }
+    
+    onMount(() => {
+        getVoucher()
+    })
 
     const df = new DateFormatter("en-GB", {
         dateStyle: "medium"
