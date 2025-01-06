@@ -43,7 +43,7 @@
 
     onMount(() => {
         
-        BaseApi.ins.fetchAuth('/api/mitras').then(async res => {
+        BaseApi.ins.fetchAuth('/api/mitras-motor').then(async res => {
             console.log(res)
             let data = await res.json()
             dataMitra = data
@@ -99,7 +99,7 @@
                         <tr data-id="${mitra.id_mitra}">
                             <td>{mitra.id_mitra}</td>
                             <td>{mitra.pengguna.nama}</td>
-                            <td>{mitra.pengguna.umur}</td>
+                            <td>{mitra.jumlah_motor}</td>
                             <td>{mitra.status}</td>
                             <td style="text-align: center;">
                                 <button onclick={() => selectMitra(mitra.id_mitra)} class="btn-action">Details</button>
@@ -126,7 +126,7 @@
     <h3>Mitra Details</h3>
     <p><strong>Mitra ID:</strong> {selectedMitra.id_mitra}</p>
     <p><strong>Username:</strong> {selectedMitra.pengguna?.nama}</p>
-    <p><strong>Vehicle:</strong> {selectedMitra.pengguna?.umur}</p>
+    <p><strong>Vehicle:</strong> {selectedMitra.jumlah_motor}</p>
     <p><strong>Email:</strong> {selectedMitra.pengguna?.email}</p>
     <p><strong>Status:</strong> {selectedMitra.status}</p>
     <button onclick={selectMitraBack} class="btn-action btn-back">Back</button>
