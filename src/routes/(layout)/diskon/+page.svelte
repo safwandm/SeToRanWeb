@@ -270,14 +270,14 @@
         <div class="popbox_container">
             <button class="close-button" onclick={closePopBox}>&times;</button>
             <h3>Tambah diskon</h3>
-            <form class="diskon-form" onsubmit={handleSubmit}>
+            <form class="diskon-form">
                 <label for="nama">Nama promo</label>
                 <input class="diskon-input" type="text" id="nama" required>
                 
                 <label for="status">Status promo</label>
                 <select class="select-status" id="status" required>
-                    <option value="Aktif">Aktif</option>
-                    <option value="Non Aktif">Non Aktif</option>
+                    <option value="aktif">Aktif</option>
+                    <option value="nonaktif">Non Aktif</option>
                 </select>
                 
                 <label for="tgl-mulai">Tanggal mulai</label>
@@ -287,7 +287,7 @@
                 <input class="diskon-input" type="date" id="tgl-akhir" required>
                 
                 <div class="flex-center" style="width: 100%;">
-                    <button type="submit" class="btn-action">Submit</button>
+                    <button type="submit" class="btn-action" onclick={handleSubmit}>Submit</button>
                 </div>
             </form>
         </div>
