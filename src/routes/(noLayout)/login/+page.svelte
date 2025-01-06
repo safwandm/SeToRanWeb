@@ -116,7 +116,7 @@
 
 <script>
 	import { goto } from "$app/navigation";
-	import { backendHost } from "$lib/utilities";
+	import { backendHost } from "$lib/baseApi";
     import Cookies from "js-cookie";
 
     let error = $state("")
