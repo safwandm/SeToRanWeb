@@ -61,6 +61,23 @@ export class BaseApi {
         Authorization: `Bearer ${accessToken}`,
         ...init.headers,
       },
+
     });
+
   }
+  async putAuth(input: RequestInfo, data: any, init: RequestInit = {}): Promise<Response> {
+    const accessToken = this.cookieProvider.get("access_token");
+
+    return fetch(backendHost + input, {
+      method: "PUT",
+      ...init,
+      body: JSON.stringify(data),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        ...init.headers,
+      },
+    });
+  }
 }
