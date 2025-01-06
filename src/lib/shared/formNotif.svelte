@@ -23,6 +23,13 @@
     let loadingPengguna = $state(false)
     let commandOpen = $state(false)
 
+    let opsiNavigasi = [
+        ['', '-'],
+        ['transaksi', "Ke Page Transaksi"],
+        ['editProfile', "Ke Page Edit Profile"]
+    ]
+    let acceptDataNavigasi = $state(false)
+
     async function getPengguna() {
         console.log("here")
         loadingPengguna = true
@@ -36,12 +43,6 @@
         }
     }
 
-    let opsiNavigasi = [
-        ['', '-'],
-        ['transaksi', "Ke Page Transaksi"],
-        ['editProfile', "Ke Page Edit Profile"]
-    ]
-    let acceptDataNavigasi = $state(false)
     $effect(() => {
         acceptDataNavigasi = formData.navigasi !== ''
     })
@@ -135,6 +136,10 @@
     </div>
 {/snippet}
 
+<!-- {#snippet item(pengguna)}
+     {pengguna.nama} ({pengguna.email})
+{/snippet} -->
+
 <Dialog.Root bind:open>
     <Dialog.Content>
         <Dialog.Header>
@@ -145,7 +150,11 @@
             <label for="target-pengguna">Pengguna</label>
             <Popover.Root bind:open={commandOpen}>
                 <Popover.Trigger id="target-pengguna" class={cn(buttonVariants({ variant: "outline"}), "flex justify-start w-full")}>
-                    {targetPengguna !== null ? `(${targetPengguna.id_pengguna}) ${targetPengguna.nama}` : "Pilih Pengguna"}
+                    {#if targetPengguna !== null}
+                        {targetPengguna.nama} ({targetPengguna.email})
+                    {:else}
+                        Pilih Pengguna
+                    {/if}
                 </Popover.Trigger>
                 <Popover.Content>
                     <Command.Root>
@@ -155,7 +164,12 @@
                                 Loading...
                             {:else}
                                 {#each opsiPengguna as pengguna}
-                                    <Command.Item onclick={() => {targetPengguna = pengguna; commandOpen=false}}>({pengguna.id_pengguna}) {pengguna.nama}</Command.Item>
+                                    <Command.Item 
+                                        onclick={() => {targetPengguna = pengguna; commandOpen=false}} 
+                                        class="border-b-[1px] border-solid border-border"
+                                    > 
+                                        {pengguna.nama} <br> ({pengguna.email}) 
+                                    </Command.Item>
                                 {/each}
                             {/if}
                         </Command.List>

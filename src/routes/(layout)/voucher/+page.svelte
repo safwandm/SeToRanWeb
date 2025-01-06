@@ -93,10 +93,10 @@
             }
         })
     }
-
-    getVoucher()
-    // onMount(() => {
-    // })
+    
+    onMount(() => {
+        getVoucher()
+    })
 
     const df = new DateFormatter("en-GB", {
         dateStyle: "medium"
