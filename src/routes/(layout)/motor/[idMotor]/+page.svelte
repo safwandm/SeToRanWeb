@@ -66,6 +66,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Detail Pelanggan</title>
 </svelte:head>
+
 <h1 class="text-2xl font-medium">Edit Motor</h1>
 
 <Breadcrumb.Root class="mb-5">
