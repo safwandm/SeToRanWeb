@@ -80,7 +80,6 @@
 
 	$effect(() => {
 		// dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
-		filterObj.pencarian.nama,
 			filterObj.tahun,
 			filterObj.transmisi,
 			filterObj.status,
@@ -513,9 +512,9 @@
 				name="nama"
 				class="search-field"
 			/>
-			<div class="search-button">
+			<button class="search-button" onclick={() => reloadTable()}>
 				<img src="src/lib/assets/icons/material-symbols_search.png" alt="" class="search-img" />
-			</div>
+			</button>
 		</form>
 	</div>
 
