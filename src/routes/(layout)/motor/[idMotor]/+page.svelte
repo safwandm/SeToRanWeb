@@ -1,12 +1,11 @@
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-	crossorigin="anonymous"
->
+<script>
 	import { BaseApi } from '$lib/baseApi';
 	import { onMount } from 'svelte';
+	import { toast } from "svelte-sonner";
+	import { buttonVariants } from "$lib/components/ui/button";
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.ts';
 	import * as jqa from 'jquery';
+	import { goto } from '$app/navigation';
 	const jq = jqa.default;
 
 	let { data } = $props();
@@ -44,9 +43,6 @@
 		await loadData();
 	});
 
-	import { goto } from '$app/navigation';
-
-
 	function updateMotor() {
 		BaseApi.ins.putAuth(`/api/generic/motors/${data.idMotor}`, {
 			brand: brand,
@@ -60,8 +56,8 @@
 			tipe: tipe,
 			transmisi: transmisi
 		});
-
-		goto(`/`);
+		toast.success('Motor telah di-update');
+		goto('/motor');
 	}
 </script>
 
@@ -69,14 +65,9 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Detail Pelanggan</title>
-	<link
-		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-		rel="stylesheet"
-		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-		crossorigin="anonymous"
-	/>
 </svelte:head>
 <h1 class="text-2xl font-medium">Edit Motor</h1>
+
 <Breadcrumb.Root class="mb-5">
 	<Breadcrumb.List>
 		<Breadcrumb.Item>
@@ -84,14 +75,15 @@
 		</Breadcrumb.Item>
 		<Breadcrumb.Separator />
 		<Breadcrumb.Item>
-			<Breadcrumb.Link href="/motor">Motor</Breadcrumb.Link>
+			<Breadcrumb.Link href="/motor">Pelanggan</Breadcrumb.Link>
 		</Breadcrumb.Item>
 		<Breadcrumb.Separator />
 		<Breadcrumb.Item>
-			<Breadcrumb.Page>Edit Motor</Breadcrumb.Page>
+			<Breadcrumb.Page>Detail Pelanggan</Breadcrumb.Page>
 		</Breadcrumb.Item>
 	</Breadcrumb.List>
 </Breadcrumb.Root>
+
 
 <div class="card">
 	<p class="text-xl font-semibold">Edit Form</p>
@@ -166,7 +158,7 @@
 				<input type="text" name="tipe" bind:value={tipe} id="inputTipe" />
 			</div>
 
-			<button class="btn btn-primary" onclick={updateMotor}>Submit</button>
+			<button type="button" class={buttonVariants({ variant: 'default'})} onclick={() => updateMotor()}>Submit</button>
 		</form>
 		<!-- <div class="flex w-80 grow-0 justify-center">
 			<div class="h-60 w-60 rounded-full bg-black"></div>
