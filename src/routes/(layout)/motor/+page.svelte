@@ -227,149 +227,33 @@
             object-fit: cover;
             object-position: center;
         }
+        .breadcrumb {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .breadcrumb-title {
+            font-size: 24px;
+            color: #00236f;
+            font-weight: 500;
+        }
+
+        .breadcrumb-path {
+            color: #6c6c6c;
+        }
+
+        .breadcrumb-current-path {
+            color: #4a4a4a;
+        }
+
     </style>
 </svelte:head>
-
-<!-- <script>
-    import { Popbox } from '$lib/popbox/popbox';
-    import { onMount } from 'svelte';
-    import { BaseApi } from '$lib/baseApi';
-    import * as jqa from 'jquery'
-    const jq = jqa.default
-
-    let popbox;
-
-    // States
-    var motorImages = $state([])
-    var motors = $state([])
-    var motorDetail = $state({
-        id: "",
-        name: "",
-        year: "",
-        transmission: "",
-        status: "",
-        dailyRate: "",
-        owner: "",
-        motorImg: ""
-    })
-
-    var filterObj = $state({
-        "pencarian": {
-            "nama": ""
-        },
-        "tahun": "2019",
-        "transmisi": "",
-        "status": "",
-        "tipePemilik": ""
-    })
-
-    var test = fetchMotors();
-
-    // Fetch motors from API
-    async function fetchMotors() {
-        try {
-            // var data;
-            BaseApi.ins.fetchAuth('/api/motors').then(async (res) => {
-                const data = await res.json();
-                if (!data) throw new Error("Invalid data structure from API");
-                motors = data
-                motorImages = data.map((motor) => motor.motorImg || "");
-                return data
-
-            });
-
-
-        } catch (error) {
-            console.error("Failed to fetch motor data:", error.message);
-            motors = [];
-        }
-    }
-
-    function reloadTable() {
-        let filteredMotors = [...motors];
-
-        if (filterObj.tahun) {
-            filteredMotors = filteredMotors.filter(motor => motor.tahun == filterObj.tahun);
-        }
-        if (filterObj.transmisi) {
-            filteredMotors = filteredMotors.filter(motor => motor.transmisi == filterObj.transmisi);
-        }
-        if (filterObj.status) {
-            filteredMotors = filteredMotors.filter(motor => motor.status_motor == filterObj.status);
-        }
-        // if (filterObj.tipePemilik) {
-        //     filteredMotors = filteredMotors.filter(motor => 
-        //         filterObj.tipePemilik === "Perusahaan" ? motor.owner === "Perusahaan" : motor.owner !== "Perusahaan"
-        //     );
-        // }
-        if (filterObj.pencarian.nama) {
-            const regex = new RegExp(filterObj.pencarian.nama, "i");
-            filteredMotors = filteredMotors.filter(motor => regex.test(motor.model));
-        }
-
-        motors = filteredMotors;
-    }
-
-    $effect(() => {
-        // dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
-        filterObj.pencarian.nama, filterObj.tahun, filterObj.transmisi, filterObj.status, filterObj.tipePemilik;
-        
-        // reloadTable();
-    })
-
-    onMount(async () => {
-        popbox = new Popbox({
-            blur:true,
-            overlay:true,
-        });
-        await fetchMotors();
-
-        jq('.filter').click(function (event) {
-            if (jq('.filter-dropdown-box').css('display') == 'none') {
-                jq('.filter-dropdown-box').toggle();
-            }
-
-            event.stopPropagation();
-        })
-
-        jq(document).click(function (event) {
-            if (!jq(event.target).closest('.filter-dropdown-box').length && !jq(event.target).closest('.filter').length) {
-                jq('.filter-dropdown-box').hide()
-            }
-
-            if (!jq(event.target).closest('.popbox_container').length) {
-                popbox.close('motor-detail-popbox')
-            }
-        })
-
-        for (let i = 2000; i <= 2024; ++i) {
-            jq('#filter-tahun').append(`
-                <option value="${i}">${i}</option>
-            `)
-        }
-
-        reloadTable();
-    });
-
-    function selectMotor(id) {
-        // motorDetail = motors.find(motor => motor.id_motor === id) || {};
-        popbox.open('motor-detail-popbox');
-
-        // for (let motor of motors) {
-        //     if (motor.id === id)
-        //         motorDetail = motor
-        // }
-
-        popbox.open('motor-detail-popbox')
-
-        event.stopPropagation()
-    }
-</script> -->
 
 <script>
     import { Popbox } from '$lib/popbox/popbox';
     import { onMount } from 'svelte';
     import { BaseApi } from '$lib/baseApi';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.ts';
     import * as jqa from 'jquery'
     const jq = jqa.default
 
@@ -401,7 +285,6 @@
     function reloadTable() {
 
         try {
-            // var data;
             BaseApi.ins.fetchAuth('/api/generic/motors').then(async (res) => {
                 let data = await res.json();
                 if (!data) throw new Error("Invalid data structure from API");
@@ -504,11 +387,17 @@
 
     async function deleteMotor(id) {
         try {
-            await BaseApi.ins.deleteAuth(`/api/motors/${id}`);
+            await BaseApi.ins.deleteAuth(`/api/generic/motors/${id}`);
             location.reload()
         } catch (error) {
             console.error("Failed to delete motor:", error);
         }
+    }
+
+    import { goto } from '$app/navigation';
+
+    function navigateToDetail(motorId) {
+        goto(`/motor/${motorId}`); 
     }
 
 </script>
@@ -517,7 +406,9 @@
 <div data-popbox-id="motor-detail-popbox" class="popbox">
     <div class="popbox_container">
         <div class="card-head">
-            <button class="btn-action action-button" style="background-color: #f44336;" onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus Motor</button>
+            <button class="btn-action action-button" style="background-color: #f44336;" onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus</button>
+            <button class="btn-action action-button" style="background-color: #FFFF00;" onclick={() => navigateToDetail(motorDetail.id_motor)}>Update</button>
+            <!-- <a class="btn-action action-button" href="https://www.reddit.com/">Test</a> -->
         </div>
 
         <div class="card-body">
@@ -542,11 +433,20 @@
 
 <div class="content">
 
-    <div class="breadcrumb">
-        <h2>Motor</h2>
-        <p>Home / <b>Motor</b></p>
-    </div>
-
+	<div>
+		<h1 class="text-2xl font-medium">Motor</h1>
+		<Breadcrumb.Root>
+			<Breadcrumb.List>
+				<Breadcrumb.Item>
+					<Breadcrumb.Link>Home</Breadcrumb.Link>
+				</Breadcrumb.Item>
+				<Breadcrumb.Separator />
+				<Breadcrumb.Item>
+					<Breadcrumb.Page>Motor</Breadcrumb.Page>
+				</Breadcrumb.Item>
+			</Breadcrumb.List>
+		</Breadcrumb.Root>
+	</div>
     <div class="filterNsearch-section">
 
         <div class="filter">
