@@ -57,6 +57,11 @@
 					</tr>
 				</thead>
 				<tbody>
+					{#if transaction.length === 0}
+						<tr>
+							<td colspan="5" class="text-center">Tidak ada transaksi aktif</td>
+						</tr>
+					{/if}
 					{#each transaction as trans, index}
 						<tr>
 							<td>{index + 1}</td>
