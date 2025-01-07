@@ -25,14 +25,6 @@
             width: 218px;
         }
 
-        .btn-vDetail{
-            height: 34px;
-            width: 80px;
-            background-color: grey;
-            border-radius: 4px;
-            color: white;
-        }
-
         .search-field{
             width: 100%;
             padding: 5px;
