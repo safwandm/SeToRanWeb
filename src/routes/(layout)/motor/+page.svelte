@@ -18,7 +18,6 @@
 		status: '',
 		dailyRate: '',
 		owner: '',
-		motorImg: ''
 	});
 
 	var filterObj = $state({
@@ -78,8 +77,6 @@
 	}
 
 	$effect(() => {
-		// dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
-
 		if (filterObj.pencarian.nama === '') {
 			reloadTable();
 		}
@@ -122,7 +119,6 @@
 		reloadTable();
 	});
 
-	// Karena btn-action ditambahkan secara dinamis. Click event listener harus ditambah ken element yang ada
 	function selectMotor(id) {
 		for (let motor of motors) {
 			if (motor.id_motor === id) motorDetail = motor;
@@ -167,32 +163,6 @@
 			padding: 0;
 			box-sizing: border-box;
 			font-family: 'Poppins', sans-serif;
-		}
-
-		header {
-			grid-column: 1 / 3;
-			background-color: #3c6dd7;
-			color: white;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			box-shadow: 0px 0px 20px rgba(0, 48, 120, 0.1);
-		}
-
-		.logo {
-			display: flex;
-			gap: 80px;
-		}
-
-		.logo p {
-			font-size: 24px;
-			font-weight: 600;
-			line-height: 1;
-		}
-
-		.selected {
-			background-color: #e3f2fd;
-			color: #3c6dd7;
 		}
 
 		.filterNsearch-section {
@@ -310,15 +280,6 @@
 			border-collapse: collapse;
 		}
 
-		.action-button {
-			/* background-color: #3C6DD7;
-            color: white;
-            border: none;
-            border-radius: 4px; */
-			padding: 6px 12px;
-			cursor: pointer;
-		}
-
 		.popbox_container {
 			width: 387px;
 			height: auto;
@@ -332,30 +293,6 @@
 			box-shadow: 0px 0px 5px rgba(0, 48, 120, 0.1);
 
 			background-color: white;
-		}
-
-		.card-head {
-			display: flex;
-
-			justify-content: center;
-			align-items: center;
-		}
-
-		.card-head .arrow {
-			font-size: 30px;
-		}
-
-		.card-head .img-container {
-			width: 277px;
-			height: 157px;
-			margin-right: 5px;
-			margin-left: 5px;
-			position: relative;
-			border: none;
-			border-radius: 4px;
-			box-shadow: 0px 0px 5px rgba(0, 48, 120, 0.1);
-			background-color: white;
-			overflow: hidden;
 		}
 
 		.card-body {
@@ -373,31 +310,6 @@
 			display: inline-block;
 			width: 120px;
 			font-weight: bold;
-		}
-
-		.img-container img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			object-position: center;
-		}
-		.breadcrumb {
-			display: flex;
-			flex-direction: column;
-		}
-
-		.breadcrumb-title {
-			font-size: 24px;
-			color: #00236f;
-			font-weight: 500;
-		}
-
-		.breadcrumb-path {
-			color: #6c6c6c;
-		}
-
-		.breadcrumb-current-path {
-			color: #4a4a4a;
 		}
 
 		input,
