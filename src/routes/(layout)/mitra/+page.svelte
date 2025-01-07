@@ -25,6 +25,14 @@
             width: 218px;
         }
 
+        .btn-vDetail{
+            height: 34px;
+            width: 80px;
+            background-color: grey;
+            border-radius: 4px;
+            color: white;
+        }
+
         .search-field{
             width: 100%;
             padding: 5px;
@@ -98,8 +106,8 @@
 
     jq('.mitra-section').hide();
     jq('.filter-section').hide();
-    jq('.motor-section').show();
-    jq('.details-section').hide();
+    jq('.motor-section').hide();
+    jq('.details-section').show();
 }
 
 
