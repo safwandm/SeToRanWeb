@@ -118,9 +118,17 @@
 </script>
 
 <h2>Dashboard</h2>
-<div class="breadcrumb">
-    <p>Home / <b>Dashboard</b></p>
-</div>
+<Breadcrumb.Root>
+    <Breadcrumb.List>
+        <Breadcrumb.Item>
+            <Breadcrumb.Link>Home</Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Separator />
+        <Breadcrumb.Item>
+            <Breadcrumb.Page>Dashboard</Breadcrumb.Page>
+        </Breadcrumb.Item>
+    </Breadcrumb.List>
+</Breadcrumb.Root>
 
 <div style="display: flex; justify-content:center; width: 100%; height: fit-content; margin-top: 16px;">
 

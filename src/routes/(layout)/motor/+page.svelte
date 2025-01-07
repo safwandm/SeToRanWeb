@@ -9,7 +9,6 @@
 
 	let popbox;
 
-	var motorImages = $state([]);
 	var motors = $state([]);
 	var motorDetail = $state({
 		id: '',
@@ -411,10 +410,6 @@
 			<p id="motor-detail-harga">
 				<span class="label">Harga Harian:</span>
 				{motorDetail.harga_harian}
-			</p>
-			<p id="motor-detail-pemilik">
-				<span class="label">Pemilik:</span>
-				{motorDetail.nama_pemilik}
 			</p>
 
 			<p id="motor-detail-plat-nomor">
