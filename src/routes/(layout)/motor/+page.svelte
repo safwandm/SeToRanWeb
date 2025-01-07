@@ -9,7 +9,6 @@
 
 	let popbox;
 
-	var motorImages = $state([]);
 	var motors = $state([]);
 	var motorDetail = $state({
 		id: '',
@@ -80,7 +79,6 @@
 
 	$effect(() => {
 		// dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
-		filterObj.pencarian.nama,
 			filterObj.tahun,
 			filterObj.transmisi,
 			filterObj.status,
@@ -139,12 +137,14 @@
 		try {
 			await BaseApi.ins.deleteAuth(`/api/generic/motors/${id}`);
 			location.reload();
+			toast.success('Motor telah di-hapus');
 		} catch (error) {
 			console.error('Failed to delete motor:', error);
 		}
 	}
 
 	import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 
 	function navigateToDetail(motorId) {
         popbox.clear(); 		
@@ -312,7 +312,7 @@
 
 		.popbox_container {
 			width: 387px;
-			height: 600px;
+			height: auto;
 
 			top: 20%;
 			left: 43%;
@@ -350,7 +350,7 @@
 		}
 
 		.card-body {
-			margin-top: 42px;
+			margin-bottom: 15px;
 		}
 
 		.card-body p {
@@ -390,6 +390,11 @@
 		.breadcrumb-current-path {
 			color: #4a4a4a;
 		}
+
+		input, select {
+			background-color: white;
+			color: black;
+		}
 	</style>
 </svelte:head>
 
@@ -408,10 +413,6 @@
 				<span class="label">Harga Harian:</span>
 				{motorDetail.harga_harian}
 			</p>
-			<p id="motor-detail-pemilik">
-				<span class="label">Pemilik:</span>
-				{motorDetail.nama_pemilik}
-			</p>
 
 			<p id="motor-detail-plat-nomor">
 				<span class="label">Plat Nomor:</span>
@@ -420,21 +421,19 @@
 			<p id="motor-detail-stnk"><span class="label">Nomor STNK:</span> {motorDetail.nomor_STNK}</p>
 			<p id="motor-detail-bpkb"><span class="label">Nomor BPKB:</span> {motorDetail.nomor_BPKB}</p>
 			<p id="motor-detail-brand"><span class="label">Brand:</span> {motorDetail.brand}</p>
-			<p id="motor-detail-tipe"><span class="label">Tipe:</span> {motorDetail.tipe}</p>
-
-            <div class="card-body">
-                <button
-                    class={buttonVariants({ variant: 'default'})}
-                    style="background-color: #f44336;"
-                    onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus</button
-                >
-                <button
-                    class={buttonVariants({ variant: 'default'})}
-                    style="background-color: #f4a62b;"
-                    onclick={() => navigateToDetail(motorDetail.id_motor)}>Edit</button
-                >
-            </div>
-    
+			<p id="motor-detail-tipe"><span class="label">Tipe:</span> {motorDetail.tipe}</p>    
+		</div>
+		<div class="card-body">
+			<button
+				class={buttonVariants({ variant: 'default'})}
+				style="background-color: #f44336;"
+				onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus</button
+			>
+			<button
+				class={buttonVariants({ variant: 'default'})}
+				style="background-color: #f4a62b;"
+				onclick={() => navigateToDetail(motorDetail.id_motor)}>Edit</button
+			>
 		</div>
 	</div>
 </div>
@@ -474,16 +473,19 @@
 				bind:value={filterObj.transmisi}
 			>
 				<option value="" selected>None</option>
-				<option value="Automatic">Automatic</option>
-				<option value="Matic">Matic</option>
-				<option value="Manual">Manual</option>
+				<option value="automatic">Automatic</option>
+				<option value="matic">Matic</option>
+				<option value="manual">Manual</option>
 			</select>
 
 			<label for="filter-tahun">Status</label>
 			<select name="status" id="filter-status" class="filter-options" bind:value={filterObj.status}>
 				<option value="" selected>None</option>
-				<option value="Available">Available</option>
-				<option value="Unavailableu">Unavailable</option>
+				<option value="Tersedia">Tersedia</option>
+				<option value="Disewa">Disewa</option>
+				<option value="Dipesan">Dipesan</option>
+				<option value="Dalam Perbaikan">Dalam Perbaikan</option>
+				<option value="Tidak Tersedia">Tidak Tersedia</option>
 			</select>
 
 			<label for="filter-pemilik">Tipe Pemilik</label>
@@ -503,13 +505,13 @@
 			<input
 				bind:value={filterObj.pencarian.nama}
 				type="text"
-				placeholder="Search..."
+				placeholder="Cari nama motor..."
 				name="nama"
 				class="search-field"
 			/>
-			<div class="search-button">
+			<button class="search-button" onclick={() => reloadTable()}>
 				<img src="src/lib/assets/icons/material-symbols_search.png" alt="" class="search-img" />
-			</div>
+			</button>
 		</form>
 	</div>
 
