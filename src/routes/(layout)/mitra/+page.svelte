@@ -38,6 +38,7 @@
             padding: 5px;
             border-radius: 4px;
             border: 1px solid #ccc;
+            background-color: white;
         }
     </style>
     <title>Mitra Page</title>
@@ -47,6 +48,8 @@
     import { onMount } from 'svelte';
     import { BaseApi } from '$lib/baseApi';
     import * as jqa from 'jquery'
+	import { get } from 'svelte/store';
+	import { base } from '$app/paths';
     const jq = jqa.default
 
     let dataMitra = $state([]);
@@ -55,6 +58,7 @@
     let selectedMitra = $state({});
     let motors = $state([]);
     let username = $state('');
+    let transaction = $state([]);
 
     var filterObj = $state({
         "username": "",
@@ -72,24 +76,40 @@
  
     $effect(() => {
         // dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
-        if (filterObj.username === "" && filterObj.status === "") {
+        if (filterObj.username === "") {
             filterMitra();
         }
     })
 
-    function selectMitra(mitraId) {
-        selectedMitra = dataMitra.find(mitra => mitra.id_mitra === mitraId);
+    async function selectMitra(mitraId) {
+    selectedMitra = dataMitra.find(mitra => mitra.id_mitra === mitraId);
 
-        BaseApi.ins.fetchAuth(`/api/generic/motors?mitraId=${mitraId}`).then(async (res) => {
-            let motorData = await res.json();
-            motors = motorData.filter(motor => motor.id_mitra === mitraId);
-        });
+    const motorData = await BaseApi.ins.fetchAuth(`/api/generic/motors?mitraId=${mitraId}`).then(res => res.json());
 
-        jq('.mitra-section').hide();
-        jq('.filter-section').hide();
-        jq('.motor-section').hide();
-        jq('.details-section').show();
-    }
+    motors = await Promise.all(motorData.filter(motor => motor.id_mitra === mitraId).map(async (motor) => {
+        let totalHarga = 0;
+
+        const transaction = await BaseApi.ins.fetchAuth(`/api/transaksi/motor/${motor.id_motor}`).then(res => res.json());
+
+        if (transaction && transaction.data) {
+            for (let i = 0; i < transaction.data.length; i++) {
+                totalHarga += parseFloat(transaction.data[i].nominal);  
+            }
+        }
+        return {
+            ...motor,
+            total_harga: totalHarga
+        };
+    }));
+
+    console.log(motors); 
+
+    jq('.mitra-section').hide();
+    jq('.filter-section').hide();
+    jq('.motor-section').show();
+    jq('.details-section').hide();
+}
+
 
     function goBack() {
         jq('.mitra-section').show();
@@ -124,7 +144,16 @@
 
     function handleFilterChange() {
         filterMitra(); 
+
     }
+
+    function getTransaction(idMotor) {
+        BaseApi.ins.fetchAuth(`/api/transaksi/motor/${idMotor}`).then(async (res) => {
+            let transaction = await res.json();
+            console.log(transaction);
+        });
+    }
+
 </script>
 
 <div>
@@ -166,7 +195,7 @@
         <div class="card filter-section">
             <h3>Filter</h3>
             <label for="statusMitra" style="display: flex;">Status Mitra</label>
-            <select bind:value={filterObj.status} id="statusMitra" style="width: 100%; padding: 5px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc">
+            <select bind:value={filterObj.status} id="statusMitra" style="width: 100%; padding: 5px; margin-top: 10px; margin-bottom: 20px; border-radius: 4px; border: 1px solid #ccc; background-color:#cccc;">
                 <option value="">All</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
@@ -241,6 +270,7 @@
                     <th>Transmisi</th>
                     <th>Plat Nomor</th>
                     <th>Status</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -254,6 +284,7 @@
                         <td>{motor.transmisi}</td>
                         <td>{motor.plat_nomor}</td>
                         <td>{motor.status_motor}</td>
+                        <td>{motor.total_harga}</td>
                     </tr>
                 {/each}
             </tbody>
