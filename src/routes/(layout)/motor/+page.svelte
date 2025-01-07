@@ -2,14 +2,13 @@
 	import { Popbox } from '$lib/popbox/popbox';
 	import { onMount } from 'svelte';
 	import { BaseApi } from '$lib/baseApi';
-	import { buttonVariants } from "$lib/components/ui/button";
+	import { buttonVariants } from '$lib/components/ui/button';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.ts';
 	import * as jqa from 'jquery';
 	const jq = jqa.default;
 
 	let popbox;
 
-	var motorImages = $state([]);
 	var motors = $state([]);
 	var motorDetail = $state({
 		id: '',
@@ -19,7 +18,6 @@
 		status: '',
 		dailyRate: '',
 		owner: '',
-		motorImg: ''
 	});
 
 	var filterObj = $state({
@@ -79,14 +77,10 @@
 	}
 
 	$effect(() => {
-		// dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
-		filterObj.pencarian.nama,
-			filterObj.tahun,
-			filterObj.transmisi,
-			filterObj.status,
-			filterObj.tipePemilik;
-
-		reloadTable();
+		if (filterObj.pencarian.nama === '') {
+			reloadTable();
+		}
+		
 	});
 
 	onMount(() => {
@@ -125,7 +119,6 @@
 		reloadTable();
 	});
 
-	// Karena btn-action ditambahkan secara dinamis. Click event listener harus ditambah ken element yang ada
 	function selectMotor(id) {
 		for (let motor of motors) {
 			if (motor.id_motor === id) motorDetail = motor;
@@ -139,16 +132,19 @@
 		try {
 			await BaseApi.ins.deleteAuth(`/api/generic/motors/${id}`);
 			location.reload();
+			toast.success('Motor telah di-hapus');
 		} catch (error) {
 			console.error('Failed to delete motor:', error);
 		}
 	}
 
 	import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
+	import { nonpassive } from 'svelte/legacy';
 
 	function navigateToDetail(motorId) {
-        popbox.clear(); 		
-        goto(`/motor/${motorId}`);
+		popbox.clear();
+		goto(`/motor/${motorId}`);
 	}
 </script>
 
@@ -167,32 +163,6 @@
 			padding: 0;
 			box-sizing: border-box;
 			font-family: 'Poppins', sans-serif;
-		}
-
-		header {
-			grid-column: 1 / 3;
-			background-color: #3c6dd7;
-			color: white;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			box-shadow: 0px 0px 20px rgba(0, 48, 120, 0.1);
-		}
-
-		.logo {
-			display: flex;
-			gap: 80px;
-		}
-
-		.logo p {
-			font-size: 24px;
-			font-weight: 600;
-			line-height: 1;
-		}
-
-		.selected {
-			background-color: #e3f2fd;
-			color: #3c6dd7;
 		}
 
 		.filterNsearch-section {
@@ -279,6 +249,15 @@
 			padding-left: 10px;
 		}
 
+		.search-field:focus {
+			width: 100%;
+
+			border: none;
+
+			margin-left: 10px;
+			padding-left: 10px;
+		}
+
 		.search-bar .search-button {
 			width: 54px;
 			height: 100%;
@@ -301,18 +280,9 @@
 			border-collapse: collapse;
 		}
 
-		.action-button {
-			/* background-color: #3C6DD7;
-            color: white;
-            border: none;
-            border-radius: 4px; */
-			padding: 6px 12px;
-			cursor: pointer;
-		}
-
 		.popbox_container {
 			width: 387px;
-			height: 600px;
+			height: auto;
 
 			top: 20%;
 			left: 43%;
@@ -325,32 +295,8 @@
 			background-color: white;
 		}
 
-		.card-head {
-			display: flex;
-
-			justify-content: center;
-			align-items: center;
-		}
-
-		.card-head .arrow {
-			font-size: 30px;
-		}
-
-		.card-head .img-container {
-			width: 277px;
-			height: 157px;
-			margin-right: 5px;
-			margin-left: 5px;
-			position: relative;
-			border: none;
-			border-radius: 4px;
-			box-shadow: 0px 0px 5px rgba(0, 48, 120, 0.1);
-			background-color: white;
-			overflow: hidden;
-		}
-
 		.card-body {
-			margin-top: 42px;
+			margin-bottom: 15px;
 		}
 
 		.card-body p {
@@ -366,29 +312,10 @@
 			font-weight: bold;
 		}
 
-		.img-container img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			object-position: center;
-		}
-		.breadcrumb {
-			display: flex;
-			flex-direction: column;
-		}
-
-		.breadcrumb-title {
-			font-size: 24px;
-			color: #00236f;
-			font-weight: 500;
-		}
-
-		.breadcrumb-path {
-			color: #6c6c6c;
-		}
-
-		.breadcrumb-current-path {
-			color: #4a4a4a;
+		input,
+		select {
+			background-color: white;
+			color: black;
 		}
 	</style>
 </svelte:head>
@@ -408,10 +335,6 @@
 				<span class="label">Harga Harian:</span>
 				{motorDetail.harga_harian}
 			</p>
-			<p id="motor-detail-pemilik">
-				<span class="label">Pemilik:</span>
-				{motorDetail.nama_pemilik}
-			</p>
 
 			<p id="motor-detail-plat-nomor">
 				<span class="label">Plat Nomor:</span>
@@ -421,37 +344,34 @@
 			<p id="motor-detail-bpkb"><span class="label">Nomor BPKB:</span> {motorDetail.nomor_BPKB}</p>
 			<p id="motor-detail-brand"><span class="label">Brand:</span> {motorDetail.brand}</p>
 			<p id="motor-detail-tipe"><span class="label">Tipe:</span> {motorDetail.tipe}</p>
-
-            <div class="card-body">
-                <button
-                    class={buttonVariants({ variant: 'default'})}
-                    style="background-color: #f44336;"
-                    onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus</button
-                >
-                <button
-                    class={buttonVariants({ variant: 'default'})}
-                    style="background-color: #f4a62b;"
-                    onclick={() => navigateToDetail(motorDetail.id_motor)}>Edit</button
-                >
-            </div>
-    
+		</div>
+		<div class="card-body">
+			<button
+				class={buttonVariants({ variant: 'default' })}
+				style="background-color: #f44336;"
+				onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus</button
+			>
+			<button
+				class={buttonVariants({ variant: 'default' })}
+				style="background-color: #f4a62b;"
+				onclick={() => navigateToDetail(motorDetail.id_motor)}>Edit</button
+			>
 		</div>
 	</div>
 </div>
 
 <h1 class="text-2xl font-medium">Motor</h1>
 <Breadcrumb.Root>
-    <Breadcrumb.List>
-        <Breadcrumb.Item>
-            <Breadcrumb.Link>Home</Breadcrumb.Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-            <Breadcrumb.Page>Motor</Breadcrumb.Page>
-        </Breadcrumb.Item>
-    </Breadcrumb.List>
+	<Breadcrumb.List>
+		<Breadcrumb.Item>
+			<Breadcrumb.Link>Home</Breadcrumb.Link>
+		</Breadcrumb.Item>
+		<Breadcrumb.Separator />
+		<Breadcrumb.Item>
+			<Breadcrumb.Page>Motor</Breadcrumb.Page>
+		</Breadcrumb.Item>
+	</Breadcrumb.List>
 </Breadcrumb.Root>
-
 
 <div class="content">
 	<div class="filterNsearch-section">
@@ -474,19 +394,22 @@
 				bind:value={filterObj.transmisi}
 			>
 				<option value="" selected>None</option>
-				<option value="Automatic">Automatic</option>
-				<option value="Matic">Matic</option>
-				<option value="Manual">Manual</option>
+				<option value="automatic">Automatic</option>
+				<option value="matic">Matic</option>
+				<option value="manual">Manual</option>
 			</select>
 
 			<label for="filter-tahun">Status</label>
 			<select name="status" id="filter-status" class="filter-options" bind:value={filterObj.status}>
 				<option value="" selected>None</option>
-				<option value="Available">Available</option>
-				<option value="Unavailableu">Unavailable</option>
+				<option value="Tersedia">Tersedia</option>
+				<option value="Disewa">Disewa</option>
+				<option value="Dipesan">Dipesan</option>
+				<option value="Dalam Perbaikan">Dalam Perbaikan</option>
+				<option value="Tidak Tersedia">Tidak Tersedia</option>
 			</select>
 
-			<label for="filter-pemilik">Tipe Pemilik</label>
+			<!-- <label for="filter-pemilik">Tipe Pemilik</label>
 			<select
 				name="status"
 				id="filter-pemilik"
@@ -496,20 +419,20 @@
 				<option value="" selected>None</option>
 				<option value="Perusahaan">Perusahaan</option>
 				<option value="Mitra">Mitra</option>
-			</select>
+			</select> -->
 		</form>
 
 		<form class="search-bar">
 			<input
 				bind:value={filterObj.pencarian.nama}
 				type="text"
-				placeholder="Search..."
+				placeholder="Cari nama motor..."
 				name="nama"
 				class="search-field"
 			/>
-			<div class="search-button">
+			<button class="search-button" onclick={() => reloadTable()}>
 				<img src="src/lib/assets/icons/material-symbols_search.png" alt="" class="search-img" />
-			</div>
+			</button>
 		</form>
 	</div>
 
@@ -538,8 +461,9 @@
 						<td>{motor.harga_harian}</td>
 						<td>{motor.nama_pemilik}</td>
 						<td
-							><button class={buttonVariants({ variant: 'default'})} onclick={() => selectMotor(motor.id_motor)}
-								>Detail</button
+							><button
+								class={buttonVariants({ variant: 'default' })}
+								onclick={() => selectMotor(motor.id_motor)}>Detail</button
 							></td
 						>
 					</tr>

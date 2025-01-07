@@ -11,13 +11,17 @@
 
     import RangeDatePicker from '$lib/shared/rangeDatePicker.svelte';
     import {
+     DateFormatter,
      CalendarDate,
-     parseDate
+     parseDate,
+     getLocalTimeZone
     } from "@internationalized/date";
 	import { validate } from '../voucherValidation';
 	import { BaseApi } from '$lib/baseApi';
-	import { Trash, Trash2 } from 'lucide-svelte';
+	import { Trash, Trash2, OctagonAlert } from 'lucide-svelte';
     import * as Dialog from "$lib/components/ui/dialog/index";
+    import * as Tabs from "$lib/components/ui/tabs/index";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index";
 	import { buttonVariants } from '$lib/components/ui/button';
 	import { goto } from '$app/navigation';
     
@@ -124,6 +128,11 @@
         selectedVoucher.tanggal_mulai = daterangevalue.start?.toString()??''
         selectedVoucher.tanggal_akhir = daterangevalue.end?.toString()??''
     })
+
+    const df = new DateFormatter("en-GB", {
+        dateStyle: "medium"
+    });
+    console.log(data.voucherUsed)
 </script>
 
 <style>
@@ -188,79 +197,131 @@
 
 <div class="breadcrumb">
     <h2>Voucher</h2>
-    <p>Home / Voucher / <b>{selectedVoucherId}</b></p>
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link>Home</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="/voucher">Voucher</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Page>{selectedVoucherId}</Breadcrumb.Page>
+            </Breadcrumb.Item>
+        </Breadcrumb.List>
+    </Breadcrumb.Root>
 </div>
 
 {#snippet input(label, voucherKey, readonly, type="text")}
     <div class="input-row">
         <label for={voucherKey}>{label}</label>
         <input type={type} id={voucherKey} class={editing&&!readonly?'input-edit':''} bind:value={selectedVoucher[voucherKey]} readonly={readonly} />
+    </div>
+    <div class="w-full flex flex-row justify-end">
         {#if errors[voucherKey]}
-                <div class="pl-5 text-red-600">{errors[voucherKey]}</div>
+            <div class="pl-5 text-red-600 flex flex-row">{errors[voucherKey]}</div>
         {/if}
     </div>
 {/snippet}
+    <Tabs.Root value="detail" class="w-full">
+        <Tabs.List class="w-full">
+          <Tabs.Trigger value="detail" class="w-1/2">Edit Detail Voucher</Tabs.Trigger>
+          <Tabs.Trigger value="used" class="w-1/2">Pengguna Voucher</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="detail">
 
-<div class="card">
-    <h3>Detail Voucher</h3>
-    <form onsubmit={onSubmit} class="w-fit">
-        {@render input('Id', 'id_voucher', true)}
-        {@render input('Nama', 'nama_voucher', false)}
-        {@render input('Kode', 'kode_voucher', false)}     
-        {@render input('Persen Voucher', 'persen_voucher', false, "number")}           
-        <div class="input-row">
-            <label for='status'>Status</label>
-            <select bind:value={selectedVoucher.status_voucher} id="status" class={!editing?'':'input-edit'} disabled={false}>
-                <option id="aktif" value="aktif">Aktif</option>
-                <option id="nonAktif" value="nonAktif">Non Aktif</option>
-            </select>
-        </div>
-        <div class="input-row">
-            <label for='date'>Tanggal Aktif Voucher</label>
-            <RangeDatePicker bind:value={daterangevalue} width="360px"/>
-            {#if errors.tanggal}
-                <div class="pl-5 text-red-600">{errors.tanggal}</div>
-            {/if}
-        </div>
-        <div class="input-row">
-            <div class="flex justify-between w-full items-center">
-                <div class="flex-center flex-row">
-                    <a class="flex-center a-unstyle btn-action" href="/voucher">Back</a>
-                    {#if editing && selectedVoucher.id_voucher}
-                        <button type="submit" class={"btn-action " + (!editing?"disabled":"")}>
-                            save
-                        </button>
-                        <button class={"btn-action" + (!editing?"disabled":"")} style="background-color: red;" onclick={onCancel}>
-                            cancel
-                        </button>
-                    {:else if (!selectedVoucher.id_voucher)}
-                        Data not found
-                    {/if}
-                </div>
-                <div class="flex-center">
-                    <Dialog.Root bind:open={confirmDialogOpen}>
-                        <Dialog.Trigger type="button"><Trash2 /></Dialog.Trigger>
-                        <Dialog.Content class="w-[300px]">
-                          <Dialog.Header>
-                            <Dialog.Title>Are you sure sure?</Dialog.Title>
-                            <Dialog.Description>
-                            </Dialog.Description>
-                          </Dialog.Header>
-                          <Dialog.Footer>
-                            <button type="submit" class={buttonVariants({ variant: "outline" })} onclick={() => confirmDialogOpen = false}>
-                                cancel
-                            </button>
-                            <button type="submit" class={buttonVariants({ variant: "destructive" })} onclick={onDelete}>
-                                confirm
-                            </button>
-                          </Dialog.Footer>
-                        </Dialog.Content>
-                    </Dialog.Root>
-                </div>
+            <div class="card">
+                <h3>Edit Detail Voucher</h3>
+                <form onsubmit={onSubmit} class="w-fit">
+                    {@render input('Id', 'id_voucher', true)}
+                    {@render input('Nama', 'nama_voucher', false)}
+                    {@render input('Kode', 'kode_voucher', false)}
+                    {@render input('Persen Voucher', 'persen_voucher', false, "number")}
+                    <div class="input-row">
+                        <label for='status'>Status</label>
+                        <select bind:value={selectedVoucher.status_voucher} id="status" class={!editing?'':'input-edit'} disabled={false}>
+                            <option id="aktif" value="aktif">Aktif</option>
+                            <option id="nonAktif" value="nonAktif">Non Aktif</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label for='date'>Tanggal Aktif Voucher</label>
+                        <RangeDatePicker bind:value={daterangevalue} width="360px"/>
+                    </div>
+                    <div class="w-full flex flex-row justify-end">
+                        {#if errors.tanggal}
+                            <div class="pl-5 text-red-600">{errors.tanggal}</div>
+                        {/if}
+                    </div>
+                    <div class="input-row">
+                        <div class="flex justify-between w-full items-center">
+                            <div class="flex-center flex-row">
+                                <a class="flex-center a-unstyle btn-action" href="/voucher">Back</a>
+                                {#if editing && selectedVoucher.id_voucher}
+                                    <button type="submit" class={"btn-action " + (!editing?"disabled":"")}>
+                                        save
+                                    </button>
+                                    <button class={"btn-action" + (!editing?"disabled":"")} style="background-color: red;" onclick={onCancel}>
+                                        cancel
+                                    </button>
+                                {:else if (!selectedVoucher.id_voucher)}
+                                    Data not found
+                                {/if}
+                            </div>
+                            <div class="flex-center">
+                                <Dialog.Root bind:open={confirmDialogOpen}>
+                                    <Dialog.Trigger type="button"><Trash2 /></Dialog.Trigger>
+                                    <Dialog.Content class="w-[300px]">
+                                    <Dialog.Header>
+                                        <Dialog.Title>Are you sure sure?</Dialog.Title>
+                                        <Dialog.Description>
+                                        </Dialog.Description>
+                                    </Dialog.Header>
+                                    <Dialog.Footer>
+                                        <button type="submit" class={buttonVariants({ variant: "outline" })} onclick={() => confirmDialogOpen = false}>
+                                            cancel
+                                        </button>
+                                        <button type="submit" class={buttonVariants({ variant: "destructive" })} onclick={onDelete}>
+                                            confirm
+                                        </button>
+                                    </Dialog.Footer>
+                                    </Dialog.Content>
+                                </Dialog.Root>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </div>
-    </form>
-    <div class="control">
-
-    </div>
-</div>
+        </Tabs.Content>
+        <Tabs.Content value="used">
+            <div class="card">
+                <h3>Pengguna Voucher</h3>
+                <table style="width: 100%;" class="mt-5">
+                    <thead>
+                        <tr>
+                            <th class="max-w-[308px]">No</th>
+                            <th class="max-w-[130px]">Nama</th>
+                            <th class="max-w-[77px]">Email</th>
+                            <th class="max-w-[145px]">Tanggal Penggunaan</th>
+                            <th class="max-w-[145px]">Detail Pelanggan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {#each data.voucherUsed as item, i}
+                            <tr>
+                                <td>{i + 1}</td>
+                                <td>{item.pengguna.nama}</td>
+                                <td>{item.pengguna.email}</td>
+                                <td class="whitespace-nowrap">{df.format(parseDate(item.created_at.split("T")[0]).toDate(getLocalTimeZone()))}</td>
+                                <td style="text-align: center;">
+                                    <a class="flex-center btn-action" href={"/pelanggan/" + item.pengguna.pelanggan.id_pelanggan}>Detail</a>
+                                </td>
+                            </tr>
+                        {/each}
+                    </tbody>
+                </table>
+            </div>
+        </Tabs.Content>
+    </Tabs.Root>
