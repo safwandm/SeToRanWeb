@@ -33,7 +33,12 @@ export async function load({ params }) {
         })
     }
 
+    async function fetchUsed() {
+        return BaseApi.ins.fetchAuth("/api/voucher/used/"  + params['voucherId']).then(res => res.json())
+    }
+    
 	return {
-		voucher: await fetchVoucher()
+		voucher: await fetchVoucher(),
+        voucherUsed: await fetchUsed()
 	};
 }
