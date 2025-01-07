@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { BaseApi } from '$lib/baseApi';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.ts';
-	import { formatStringDate } from '$lib/utilities';
+	import { formatRupiah, formatStringDate } from '$lib/utilities';
 
 	let transaction = $state([]);
 	let filteredData = $state([]);
@@ -103,7 +103,7 @@
 								<td>{formatStringDate(trans.tanggal_mulai)}</td>
 								<td>{formatStringDate(trans.tanggal_selesai)}</td>
 								<td>{trans.status_transaksi}</td>
-								<td>{trans.nominal}</td>
+								<td>{formatRupiah(trans.nominal)}</td>
 								<td>
 									<a href="/transaksi/{trans.id_transaksi}" class="btn-action">Detail</a>
 								</td>
