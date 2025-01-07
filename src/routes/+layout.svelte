@@ -53,6 +53,6 @@
 
 </script>
 
-<Toaster richColors />
+<Toaster theme="light" richColors />
 
 {@render children()}
