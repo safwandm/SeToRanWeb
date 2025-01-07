@@ -21,6 +21,7 @@
 	import { Trash, Trash2, OctagonAlert } from 'lucide-svelte';
     import * as Dialog from "$lib/components/ui/dialog/index";
     import * as Tabs from "$lib/components/ui/tabs/index";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb/index";
 	import { buttonVariants } from '$lib/components/ui/button';
 	import { goto } from '$app/navigation';
     
@@ -196,7 +197,21 @@
 
 <div class="breadcrumb">
     <h2>Voucher</h2>
-    <p>Home / Voucher / <b>{selectedVoucherId}</b></p>
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link>Home</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Link href="/voucher">Voucher</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Page>{selectedVoucherId}</Breadcrumb.Page>
+            </Breadcrumb.Item>
+        </Breadcrumb.List>
+    </Breadcrumb.Root>
 </div>
 
 {#snippet input(label, voucherKey, readonly, type="text")}
@@ -282,7 +297,8 @@
         </Tabs.Content>
         <Tabs.Content value="used">
             <div class="card">
-                <table style="width: 100%;">
+                <h3>Pengguna Voucher</h3>
+                <table style="width: 100%;" class="mt-5">
                     <thead>
                         <tr>
                             <th class="max-w-[308px]">No</th>
