@@ -2,7 +2,7 @@
 	import { Popbox } from '$lib/popbox/popbox';
 	import { onMount } from 'svelte';
 	import { BaseApi } from '$lib/baseApi';
-	import { buttonVariants } from "$lib/components/ui/button";
+	import { buttonVariants } from '$lib/components/ui/button';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.ts';
 	import * as jqa from 'jquery';
 	const jq = jqa.default;
@@ -79,12 +79,11 @@
 
 	$effect(() => {
 		// dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
-			filterObj.tahun,
-			filterObj.transmisi,
-			filterObj.status,
-			filterObj.tipePemilik;
 
-		reloadTable();
+		if (filterObj.pencarian.nama === '') {
+			reloadTable();
+		}
+		
 	});
 
 	onMount(() => {
@@ -145,10 +144,11 @@
 
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
+	import { nonpassive } from 'svelte/legacy';
 
 	function navigateToDetail(motorId) {
-        popbox.clear(); 		
-        goto(`/motor/${motorId}`);
+		popbox.clear();
+		goto(`/motor/${motorId}`);
 	}
 </script>
 
@@ -279,6 +279,15 @@
 			padding-left: 10px;
 		}
 
+		.search-field:focus {
+			width: 100%;
+
+			border: none;
+
+			margin-left: 10px;
+			padding-left: 10px;
+		}
+
 		.search-bar .search-button {
 			width: 54px;
 			height: 100%;
@@ -391,7 +400,8 @@
 			color: #4a4a4a;
 		}
 
-		input, select {
+		input,
+		select {
 			background-color: white;
 			color: black;
 		}
@@ -421,16 +431,16 @@
 			<p id="motor-detail-stnk"><span class="label">Nomor STNK:</span> {motorDetail.nomor_STNK}</p>
 			<p id="motor-detail-bpkb"><span class="label">Nomor BPKB:</span> {motorDetail.nomor_BPKB}</p>
 			<p id="motor-detail-brand"><span class="label">Brand:</span> {motorDetail.brand}</p>
-			<p id="motor-detail-tipe"><span class="label">Tipe:</span> {motorDetail.tipe}</p>    
+			<p id="motor-detail-tipe"><span class="label">Tipe:</span> {motorDetail.tipe}</p>
 		</div>
 		<div class="card-body">
 			<button
-				class={buttonVariants({ variant: 'default'})}
+				class={buttonVariants({ variant: 'default' })}
 				style="background-color: #f44336;"
 				onclick={() => deleteMotor(motorDetail.id_motor)}>Hapus</button
 			>
 			<button
-				class={buttonVariants({ variant: 'default'})}
+				class={buttonVariants({ variant: 'default' })}
 				style="background-color: #f4a62b;"
 				onclick={() => navigateToDetail(motorDetail.id_motor)}>Edit</button
 			>
@@ -440,17 +450,16 @@
 
 <h1 class="text-2xl font-medium">Motor</h1>
 <Breadcrumb.Root>
-    <Breadcrumb.List>
-        <Breadcrumb.Item>
-            <Breadcrumb.Link>Home</Breadcrumb.Link>
-        </Breadcrumb.Item>
-        <Breadcrumb.Separator />
-        <Breadcrumb.Item>
-            <Breadcrumb.Page>Motor</Breadcrumb.Page>
-        </Breadcrumb.Item>
-    </Breadcrumb.List>
+	<Breadcrumb.List>
+		<Breadcrumb.Item>
+			<Breadcrumb.Link>Home</Breadcrumb.Link>
+		</Breadcrumb.Item>
+		<Breadcrumb.Separator />
+		<Breadcrumb.Item>
+			<Breadcrumb.Page>Motor</Breadcrumb.Page>
+		</Breadcrumb.Item>
+	</Breadcrumb.List>
 </Breadcrumb.Root>
-
 
 <div class="content">
 	<div class="filterNsearch-section">
@@ -488,7 +497,7 @@
 				<option value="Tidak Tersedia">Tidak Tersedia</option>
 			</select>
 
-			<label for="filter-pemilik">Tipe Pemilik</label>
+			<!-- <label for="filter-pemilik">Tipe Pemilik</label>
 			<select
 				name="status"
 				id="filter-pemilik"
@@ -498,7 +507,7 @@
 				<option value="" selected>None</option>
 				<option value="Perusahaan">Perusahaan</option>
 				<option value="Mitra">Mitra</option>
-			</select>
+			</select> -->
 		</form>
 
 		<form class="search-bar">
@@ -540,8 +549,9 @@
 						<td>{motor.harga_harian}</td>
 						<td>{motor.nama_pemilik}</td>
 						<td
-							><button class={buttonVariants({ variant: 'default'})} onclick={() => selectMotor(motor.id_motor)}
-								>Detail</button
+							><button
+								class={buttonVariants({ variant: 'default' })}
+								onclick={() => selectMotor(motor.id_motor)}>Detail</button
 							></td
 						>
 					</tr>

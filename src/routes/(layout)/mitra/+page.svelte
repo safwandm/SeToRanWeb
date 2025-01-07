@@ -75,7 +75,6 @@
     });
  
     $effect(() => {
-        // dependency harus ditulis/dipake biar setiap value berubah fungsi ini jalan
         if (filterObj.username === "") {
             filterMitra();
         }
