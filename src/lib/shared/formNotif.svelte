@@ -48,8 +48,10 @@
     })
 
     $effect(() => {
-        if (open)
+        if (open) {
+            formData = {}
             targetPengguna = null
+        }
     })
 
     $effect(() => {
@@ -89,6 +91,14 @@
         else
             toast.error(`Notifikasi gagal terkirim!`)
     }
+
+    $effect(() => {
+        if (formData.navigasi === "transaksi") {
+            formData.dataNavigasi = {}
+        } else {
+            formData.dataNavigasi = undefined
+        }
+    })
 </script>
 
 <style>
@@ -193,13 +203,12 @@
             </select>
         </div>
 
-        <div class="input-row">
-            <label for={"dataNavigasi"}>Data Navigasi (json)</label>
-            <textarea readonly={!acceptDataNavigasi} bind:value={formData.dataNavigasi} id={"dataNavigasi"} name={"dataNavigasi"} class="pt-2"></textarea>
-            {#if errors["dataNavigasi"]}
-                <p class="text-red-600">{errors["dataNavigasi"]}</p>
-            {/if}
-        </div>
+        {#if formData.navigasi === "transaksi"}
+            <div class="input-row">
+                <label for="id_transaksi">Id Transaksi</label>
+                <input bind:value={formData.dataNavigasi.id_transaksi} id="id_transaksi" name="id_transaksi" />
+            </div>
+        {/if}
     <Dialog.Footer>
         <button class={buttonVariants({ variant: 'outline'})} onclick={batal}>
             Batal

@@ -65,7 +65,7 @@ export class BaseApi {
     });
 
   }
-  
+
   async putAuth(input: RequestInfo, data: any, init: RequestInit = {}): Promise<Response> {
     const accessToken = this.cookieProvider.get("access_token");
 
@@ -78,7 +78,7 @@ export class BaseApi {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
         ...init.headers,
-      },
-    });
-  }
+      },
+    });
+  }
 }

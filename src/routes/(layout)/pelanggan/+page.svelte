@@ -63,27 +63,6 @@
 		// });
 	}
 
-	function loadTableActiveTransaction() {
-		BaseApi.ins.fetchAuth('/api/transaksi/aktif').then(async (res) => {
-			const data = await res.json();
-			// console.log(data.data);
-
-			transaction = data.data;
-			console.log(transaction);
-			console.log(typeof transaction[0].tanggal_mulai);
-		});
-		// jq.getJSON('src/lib/json/transaction.json', (data) => {
-		// 	data.transaction.forEach((trans) => {
-		// 		transaction.push({
-		// 			id: trans.id,
-		// 			username: trans.username,
-		// 			startDate: parseDate(trans.startDate),
-		// 			endDate: parseDate(trans.endDate)
-		// 		});
-		// 	});
-		// });
-	}
-
 	function parseDate(dateString) {
 		let [date, time] = dateString.split(' ');
 		let [year, month, day] = date.split('-');
@@ -133,43 +112,13 @@
 		</Breadcrumb.Root>
 	</div>
 	<div class="row">
-		<div class="card" style="width: 100%;">
-			<p class="card-title">Active Transaction</p>
-			<div class="card-content">
-				<table id="transaction-table">
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Nama</th>
-							<th>Start Date</th>
-							<th>End Date</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						{#each transaction as trans}
-							<tr>
-								<td>{trans.id_transaksi}</td>
-								<td>{trans.nama}</td>
-								<td>{formatStringDate(trans.tanggal_mulai)}</td>
-								<td>{formatStringDate(trans.tanggal_selesai)}</td>
-								<td>
-									<button class="btn-action">Detail</button>
-								</td>
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-	<div class="row">
 		<div class="card" id="semua-pelanggan-card">
 			<p class="card-title">Semua Pelanggan</p>
 			<div class="card-content">
 				<table id="pelanggan-table">
 					<thead>
 						<tr>
+							<th>No</th>
 							<th>Nama</th>
 							<th>Email</th>
 							<th>Nomor Telepon</th>
@@ -177,8 +126,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each pelanggan as pel}
+						{#each pelanggan as pel, index}
 							<tr>
+								<td>{index + 1}</td>
 								<td>{pel.nama}</td>
 								<td>{pel.email}</td>
 								<td>{pel.nomor_telepon}</td>
@@ -192,17 +142,6 @@
 			</div>
 		</div>
 		<div class="card" id="filter-sort-card">
-			<p class="card-title">Filter & Sort</p>
-			<div class="card-content">
-				<div class="input-select">
-					<label for="status">Status</label>
-					<select bind:value={filter.status} name="status" id="statusSelect">
-						<option value="">All</option>
-						<option value="verified">Verified</option>
-						<option value="not-verified">Not Verified</option>
-					</select>
-				</div>
-			</div>
 			<p class="card-title">Sort</p>
 			<div class="card-content">
 				<div class="input-select">
@@ -305,6 +244,7 @@
 
 	#filter-sort-card {
 		flex-grow: 1;
+		height: min-content;
 	}
 
 	.input-select {

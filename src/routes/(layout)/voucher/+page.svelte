@@ -4,6 +4,7 @@
 
 <script>
     import * as Dialog from "$lib/components/ui/dialog";
+    import * as Breadcrumb from "$lib/components/ui/breadcrumb";
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { json } from '@sveltejs/kit';
@@ -235,7 +236,17 @@
 
 <div class="breadcrumb">
     <h2>Voucher</h2>
-    <p>Home / <b>Voucher</b></p>
+    <Breadcrumb.Root>
+        <Breadcrumb.List>
+            <Breadcrumb.Item>
+                <Breadcrumb.Link>Home</Breadcrumb.Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Separator />
+            <Breadcrumb.Item>
+                <Breadcrumb.Page href="/voucher">Voucher</Breadcrumb.Page>
+            </Breadcrumb.Item>
+        </Breadcrumb.List>
+    </Breadcrumb.Root>
 </div>
 
 <div class="content-container row">

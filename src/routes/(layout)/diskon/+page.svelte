@@ -260,6 +260,7 @@
         padding: 40px;
         color: #6b7280;
     }
+    
 </style>
 
 <div class="breadcrumb">
@@ -396,6 +397,34 @@
                     </div>
 
                     <div class="input-row">
+                        <label for="motor">ID Motor</label>
+                        <input 
+                            bind:value={formData.motor}
+                            type="text" 
+                            id="motor"
+                            disabled={loading}
+                        />
+                        {#if errors.motor}
+                            <p class="error-text">{errors.motor}</p>
+                        {/if}
+                    </div>
+
+                    <div class="input-row">
+                        <label for="persentase">Persentase Diskon (%)</label>
+                        <input 
+                            bind:value={formData.persentase}
+                            type="number" 
+                            id="persentase"
+                            min="0" 
+                            max="100"
+                            disabled={loading}
+                        />
+                        {#if errors.persentase}
+                            <p class="error-text">{errors.persentase}</p>
+                        {/if}
+                    </div>
+
+                    <div class="input-row">
                         <label>Tanggal Aktif Diskon</label>
                         <RangeDatePicker bind:value={dateRangeValue} />
                         {#if errors.tanggal}
@@ -426,50 +455,53 @@
     </Dialog.Content>
 </Dialog.Root>
 
+
 <Dialog.Root bind:open={detailDialogOpen}>
     <Dialog.Content>
         <Dialog.Header>
             <Dialog.Title>Detail Diskon</Dialog.Title>
-            </Dialog.Header>
-            {#if selectedDiskon}
-                <p><b>ID:</b> {selectedDiskon.id}</p>
-                <p><b>Nama Promo:</b></p>
-                <input 
-                    type="text" 
-                    bind:value={selectedDiskon.nama} 
-                    disabled={loading} 
-                />
-                <p><b>Status Promo:</b></p>
-                <select 
-                    bind:value={selectedDiskon.status_promo}
+        </Dialog.Header>
+        {#if selectedDiskon}
+            <p><b>ID:</b> {selectedDiskon.id}</p>
+            <p><b>Nama Promo:</b></p>
+            <input 
+                type="text" 
+                bind:value={selectedDiskon.nama} 
+                disabled={loading} 
+            />
+            <p><b>Status Promo:</b></p>
+            <select 
+                bind:value={selectedDiskon.status_promo}
+                disabled={loading}
+            >
+                {#each Object.entries(statusMap) as [key, val]}
+                    <option value={key}>{val}</option>
+                {/each}
+            </select>
+            <p><b>Motor:</b> {selectedDiskon.motor_nama}</p>
+            <p><b>Persentase Diskon:</b> {selectedDiskon.persentase}%</p>
+            <p><b>Tanggal Mulai:</b> {formatDate(selectedDiskon.tanggal_mulai)}</p>
+            <p><b>Tanggal Akhir:</b> {formatDate(selectedDiskon.tanggal_akhir)}</p>
+            <div class="flex justify-end gap-2 mt-6">
+                <button
+                    class="btn-action"
+                    onclick={updateDiskon}
                     disabled={loading}
                 >
-                    {#each Object.entries(statusMap) as [key, val]}
-                        <option value={key}>{val}</option>
-                    {/each}
-                </select>
-                <p><b>Tanggal Mulai:</b> {formatDate(selectedDiskon.tanggal_mulai)}</p>
-                <p><b>Tanggal Akhir:</b> {formatDate(selectedDiskon.tanggal_akhir)}</p>
-                <div class="flex justify-end gap-2 mt-6">
-                    <button
-                        class="btn-action"
-                        onclick={updateDiskon}
-                        disabled={loading}
-                    >
-                        {loading ? "Memperbarui..." : "Update"}
-                    </button>
-                    <button
-                        class="btn-action"
-                        onclick={deleteDiskon}
-                        disabled={loading}
-                    >
-                        {loading ? "Menghapus..." : "Hapus"}
-                    </button>
-                </div>
-            {:else}
-                <p>Data tidak tersedia</p>
-            {/if}
-            <Dialog.Footer>
+                    {loading ? "Memperbarui..." : "Update"}
+                </button>
+                <button
+                    class="btn-action"
+                    onclick={deleteDiskon}
+                    disabled={loading}
+                >
+                    {loading ? "Menghapus..." : "Hapus"}
+                </button>
+            </div>
+        {:else}
+            <p>Data tidak tersedia</p>
+        {/if}
+        <Dialog.Footer>
             <button
                 class="btn-action"
                 onclick={() => detailDialogOpen = false}
@@ -479,5 +511,3 @@
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>
-
-
