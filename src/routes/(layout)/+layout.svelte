@@ -12,6 +12,7 @@
 	import { buttonVariants } from '$lib/components/ui/button';
 	import FormNotif from '$lib/shared/formNotif.svelte';
 	import SendHorizontal from 'lucide-svelte/icons/send-horizontal';
+	import { cn } from '$lib/utils';
 
 	let { children } = $props();
 
@@ -38,7 +39,7 @@
 			<!-- tes currentUser -->
 		</div>
 		<div class="header-right flex-center">
-			<Popover.Root>
+			<!-- <Popover.Root>
 				<Popover.Trigger>
 					<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 24 24">
 						<path
@@ -59,9 +60,9 @@
 					</svg>
 				</Popover.Trigger>
 				<Popover.Content><h3>Notifications</h3></Popover.Content>
-			</Popover.Root>
+			</Popover.Root> -->
 			<Dialog.Root>
-				<Dialog.Trigger><LogOut /></Dialog.Trigger>
+				<Dialog.Trigger class={cn(buttonVariants({ variant: "ghost" }), "flex flex-row gap-3")}>Logout <LogOut /></Dialog.Trigger>
 				<Dialog.Content class="w-[300px]">
 					<Dialog.Header>
 						<Dialog.Title>Konfirmasi Log Out</Dialog.Title>
@@ -238,7 +239,7 @@
 
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: end;
 	}
 
 	.logo {

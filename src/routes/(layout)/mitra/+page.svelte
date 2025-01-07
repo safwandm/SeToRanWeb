@@ -105,8 +105,8 @@
 
     jq('.mitra-section').hide();
     jq('.filter-section').hide();
-    jq('.motor-section').show();
-    jq('.details-section').hide();
+    jq('.motor-section').hide();
+    jq('.details-section').show();
 }
 
 
