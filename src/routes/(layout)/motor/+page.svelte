@@ -77,9 +77,16 @@
 	}
 
 	$effect(() => {
-		if (filterObj.pencarian.nama === '') {
+		filterObj.tahun, filterObj.transmisi, filterObj.status;
+
+		if (filterObj.tahun || filterObj.transmisi || filterObj.status) {
 			reloadTable();
 		}
+
+
+		if (filterObj.pencarian.nama == '') {
+			reloadTable();
+		} 
 		
 	});
 
