@@ -137,12 +137,14 @@
 		try {
 			await BaseApi.ins.deleteAuth(`/api/generic/motors/${id}`);
 			location.reload();
+			toast.success('Motor telah di-hapus');
 		} catch (error) {
 			console.error('Failed to delete motor:', error);
 		}
 	}
 
 	import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 
 	function navigateToDetail(motorId) {
         popbox.clear(); 		
