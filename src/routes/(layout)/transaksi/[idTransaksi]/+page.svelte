@@ -30,13 +30,11 @@
 	}
 
 	function loadPembayaranData() {
-		BaseApi.ins
-			.fetchAuth(`/api/pembayaran/transaksi/${transaksiData.id_pelanggan}`)
-			.then(async (res) => {
-				const resBody = await res.json();
-				pembayaranData = resBody;
-				console.log(pembayaranData);
-			});
+		BaseApi.ins.fetchAuth(`/api/pembayaran/transaksi/${data.idTransaksi}`).then(async (res) => {
+			const resBody = await res.json();
+			pembayaranData = resBody;
+			console.log(pembayaranData);
+		});
 	}
 
 	function loadMotorData() {
@@ -86,9 +84,7 @@
 			<div class="info">
 				<p class="label">Status</p>
 				<p>
-					{transaksiData.status_transaksi == undefined
-						? ''
-						: formatStringDate(transaksiData.status_transaksi)}
+					{transaksiData.status_transaksi}
 				</p>
 			</div>
 			<div class="info">
