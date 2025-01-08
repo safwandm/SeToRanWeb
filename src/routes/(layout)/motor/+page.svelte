@@ -45,13 +45,6 @@
 				if (filterObj.status) {
 					data = data.filter((motor) => motor.status_motor == filterObj.status);
 				}
-				if (filterObj.tipePemilik) {
-					data = data.filter((motor) =>
-						filterObj.tipePemilik === 'Perusahaan'
-							? motor.nama_pemilik === 'SeToRan'
-							: motor.owner !== 'SeToRan'
-					);
-				}
 
 				let mitras_res = await BaseApi.ins.fetchAuth('/api/mitras');
 
@@ -77,16 +70,14 @@
 	}
 
 	$effect(() => {
-		filterObj.tahun, filterObj.transmisi, filterObj.status;
+		filterObj.pencarian.nama, filterObj.tahun, filterObj.transmisi, filterObj.status;
 
-		if (filterObj.tahun || filterObj.transmisi || filterObj.status) {
+		if (filterObj.pencarian.nama === '') {
+			reloadTable();
+		} else 		if (filterObj.tahun || filterObj.transmisi || filterObj.status) {
 			reloadTable();
 		}
 
-
-		if (filterObj.pencarian.nama == '') {
-			reloadTable();
-		} 
 		
 	});
 

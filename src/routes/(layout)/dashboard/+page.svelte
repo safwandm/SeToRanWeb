@@ -74,7 +74,7 @@
 
         dashboardData.diskons.total = diskons.length;
         dashboardData.diskons.totalAktif = diskons.filter((voucher) => voucher.status_promo == "aktif").length;
-        dashboardData.diskons.totalNonAktif = diskons.filter((voucher) => voucher.status_promo == "non-aktif").length;
+        dashboardData.diskons.totalNonAktif = diskons.filter((voucher) => voucher.status_promo == "nonaktif").length;
 
 
     }
