@@ -103,10 +103,6 @@
     }
 
 	onMount(async () => {
-		popbox = new Popbox({
-			blur: true,
-			overlay: true
-		});
 
         await getMotorsData();
         await getDiskonsData();
