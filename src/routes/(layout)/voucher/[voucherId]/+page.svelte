@@ -62,27 +62,8 @@
         if (Object.keys(errors).length !== 0)
             return
 
-        // BaseApi.ins.postAuth("/api/voucher/" + selectedVoucherId, selectedVoucher, {
-        //     "method": "PUT"
-        // }).then(res => {
-        //     if (res.ok) {
-        //         originalVoucher = $state.snapshot(selectedVoucher)
-        //         editing = false;
-        //         toast.success("Voucher berhasil di update!")
-        //     } else {
-        //         toast.error("Voucher gagal di update")
-        //     }
-        // }).catch(res => {
-        //     toast.error("Voucher gagal di update")
-        // })
-
-        fetch("http://localhost:3000/api/voucher/" + selectedVoucherId, {
-            "method": "PUT",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(selectedVoucher)
+        BaseApi.ins.postAuth("/api/voucher/" + selectedVoucherId, selectedVoucher, {
+            "method": "PUT"
         }).then(res => {
             if (res.ok) {
                 originalVoucher = $state.snapshot(selectedVoucher)
@@ -94,6 +75,25 @@
         }).catch(res => {
             toast.error("Voucher gagal di update")
         })
+
+        // fetch("http://localhost:3000/api/voucher/" + selectedVoucherId, {
+        //     "method": "PUT",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(selectedVoucher)
+        // }).then(res => {
+        //     if (res.ok) {
+        //         originalVoucher = $state.snapshot(selectedVoucher)
+        //         editing = false;
+        //         toast.success("Voucher berhasil di update!")
+        //     } else {
+        //         toast.error("Voucher gagal di update")
+        //     }
+        // }).catch(res => {
+        //     toast.error("Voucher gagal di update")
+        // })
     }
 
     async function onDelete() {
