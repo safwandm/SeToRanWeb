@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-export let backendHost = "http://localhost:8000";
+export let backendHost = "http://103.161.185.102:8000";
 
 /**
  * harus input cookie provider kalau di pake di file .server.ts/js
